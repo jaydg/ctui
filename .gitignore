@@ -1,0 +1,6 @@
+.dub
+dub.selections.json
+docs/
+bin/
+lib/
+*.lst
