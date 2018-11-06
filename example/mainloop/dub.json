@@ -1,0 +1,16 @@
+{
+    "name":         "mainloop",
+    "description":  "Minimal example application for the ctui mainloop",
+    "homepage":     "https://github.com/jaydg/ctui",
+    "authors": [
+                    "Miguel de Icaza",
+                    "Joachim de Groot"
+    ],
+    "license":      "MIT",
+    "dependencies": {
+                    "ctui": "*"
+    },
+    "targetPath":   "bin",
+    "targetType":   "executable",
+    "targetName":   "mainloop"
+}

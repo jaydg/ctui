@@ -1,0 +1,15 @@
+{
+    "name":         "tui",
+    "description":  "Complex example application for the ctui library",
+    "homepage":     "https://github.com/jaydg/ctui",
+    "authors": [
+                    "Miguel de Icaza"
+    ],
+    "license":      "MIT",
+    "dependencies": {
+                    "ctui": "*"
+    },
+    "targetPath":   "bin",
+    "targetType":   "executable",
+    "targetName":   "tui"
+}
