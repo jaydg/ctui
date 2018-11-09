@@ -172,6 +172,7 @@ public class Application {
 
         raw();
         noecho();
+        set_escdelay(0);
         main_window.keypad(true);
         mousemask(ALL_MOUSE_EVENTS, null);
 
