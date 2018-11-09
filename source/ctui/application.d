@@ -28,6 +28,8 @@
 
 module ctui.application;
 
+import core.sys.posix.signal;
+
 import std.algorithm : max, remove;
 
 import deimos.ncurses;
@@ -131,6 +133,8 @@ public class Application {
     static MainLoop mainLoop;
 
     static bool using_color = false;
+    static int cols, lines;
+
     public static @property bool UsingColor()
     {
         return using_color;
@@ -147,12 +151,24 @@ public class Application {
 
         empty_container = new Container(0, 0, Application.Cols, Application.Lines);
 
+        // Install SIGWINCH handler
+        sigaction_t action = {
+            sa_sigaction: &sigHandler,
+            sa_flags: SA_SIGINFO
+        };
+        // FIXME: SIGWINCH is currently not defined anywhere
+        sigaction(28, &action, null);
+
         main_window = initscr();
         if (main_window is null) {
             import std.stdio : writeln;
             writeln("Curses failed to initialize.");
             throw new Exception("Application.Init failed");
         }
+
+        // get initial column and line count from curses
+        cols = COLS;
+        lines = LINES;
 
         raw();
         noecho();
@@ -226,13 +242,13 @@ public class Application {
     ///   The number of lines on the screen
     static public @property int Lines()
     {
-        return LINES;
+        return lines;
     }
 
     ///   The number of columns on the screen
     static public @property int Cols()
     {
-        return COLS;
+        return cols;
     }
 
     ///   Displays a message on a modal dialog box.
@@ -445,12 +461,7 @@ public class Application {
 
         if ((ch == -1) || (ch == KEY_RESIZE))
         {
-            EmptyContainer.Clear();
-            foreach (c; toplevels) {
-                c.SizeChanged();
-            }
-            Refresh();
-
+            Resize();
             return;
         }
 
@@ -516,9 +527,48 @@ public class Application {
     /// <returns>The suspend.</returns>
     static bool Suspend()
     {
-        import core.sys.posix.signal;
-
         killpg(0, SIGTSTP);
         return true;
+    }
+
+    static void Resize()
+    {
+        EmptyContainer.Clear();
+        foreach (c; toplevels) {
+            c.SizeChanged();
+        }
+        Refresh();
+    }
+
+    // SIGWINCH terminal window resize handler
+    extern(C)
+    private static void sigHandler(int signo, siginfo_t* info, void* ctx) nothrow
+    {
+        import core.sys.posix.sys.ioctl;
+
+        winsize size;
+        if (ioctl(0, TIOCGWINSZ, &size) != 0) {
+            // no success in getting the new window size
+            return;
+        }
+
+        if (!is_term_resized(size.ws_row, size.ws_col)) {
+            // ncurses doesn't think anything was modified
+            return;
+        }
+
+        // update Application state
+        Application.lines = size.ws_row;
+        Application.cols = size.ws_col;
+
+        // resize underlying ncurses data structures
+        resize_term(Application.lines, Application.cols);
+
+        // resize the application itself
+        try {
+            Application.Resize();
+        } catch (Exception e) {
+            // This is fine.
+        }
     }
 }
