@@ -33,6 +33,7 @@ import std.string : toStringz;
 import deimos.ncurses;
 
 import ctui.application;
+import ctui.keys;
 import ctui.widgets.button;
 import ctui.widgets.frame;
 import ctui.widgets.widget;
@@ -133,7 +134,7 @@ public class Dialog : Frame
 
     public override bool ProcessKey(int key)
     {
-        if (key == 27) {
+        if (key == Keys.Esc) {
             running = false;
             return true;
         }
