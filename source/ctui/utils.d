@@ -1,10 +1,7 @@
 //
-// Simple curses-based GUI toolkit, core
+// Simple curses-based GUI toolkit, helper functions
 //
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
-//
-// Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,16 +25,17 @@
 
 module ctui.utils;
 
-import std.algorithm : countUntil;
+import std.utf;
 
-string substring(string str, ulong start, ulong length=0)
+string substring(string str, size_t start)
 {
-    import std.utf : toUTFindex;
+    return str[str.toUTFindex(start) .. $];
 
+}
+string substring(string str, size_t start, size_t length)
+{
     immutable first = str.toUTFindex(start);
-    immutable second = length
-        ? str[first .. $].toUTFindex(length) + first
-        : str.length;
+    immutable second = str.toUTFindex(start + length);
 
     return str[first .. second];
 }
