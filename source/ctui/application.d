@@ -28,6 +28,7 @@
 
 module ctui.application;
 
+import core.stdc.locale;
 import core.sys.posix.signal;
 
 import std.algorithm : max, remove;
@@ -158,6 +159,9 @@ public class Application {
         };
         // FIXME: SIGWINCH is currently not defined anywhere
         sigaction(28, &action, null);
+
+        // Use user's locale
+        setlocale(LC_ALL, "");
 
         main_window = initscr();
         if (main_window is null) {
