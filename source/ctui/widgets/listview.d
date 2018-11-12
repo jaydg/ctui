@@ -28,6 +28,7 @@
 
 module ctui.widgets.listview;
 
+import core.stdc.stddef;
 import deimos.ncurses;
 
 import ctui.keys;
@@ -63,7 +64,7 @@ public interface IListProvider {
     ///
     /// The model should return true if the key was
     /// processed, false otherwise.
-    bool ProcessKey(int ch);
+    bool ProcessKey(wchar_t ch);
 
     /// Callback: invoked when the selected item has changed.
     void SelectedChanged();
@@ -120,7 +121,7 @@ public class ListView : Widget {
         provider.SelectedChanged();
     }
 
-    public override bool ProcessKey(int c)
+    public override bool ProcessKey(wchar_t c)
     {
         int n;
 

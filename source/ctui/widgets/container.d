@@ -28,6 +28,7 @@
 
 module ctui.widgets.container;
 
+import core.stdc.stddef;
 import std.algorithm : remove;
 import deimos.ncurses;
 
@@ -312,7 +313,7 @@ public class Container : Widget
             this.CanFocus = false;
     }
 
-    public override bool ProcessKey(int key)
+    public override bool ProcessKey(wchar_t key)
     {
         if (focused !is null) {
             if (focused.ProcessKey(key))
@@ -321,7 +322,7 @@ public class Container : Widget
         return false;
     }
 
-    public override bool ProcessHotKey(int key)
+    public override bool ProcessHotKey(wchar_t key)
     {
         if (focused !is null)
             if (focused.ProcessHotKey(key))
@@ -337,7 +338,7 @@ public class Container : Widget
         return false;
     }
 
-    public override bool ProcessColdKey(int key)
+    public override bool ProcessColdKey(wchar_t key)
     {
         if (focused !is null)
             if (focused.ProcessColdKey(key))

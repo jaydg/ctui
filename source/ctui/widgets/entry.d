@@ -28,6 +28,7 @@
 
 module ctui.widgets.entry;
 
+import core.stdc.stddef;
 import std.conv : to;
 import std.uni;
 
@@ -169,7 +170,7 @@ public class Entry : Widget
         }
     }
 
-    public override bool ProcessKey(int key)
+    public override bool ProcessKey(wchar_t key)
     {
         switch (key) {
         case 127:
@@ -344,7 +345,6 @@ public class Entry : Widget
 
         return -1;
     }
-
 
     public override void ProcessMouse(MEVENT* ev)
     {

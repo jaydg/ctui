@@ -28,6 +28,7 @@
 
 module ctui.widgets.checkbox;
 
+import core.stdc.stddef;
 import std.string : toStringz;
 import std.uni : isUpper;
 
@@ -146,7 +147,7 @@ public class CheckBox : Widget {
         Move(y, x + 1);
     }
 
-    public override bool ProcessKey(int c)
+    public override bool ProcessKey(wchar_t c)
     {
         if (c == ' ') {
             checked = !checked;
@@ -173,5 +174,3 @@ public class CheckBox : Widget {
         }
     }
 }
-
-

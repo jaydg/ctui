@@ -28,8 +28,8 @@
 
 module ctui.widgets.dialog;
 
+import core.stdc.stddef;
 import std.string : toStringz;
-
 import deimos.ncurses;
 
 import ctui.application;
@@ -132,7 +132,7 @@ public class Dialog : Frame
         RedrawChildren();
     }
 
-    public override bool ProcessKey(int key)
+    public override bool ProcessKey(wchar_t key)
     {
         if (key == Keys.Esc) {
             running = false;
@@ -152,5 +152,3 @@ public class Dialog : Frame
         LayoutButtons();
     }
 }
-
-

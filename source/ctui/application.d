@@ -462,7 +462,8 @@ public class Application {
 
     static void ProcessChar(Container container)
     {
-        int ch = getch();
+        wchar_t ch;
+        get_wch(&ch);
 
         if ((ch == -1) || (ch == KEY_RESIZE))
         {

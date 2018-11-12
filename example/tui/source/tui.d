@@ -1,4 +1,6 @@
 import core.time : dur;
+import core.stdc.stddef;
+
 import std.conv : to, ConvException;
 import std.datetime : Clock;
 import std.file : exists, getcwd, isDir, isFile;
@@ -126,7 +128,7 @@ public class TorrentDetailsList : IListProvider {
         }
     }
 
-    bool ProcessKey(int ch)
+    bool ProcessKey(wchar_t ch)
     {
         return false;
     }

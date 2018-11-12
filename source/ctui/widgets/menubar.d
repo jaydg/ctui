@@ -28,6 +28,7 @@
 
 module ctui.widgets.menubar;
 
+import core.stdc.stddef;
 import std.algorithm : countUntil;
 import std.string : toStringz;
 import std.uni : toUpper;
@@ -202,7 +203,7 @@ public class MenuBar : Container
         action = item.action;
     }
 
-    public override bool ProcessKey(int key)
+    public override bool ProcessKey(wchar_t key)
     {
         switch(key) {
         case KEY_UP:
@@ -259,7 +260,7 @@ public class MenuBar : Container
         default:
             if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9'))
             {
-                dchar c = key.toUpper;
+                wchar_t c = key.toUpper;
 
                 if (Menus[selected].Children == null)
                     return false;

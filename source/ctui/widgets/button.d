@@ -28,6 +28,7 @@
 
 module ctui.widgets.button;
 
+import core.stdc.stddef;
 import std.string : toStringz;
 import std.uni;
 
@@ -163,7 +164,7 @@ public class Button : Widget {
         return false;
     }
 
-    public override bool ProcessHotKey(int key)
+    public override bool ProcessHotKey(wchar_t key)
     {
         int k = isAlt(key);
         if (k != 0)
@@ -172,7 +173,7 @@ public class Button : Widget {
         return false;
     }
 
-    public override bool ProcessColdKey(int key)
+    public override bool ProcessColdKey(wchar_t key)
     {
         if (is_default && key == '\n') {
             if (clicked)
@@ -184,7 +185,7 @@ public class Button : Widget {
         return CheckKey(key);
     }
 
-    public override bool ProcessKey(int c)
+    public override bool ProcessKey(wchar_t c)
     {
         if (c == '\n' || c == ' ' || toUpper(c) == hot_key) {
             if (clicked)
@@ -206,5 +207,3 @@ public class Button : Widget {
         }
     }
 }
-
-

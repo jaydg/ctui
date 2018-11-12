@@ -28,6 +28,7 @@
 
 module ctui.widgets.widget;
 
+import core.stdc.stddef;
 import deimos.ncurses;
 
 import ctui.application;
@@ -197,7 +198,7 @@ public abstract class Widget
     /// widget engine.    If they return false, the
     /// keystroke will be passed out to other widgets
     /// for processing.
-    public bool ProcessKey(int key)
+    public bool ProcessKey(wchar_t key)
     {
         return false;
     }
@@ -233,7 +234,7 @@ public abstract class Widget
     /// Alt-key combination, you would use
     /// isAlt(key) and then Char.ToUpper(key)
     /// to compare with your hotkey.
-    public bool ProcessHotKey(int key)
+    public bool ProcessHotKey(wchar_t key)
     {
         return false;
     }
@@ -254,7 +255,7 @@ public abstract class Widget
     /// Processing this as a hot-key would prevent
     /// non-default buttons from consuming the enter
     /// keypress when they have the focus.
-    public bool ProcessColdKey(int key)
+    public bool ProcessColdKey(wchar_t key)
     {
         return false;
     }
