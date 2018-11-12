@@ -7,7 +7,7 @@
     ],
     "license":      "MIT",
     "dependencies": {
-                    "ctui": "*"
+                    "ctui": {"path": "../../"}
     },
     "targetPath":   "bin",
     "targetType":   "executable",
