@@ -5,6 +5,7 @@ import std.conv : to, ConvException;
 import std.datetime : Clock;
 import std.file : exists, getcwd, isDir, isFile;
 import std.string : format, toStringz;
+import std.utf : count;
 
 import ctui;
 import ctui.utils;
@@ -118,12 +119,12 @@ public class TorrentDetailsList : IListProvider {
     void Render(int line, int col, int width, int item)
     {
         string s = format!"%d This is item %d"(item, item);
-        if (s.length > width) {
+        if (s.count > width) {
             s = s.substring(0, width);
             addstr(s.toStringz);
         } else {
             addstr(s.toStringz);
-            for (size_t i = s.length; i < width; i++)
+            for (size_t i = s.count; i < width; i++)
                 addch(' ');
         }
     }
@@ -177,7 +178,7 @@ public class LogWidget : Widget {
 
             Move(y + l, x);
 
-            size_t sl = messages[item].length;
+            size_t sl = messages[item].count;
             if (sl < w) {
                 addstr(messages[item].toStringz);
                 for (int fi = 0; fi < w - sl; fi++)
