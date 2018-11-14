@@ -79,6 +79,12 @@ public class Entry : Widget
 
     public @property
     {
+        public override bool HasFocus(bool value)
+        {
+            curs_set(value);
+            return super.HasFocus(value);
+        }
+
         /// Sets or gets the text in the entry.
         string Text()
         {
