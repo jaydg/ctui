@@ -32,6 +32,7 @@ import core.stdc.locale;
 import core.sys.posix.signal;
 
 import std.algorithm : max, remove;
+import std.encoding : index;
 import std.utf : count;
 import deimos.ncurses;
 
@@ -269,7 +270,7 @@ public class Application {
         string x;
         for (int i = 0; i < t.count; i++)
         {
-            if (t[i] == '\n') {
+            if (t[t.index(i)] == '\n') {
                 x = t.substring(last, i - last);
                 lines ~= x;
                 last = i + 1;
