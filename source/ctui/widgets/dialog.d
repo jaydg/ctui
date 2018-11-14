@@ -30,6 +30,7 @@ module ctui.widgets.dialog;
 
 import core.stdc.stddef;
 import std.string : toStringz;
+import std.utf : count;
 import deimos.ncurses;
 
 import ctui.application;
@@ -124,7 +125,7 @@ public class Dialog : Frame
         Clear();
 
         Widget.DrawFrame(x + 1, y + 1, w - 2, h - 2);
-        move(y + 1, x + (w - cast(int)Title.length) / 2);
+        move(y + 1, x + (w - cast(int)Title.count) / 2);
         addch(' ');
         attrset(Application.ColorDialogHotNormal);
         addstr(Title.toStringz);

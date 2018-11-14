@@ -32,7 +32,7 @@ import core.stdc.locale;
 import core.sys.posix.signal;
 
 import std.algorithm : max, remove;
-
+import std.utf : count;
 import deimos.ncurses;
 
 import ctui.keys;
@@ -266,22 +266,22 @@ public class Application {
         int last = 0;
         size_t max_w = 0;
         string x;
-        for (int i = 0; i < t.length; i++)
+        for (int i = 0; i < t.count; i++)
         {
             if (t[i] == '\n') {
-                x = t.substring(last, i-last);
+                x = t.substring(last, i - last);
                 lines ~= x;
                 last = i + 1;
-                if (x.length > max_w)
-                    max_w = x.length;
+                if (x.count > max_w)
+                    max_w = x.count;
             }
         }
         x = t.substring(last);
-        if (x.length > max_w)
-            max_w = x.length;
+        if (x.count > max_w)
+            max_w = x.count;
         lines ~= x;
 
-        Dialog d = new Dialog(cast(int)max(caption.length + 8, max_w + 8), cast(int)lines.length + 7, caption);
+        Dialog d = new Dialog(cast(int)max(caption.count + 8, max_w + 8), cast(int)lines.length + 7, caption);
         if (error)
             d.ErrorColors();
 

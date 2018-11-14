@@ -32,6 +32,7 @@ import core.stdc.stddef;
 import std.algorithm : countUntil;
 import std.string : toStringz;
 import std.uni : toUpper;
+import std.utf : count;
 
 import deimos.ncurses;
 
@@ -53,7 +54,7 @@ public class MenuItem
         Title = title;
         Help = help;
         action = action;
-        Width = cast(int)Title.length + cast(int)Help.length + 1;
+        Width = cast(int)Title.count + cast(int)Help.count + 1;
     }
 }
 
@@ -144,7 +145,7 @@ public class MenuBar : Container
                        i == menu.Current ? Application.ColorMenuSelected : Application.ColorMenu);
 
             // The help string
-            int l = cast(int)item.Help.length;
+            int l = cast(int)item.Help.count;
             Move(line + 1 + i, col + x + max - l - 2);
             addstr(item.Help.toStringz);
         }
@@ -177,7 +178,7 @@ public class MenuBar : Container
                 attrset(Application.ColorFocus);
             addstr("  ".toStringz);
 
-            pos += menu.Title.length + 4;
+            pos += menu.Title.count + 4;
         }
         PositionCursor();
     }
@@ -191,7 +192,7 @@ public class MenuBar : Container
                 Move(y, pos);
                 return;
             } else {
-                pos += Menus[i].Title.length + 4;
+                pos += Menus[i].Title.count + 4;
             }
         }
         Move(y, 0);
@@ -268,7 +269,7 @@ public class MenuBar : Container
                 foreach (mi; Menus[selected].Children)
                 {
                     auto p = mi.Title.countUntil('_');
-                    if (p != -1 && p + 1 < mi.Title.length) {
+                    if (p != -1 && p + 1 < mi.Title.count) {
                         if (mi.Title[p + 1] == c) {
                             Selected(mi);
                             return true;

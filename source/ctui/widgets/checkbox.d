@@ -31,7 +31,7 @@ module ctui.widgets.checkbox;
 import core.stdc.stddef;
 import std.string : toStringz;
 import std.uni : isUpper;
-
+import std.utf : count;
 import deimos.ncurses;
 
 import ctui.widgets.widget;
@@ -75,7 +75,7 @@ public class CheckBox : Widget {
     ///
     public this(int x, int y, string s, bool is_checked)
     {
-        super(x, y, cast(int)s.length + 4, 1);
+        super(x, y, cast(int)s.count + 4, 1);
         checked = is_checked;
         Text = s;
 

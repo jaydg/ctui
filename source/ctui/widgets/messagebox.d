@@ -28,6 +28,8 @@
 
 module ctui.widgets.messagebox;
 
+import std.utf : count;
+
 import ctui.application;
 import ctui.widgets.button;
 import ctui.widgets.dialog;
@@ -51,7 +53,7 @@ public class MessageBox
             d.AddButton(b);
         }
         if (message !is null) {
-            Label l = new Label((width - 4 - cast(int)message.length) / 2, 0, message);
+            Label l = new Label((width - 4 - cast(int)message.count) / 2, 0, message);
             d.Add(l);
         }
 

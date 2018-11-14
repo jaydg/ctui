@@ -28,6 +28,8 @@
 
 module ctui.widgets.trimlabel;
 
+import std.utf : count;
+
 import ctui.utils;
 import ctui.widgets.label;
 import ctui.widgets.widget;
@@ -56,11 +58,11 @@ public class TrimLabel : Label
             w = container.w - container.Border * 2 - x;
 
         this.w = w;
-        if (s.length > w) {
+        if (s.count > w) {
             if (w < 5)
                 text = s.substring(0, w);
             else {
-                text = s.substring(0, w/2-2) ~ "..." ~ s.substring(s.length - w/2+1);
+                text = s.substring(0, w/2-2) ~ "..." ~ s.substring(s.count - w/2+1);
             }
         } else
             text = s;

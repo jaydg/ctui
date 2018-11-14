@@ -31,6 +31,7 @@ module ctui.widgets.button;
 import core.stdc.stddef;
 import std.string : toStringz;
 import std.uni;
+import std.utf : count;
 
 import deimos.ncurses;
 
@@ -127,7 +128,7 @@ public class Button : Widget {
     /// dialog would implicitly activate this button.
     public this(int x, int y, string s, bool is_default)
     {
-       super(x, y, cast(int)s.length + 4 + (is_default ? 2 : 0), 1);
+       super(x, y, cast(int)s.count + 4 + (is_default ? 2 : 0), 1);
        CanFocus = true;
 
        this.is_default = is_default;

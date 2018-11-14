@@ -29,7 +29,7 @@
 module ctui.widgets.label;
 
 import std.string : toStringz;
-
+import std.utf : count;
 import deimos.ncurses;
 
 import ctui.widgets.widget;
@@ -46,14 +46,14 @@ public class Label : Widget
     ///
     public this(int x, int y, string s)
     {
-        super(x, y, cast(int)s.length, 1);
+        super(x, y, cast(int)s.count, 1);
         text = s;
     }
 
     public this(int x, int y, string s, Args...)(Args args)
     {
         text = format(s, args);
-        super(x, y, cast(int)s.length, 1);
+        super(x, y, cast(int)s.count, 1);
     }
 
     public override void Redraw()
@@ -79,7 +79,7 @@ public class Label : Widget
     {
         attrset(ColorNormal);
         Move(y, x);
-        for (int i = 0; i < text.length; i++)
+        for (int i = 0; i < text.count; i++)
             addch(' ');
         text = value;
         Redraw();
