@@ -29,8 +29,14 @@
 module ctui.widgets.entry;
 
 import core.stdc.stddef;
-import std.conv : to;
+import std.algorithm : min;
+import std.conv : text;
+import std.encoding : index;
+import std.string : leftJustify, toStringz;
 import std.uni;
+import std.utf : count;
+
+alias std.conv.text toText;
 
 import deimos.ncurses;
 
@@ -46,7 +52,7 @@ import ctui.widgets.widget;
 public class Entry : Widget
 {
     string text, kill;
-    int first, point;
+    size_t first, point;
     int color;
     bool used;
     bool secret;
@@ -65,7 +71,7 @@ public class Entry : Widget
             s = "";
 
         text = s;
-        point = cast(int)s.length;
+        point = s.count;
         first = point > w ? point - w : 0;
         CanFocus = true;
         Color = Application.ColorDialogFocus;
@@ -82,8 +88,8 @@ public class Entry : Widget
         string Text(string value)
         {
             text = value;
-            if (point > text.length) {
-                point = cast(int)text.length;
+            if (point > text.count) {
+                point = text.count;
             }
 
             first = point > w ? point - w : 0;
@@ -121,13 +127,13 @@ public class Entry : Widget
         /// The current cursor position.
         int CursorPosition()
         {
-            return point;
+            return cast(int)point;
         }
     }
     /// Sets the cursor position.
     public override void PositionCursor()
     {
-        Move(y, x + point - first);
+        Move(y, cast(int)(x + point - first));
     }
 
     public override void Redraw()
@@ -135,15 +141,18 @@ public class Entry : Widget
         attrset(Color);
         Move(y, x);
 
-        for (int i = 0; i < w; i++) {
-            int p = first + i;
-
-            if (p < text.length) {
-                addch(Secret ? '*' : text[p]);
-            } else {
-                addch(' ' );
-            }
+        if (secret) {
+            int vislength = min(text.count, w);
+            char[] asterixes = new char[vislength + 1];
+            asterixes[] = '*';
+            asterixes[vislength] = 0;
+            printw("%-*s", w, asterixes.ptr);
+        } else {
+            size_t l = min(text.count - first, w);
+            string vis = text.substring(first, l).leftJustify(w);
+            printw("%-*s", w, vis.toStringz);
         }
+
         PositionCursor();
     }
 
@@ -198,22 +207,22 @@ public class Entry : Widget
             break;
 
         case Keys.CtrlD: // Delete
-            if (point == text.length) {
+            if (point == text.count) {
                 break;
             }
 
-            SetText(text.substring(0, point) ~ text.substring(point+1));
+            SetText(text.substring(0, point) ~ text.substring(point + 1));
             Adjust();
             break;
 
         case Keys.CtrlE: // End
-            point = cast(int)text.length;
+            point = text.count;
             Adjust();
             break;
 
         case KEY_RIGHT:
         case Keys.CtrlF: // Control-f, forward char
-            if (point == text.length) {
+            if (point == text.count) {
                 break;
             }
             point++;
@@ -230,19 +239,19 @@ public class Entry : Widget
             if (kill == null)
                 return true;
 
-            if (point == text.length) {
+            if (point == text.count) {
                 SetText(text ~ kill);
-                point = cast(int)text.length;
+                point = text.count;
             } else {
                 SetText(text.substring(0, point) ~ kill ~ text.substring(point));
-                point += kill.length;
+                point += kill.count;
             }
 
             Adjust();
             break;
 
         case 'b' + Keys.Alt:
-            int bw = WordBackward(point);
+            size_t bw = WordBackward(point);
             if (bw != -1) {
                 point = bw;
             }
@@ -251,7 +260,7 @@ public class Entry : Widget
             break;
 
         case 'f' + Keys.Alt:
-            int fw = WordForward(point);
+            size_t fw = WordForward(point);
             if (fw != -1) {
                 point = fw;
             }
@@ -265,14 +274,14 @@ public class Entry : Widget
                 return false;
 
             if (used) {
-                if (point == text.length) {
-                    SetText(text ~ to!char(key));
+                if (point == text.count) {
+                    SetText(text ~ toText(key));
                 } else {
-                    SetText(text.substring(0, point) ~ to!char(key) ~ text.substring(point));
+                    SetText(text.substring(0, point) ~ toText(key) ~ text.substring(point));
                 }
                 point++;
             } else {
-                SetText("" ~ to!char(key));
+                SetText("" ~ toText(key));
                 first = 0;
                 point = 1;
             }
@@ -284,25 +293,25 @@ public class Entry : Widget
         return true;
     }
 
-    int WordForward(int p)
+    size_t WordForward(size_t p)
     {
-        if (p >= text.length) {
+        if (p >= text.count) {
             return -1;
         }
 
-        int i = p;
-        if (text[p].isPunctuation || text[p].isWhite) {
-            for (; i < text.length; i++) {
-                if (text[i].isAlphaNum)
+        int i = cast(int)p;
+        if (text[text.index(i)].isPunctuation || text[text.index(i)].isWhite) {
+            for (; i < text.count; i++) {
+                if (text[text.index(i)].isAlphaNum)
                     break;
             }
-            for (; i < text.length; i++) {
-                if (!text[i].isAlphaNum)
+            for (; i < text.count; i++) {
+                if (!text[text.index(i)].isAlphaNum)
                     break;
             }
         } else {
-            for (; i < text.length; i++) {
-                if (!text[i].isAlphaNum)
+            for (; i < text.count; i++) {
+                if (!text[text.index(i)].isAlphaNum)
                     break;
             }
         }
@@ -314,27 +323,30 @@ public class Entry : Widget
         return -1;
     }
 
-    int WordBackward(int p)
+    size_t WordBackward(size_t p)
     {
         if (p == 0)
             return -1;
 
-        int i = p-1;
+        int i = cast(int)p - 1;
         if (i == 0)
             return 0;
 
-        if (isPunctuation(text[i]) || isSymbol(text[i]) || isWhite(text[i])) {
+        if (isPunctuation(text[text.index(i)])
+                || isSymbol(text[text.index(i)])
+                || isWhite(text[text.index(i)]))
+        {
             for (; i >= 0; i--) {
-                if (isAlphaNum(text[i]))
+                if (isAlphaNum(text[text.index(i)]))
                     break;
             }
             for (; i >= 0; i--) {
-                if (!isAlphaNum(text[i]))
+                if (!isAlphaNum(text[text.index(i)]))
                     break;
             }
         } else {
             for (; i >= 0; i--) {
-                if (!isAlphaNum(text[i]))
+                if (!isAlphaNum(text[text.index(i)]))
                     break;
             }
         }
@@ -355,8 +367,8 @@ public class Entry : Widget
 
         // We could also set the cursor position.
         point = first + (ev.x - x);
-        if (point > text.length)
-            point = cast(int)text.length;
+        if (point > text.count)
+            point = text.count;
         if (point < first)
             point = 0;
 
