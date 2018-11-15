@@ -137,6 +137,9 @@ public class Dialog : Frame
     {
         if (key == Keys.Esc) {
             running = false;
+            if (focused) {
+                focused.HasFocus = false;
+            }
             return true;
         }
 
