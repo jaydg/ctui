@@ -88,6 +88,9 @@ public class Container : Widget
 
             w.Redraw();
         }
+
+        // Return the cursor to its expected position
+        PositionCursor();
     }
 
     public override void Redraw()
