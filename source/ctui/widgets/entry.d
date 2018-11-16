@@ -212,6 +212,7 @@ public class Entry : Widget
             }
             break;
 
+        case KEY_DC:
         case Keys.CtrlD: // Delete
             if (point == text.count) {
                 break;
@@ -221,6 +222,7 @@ public class Entry : Widget
             Adjust();
             break;
 
+        case KEY_END:
         case Keys.CtrlE: // End
             point = text.count;
             Adjust();
