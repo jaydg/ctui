@@ -324,30 +324,33 @@ public abstract class Widget
     /// Draws a frame with the current color in the specified coordinates.
     static public void DrawFrame(int col, int line, int width, int height, bool fill)
     {
-        int b;
         move(line, col);
-        addch(ACS_ULCORNER);
-        for (b = 0; b < width - 2; b++)
-            addch(ACS_HLINE);
-        addch(ACS_URCORNER);
+        printw("╭");
 
-        for (b = 1; b < height - 1; b++) {
+        for (int b = 0; b < width - 2; b++)
+            printw("─");
+
+        printw("╮");
+
+        for (int b = 1; b < height - 1; b++) {
             move(line+b, col);
-            addch(ACS_VLINE);
+            printw("│");
             if (fill) {
                 for (int x = 1; x < width - 1; x++)
                     addch(' ');
             } else {
                 move(line+b, col + width - 1);
             }
-            addch(ACS_VLINE);
+            printw("│");
         }
 
         move(line + height - 1, col);
-        addch(ACS_LLCORNER);
-        for (b = 0; b < width - 2; b++)
-            addch(ACS_HLINE);
-        addch(ACS_LRCORNER);
+        printw("╰");
+
+        for (int b = 0; b < width - 2; b++)
+            printw("─");
+
+        printw("╯");
     }
 
     /// The color used for rendering an unfocused widget.
