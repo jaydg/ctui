@@ -302,14 +302,12 @@ void main()
 
     // Options
     Button boptions = new Button(9, 1, "Options");
-    boptions.clicked = { OptionsDialog();};
+    boptions.clicked = { OptionsDialog(); };
     frame.Add(boptions);
 
     // Quit
     Button bquit = new Button(21, 1, "Quit");
-    bquit.clicked = {
-        top.running = false;
-    };
+    bquit.clicked = { top.running = false; };
     frame.Add(bquit);
 
     ListView list = new ListView(1, 5, 0, 0, new TorrentDetailsList());
@@ -320,10 +318,6 @@ void main()
     LogWidget log_widget = new LogWidget(0, 0);
     fprogress.Add(log_widget);
     top.Add(fprogress);
-
-    // For testing focus, not ready
-    //f.Add(new Label (0, 0, "->0<-"));
-    //f.Add(new Entry  (7, 0, 20, "Another"));
 
     // Details
     Frame fdetails = new Frame("Details");
