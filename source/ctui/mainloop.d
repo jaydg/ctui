@@ -315,11 +315,7 @@ public class MainLoop {
 
         UpdatePollMap();
 
-        version ( OSX ) {
-            int n = poll(pollmap.ptr, cast(uint)pollmap.length, pollTimeout);
-        } else {
-            int n = poll(pollmap.ptr, cast(ulong)pollmap.length, pollTimeout);
-        }
+        int n = poll(pollmap.ptr, cast(nfds_t)pollmap.length, pollTimeout);
 
         return n > 0
             || timeouts.length > 0
