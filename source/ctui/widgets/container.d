@@ -309,6 +309,9 @@ public class Container : Widget
         if (w is null)
             return;
 
+        if (focused == w)
+            focused = null;
+
         widgets = widgets.remove!(widget => widget == w);
         w.container = null;
 
