@@ -325,12 +325,12 @@ public abstract class Widget
     static public void DrawFrame(int col, int line, int width, int height, bool fill)
     {
         move(line, col);
-        printw("╭");
+        printw("┌");
 
         for (int b = 0; b < width - 2; b++)
             printw("─");
 
-        printw("╮");
+        printw("┐");
 
         for (int b = 1; b < height - 1; b++) {
             move(line+b, col);
@@ -345,12 +345,12 @@ public abstract class Widget
         }
 
         move(line + height - 1, col);
-        printw("╰");
+        printw("└");
 
         for (int b = 0; b < width - 2; b++)
             printw("─");
 
-        printw("╯");
+        printw("┘");
     }
 
     /// The color used for rendering an unfocused widget.
