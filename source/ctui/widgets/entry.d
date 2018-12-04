@@ -371,7 +371,7 @@ public class Entry : Widget
 
     public override void ProcessMouse(MEVENT* ev)
     {
-        if ((ev.bstate & BUTTON1_CLICKED) == 0)
+        if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED)
             return;
 
         container.SetFocus(this);

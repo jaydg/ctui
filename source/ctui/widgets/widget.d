@@ -202,7 +202,7 @@ public abstract class Widget
     ///
     /// Widgets can inspect the value of ev.ButtonState to determine if
     /// this is a message they are interested in (typically
-    /// `ev.bstate & BUTTON1_CLICKED`).
+    /// `ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED`).
     public void ProcessMouse(MEVENT* ev)
     {
     }
