@@ -126,6 +126,7 @@ public class MenuBarItem
 {
     private string _title;
     private int _width;
+    package wchar_t hotKey;
 
     /// The children for this MenuBarItem.
     public MenuItem[] children;
@@ -149,6 +150,20 @@ public class MenuBarItem
         {
             this._title = title;
             this._width = calculateWidth();
+
+            bool nextIsHot;
+
+            foreach (wchar_t x; title) {
+                if (x == '_')
+                    nextIsHot = true;
+                else {
+                    if (nextIsHot) {
+                        hotKey = toUpper(x);
+                        break;
+                    }
+                    nextIsHot = false;
+                }
+            }
 
             return title;
         }
@@ -475,6 +490,17 @@ public class MenuBar : Container
         if (key == KEY_F(9)) {
             StartMenu();
             return true;
+        }
+
+        if (wchar_t hotKey = isAlt(key)) {
+            hotKey = toUpper(hotKey);
+
+            foreach (int i, menu; menus) {
+                if (menu.hotKey == hotKey) {
+                    Activate(i);
+                    return true;
+                }
+            }
         }
 
         return super.ProcessHotKey(key);
