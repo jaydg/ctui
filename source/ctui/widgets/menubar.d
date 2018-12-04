@@ -45,8 +45,8 @@ public alias Action = void delegate();
 /// on activation.
 public class MenuItem
 {
-    /// The title for this item.
-    public string title;
+    private string _title;
+    private int _width;
 
     /// The help text for the item.
     public string help;
@@ -77,23 +77,45 @@ public class MenuItem
         this.title = title;
         this.help = help;
         this.action = action;
+    }
 
-        bool nextIsHot;
+    @property {
+        /// The title for this item.
+        public string title()
+        {
+            return _title;
+        }
 
-        foreach (x; title) {
-            if (x == '_')
-                nextIsHot = true;
-            else {
-                if (nextIsHot) {
-                    hotKey = toUpper(x);
-                    break;
+        /// ditto
+        public string title(string title)
+        {
+            this._title = title;
+            this._width = calculateWidth();
+
+            bool nextIsHot;
+
+            foreach (x; title) {
+                if (x == '_')
+                    nextIsHot = true;
+                else {
+                    if (nextIsHot) {
+                        hotKey = toUpper(x);
+                        break;
+                    }
+                    nextIsHot = false;
                 }
-                nextIsHot = false;
             }
+
+            return title;
+        }
+
+        public int width()
+        {
+            return _width;
         }
     }
 
-    package int width()
+    private int calculateWidth()
     {
         return cast(int)title.count + cast(int)help.count + 1;
     }
@@ -102,8 +124,8 @@ public class MenuItem
 /// A menu bar item contains other menu items.
 public class MenuBarItem
 {
-    /// The title of this MenuBarItem.
-    public string title;
+    private string _title;
+    private int _width;
 
     /// The children for this MenuBarItem.
     public MenuItem[] children;
@@ -115,7 +137,29 @@ public class MenuBarItem
         this.children = children;
     }
 
-    package int width()
+    @property {
+        /// The title of this MenuBarItem.
+        public string title()
+        {
+            return _title;
+        }
+
+        /// ditto
+        public string title(string title)
+        {
+            this._title = title;
+            this._width = calculateWidth();
+
+            return title;
+        }
+
+        public int width()
+        {
+            return _width;
+        }
+    }
+
+    private int calculateWidth()
     {
         int len;
         foreach (ch; title) {
