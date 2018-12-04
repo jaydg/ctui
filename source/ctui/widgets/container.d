@@ -30,6 +30,7 @@ module ctui.widgets.container;
 
 import core.stdc.stddef;
 import std.algorithm : remove;
+import std.range : retro;
 import deimos.ncurses;
 
 import ctui.application;
@@ -348,14 +349,16 @@ public class Container : Widget
         ev.x -= x;
         ev.y -= y;
 
-        foreach (w; widgets) {
+        // Iterate over the widgets backwards to ensure we
+        // get widgets higher on the stack first.
+        foreach (w; retro(widgets)) {
             int wx = w.x + bx;
             int wy = w.y + by;
 
-            if ((ev.x < wx) || (ev.x > (wx + w.w)))
+            if ((ev.x < wx) || (ev.x > (wx + w.w - 1)))
                 continue;
 
-            if ((ev.y < wy) || (ev.y > (wy + w.h)))
+            if ((ev.y < wy) || (ev.y > (wy + w.h - 1)))
                 continue;
 
             ev.x -= bx;

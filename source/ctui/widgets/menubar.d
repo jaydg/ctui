@@ -284,7 +284,7 @@ package class Menu : Container {
 
     public override void ProcessMouse(MEVENT* ev)
     {
-        if ((ev.bstate & BUTTON1_CLICKED) == 0 || (ev.bstate & BUTTON1_RELEASED) == 0) {
+        if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             if (ev.y < 1)
                 return;
 
@@ -526,11 +526,11 @@ public class MenuBar : Container
 
     public override void ProcessMouse(MEVENT* ev)
     {
-        if (ev.bstate == BUTTON1_CLICKED) {
+        if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             int pos = 1;
 
             foreach (int i, menu; menus) {
-                if (ev.x > pos && ev.x < pos + 1 + menu.width) {
+                if (ev.x >= pos && ev.x < pos + menu.width) {
                     Activate(i);
                 }
 
