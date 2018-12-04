@@ -279,18 +279,21 @@ public abstract class Widget
 
     /// Utility function to draw strings that contain a hotkey
     ///
-    /// Draws the string s with the given color. If a character "__" is
-    /// found in s, then the next character is drawn using hotcolor.
+    /// Draws the string s with the given color. If the character "__" is
+    /// found in s, the next character is drawn using hotcolor.
     static public void DrawHotString(string s, int hotcolor, int color)
     {
-        attrset(color);
-        foreach (char c;  s) {
+        int attr = color;
+
+        foreach (dchar c; s) {
             if (c == '_') {
-                attrset(hotcolor);
+                attr = hotcolor;
                 continue;
             }
-            addch(c);
-            attrset(color);
+
+            attron(attr);
+            printw("%lc", c);
+            attroff(attr = color);
         }
     }
 
