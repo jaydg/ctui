@@ -27,7 +27,7 @@
 module ctui.widgets.menubar;
 
 import core.stdc.stddef;
-import std.algorithm : countUntil, max;
+import std.algorithm : max;
 import std.string : toStringz;
 import std.uni : isAlphaNum, toUpper;
 import std.utf : count;
@@ -328,9 +328,6 @@ public class MenuBar : Container
     /// This can be updated if the menu is not currently visible.
     public MenuBarItem[] menus;
 
-    private int selected;
-    private Action action;
-
     /// Initializes a new instance of the MenuBar class with the specified set
     /// of toplevel menu items.
     ///
@@ -388,13 +385,13 @@ public class MenuBar : Container
         Move(0, 0);
     }
 
-    void Selected(MenuItem item)
-    {
-        running = false;
-        action = item.action;
-    }
+    // The index of the currently selected MenuBarItem
+    private int selected;
 
+    // The currently opened Menu (or null)
     private Menu openMenu;
+
+    // The Widget that was focused before the MenuBar was activated
     private Widget previousFocused;
 
     package void OpenMenu(int index)
@@ -481,47 +478,6 @@ public class MenuBar : Container
         }
 
         return super.ProcessHotKey(key);
-    }
-
-    public override bool ProcessKey(wchar_t key)
-    {
-        switch (key) {
-        case KEY_LEFT:
-            selected--;
-            if (selected < 0)
-                selected = cast(int)menus.length - 1;
-            break;
-        case KEY_RIGHT:
-            selected = (selected + 1) % cast(int)menus.length;
-            break;
-
-        case Keys.Esc:
-        case Keys.CtrlC:
-            running = false;
-            break;
-
-        default:
-            if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
-                immutable wchar_t c = toUpper(key);
-
-                if (menus[selected].children == null)
-                    return false;
-
-                foreach (mi; menus[selected].children) {
-                    size_t p = mi.title.countUntil('_');
-                    if (p != -1 && p + 1 < mi.title.count) {
-                        if (mi.title[p + 1] == c) {
-                            Selected(mi);
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        return true;
     }
 
     public override void ProcessMouse(MEVENT* ev)
