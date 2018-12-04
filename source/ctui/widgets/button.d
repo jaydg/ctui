@@ -40,9 +40,9 @@ import ctui.widgets.widget;
 
 /// Button widget
 ///
-/// Provides a button that can be clicked, or pressed with
-/// the enter key and processes hotkeys (the first uppercase
-/// letter in the button becomes the hotkey).
+/// Provides a button that can be clicked, or pressed with the enter key and
+/// processes hotkeys (the first uppercase letter in the button becomes the
+/// hotkey).
 public class Button : Widget {
     string text;
     string shown_text;
@@ -52,28 +52,24 @@ public class Button : Widget {
 
     /// Clicked event, raised when the button is clicked.
     ///
-    /// Client code can hook up to this event, it is
-    /// raised when the button is activated either with
-    /// the mouse or the keyboard.
+    /// Client code can hook up to this event, it is raised when the button is
+    /// activated either with the mouse or the keyboard.
     public void delegate() clicked;
 
     /// Public constructor, creates a button based on
     /// the given text at position 0,0
     ///
     /// The size of the button is computed based on the
-    /// text length.   This button is not a default button.
+    /// text length. This button is not a default button.
     public this(string s)
     {
         this(0, 0, s);
     }
 
-    /// Public constructor, creates a button based on
-    /// the given text.
+    /// Public constructor, creates a button based on the given text.
     ///
-    /// If the value for is_default is true, a special
-    /// decoration is used, and the enter key on a
-    /// dialog would implicitly activate this button.
-    ///
+    /// If the value for is_default is true, a special decoration is used, and
+    /// the enter key on a dialog would implicitly activate this button.
     public this(string s, bool is_default)
     {
         this(0, 0, s, is_default);
@@ -83,7 +79,7 @@ public class Button : Widget {
     /// the given text at the given position.
     ///
     /// The size of the button is computed based on the
-    /// text length.   This button is not a default button.
+    /// text length. This button is not a default button.
     public this(int x, int y, string s)
     {
         this(x, y, s, false);
@@ -95,6 +91,7 @@ public class Button : Widget {
         return text;
     }
 
+    /// ditto
     public @property string Text(string value)
     {
         text = value;
@@ -123,9 +120,8 @@ public class Button : Widget {
     /// Public constructor, creates a button based on
     /// the given text at the given position.
     ///
-    /// If the value for is_default is true, a special
-    /// decoration is used, and the enter key on a
-    /// dialog would implicitly activate this button.
+    /// If the value for is_default is true, a special decoration is used, and
+    /// the enter key on a dialog would implicitly activate this button.
     public this(int x, int y, string s, bool is_default)
     {
        super(x, y, cast(int)s.count + 4 + (is_default ? 2 : 0), 1);

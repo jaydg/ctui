@@ -44,38 +44,41 @@ import ctui.widgets.container;
 import ctui.widgets.dialog;
 import ctui.widgets.label;
 
+/// ctui Application driver.
 ///
-///   gui.cs Application driver.
-///
-///
-///   Before using gui.cs, you must call Application.Init, then
-///   you would create your toplevel container (typically by
-///   calling:  new Container(0, 0, Application.Cols,
-///   Application.Lines), adding widgets to it and finally
-///   calling Application.Run() on the toplevel container).
-///
+/// Before using ctui, you must call Application.Init, then you would create
+/// your toplevel container (typically by calling:
+/// `new Container(0, 0, Application.Cols, Application.Lines)`, adding widgets
+/// to it and finally calling `Application.Run()` on the toplevel container).
 public class Application {
     /// Color used for unfocused widgets.
     public static int ColorNormal;
+
     /// Color used for focused widgets.
     public static int ColorFocus;
+
     /// Color used for hotkeys in unfocused widgets.
     public static int ColorHotNormal;
+
     /// Color used for hotkeys in focused widgets.
     public static int ColorHotFocus;
 
     /// Color used for marked entries.
     public static int ColorMarked;
+
     /// Color used for marked entries that are currently
     /// selected with the cursor.
     public static int ColorMarkedSelected;
 
     /// Color for unfocused widgets on a dialog.
     public static int ColorDialogNormal;
+
     /// Color for focused widgets on a dialog.
     public static int ColorDialogFocus;
+
     /// Color for hotkeys in an unfocused widget on a dialog.
     public static int ColorDialogHotNormal;
+
     /// Color for a hotkey in a focused widget on a dialog.
     public static int ColorDialogHotFocus;
 
@@ -106,17 +109,16 @@ public class Application {
     /// The hot color for a menu entry
     public static int ColorMenuHot;
 
-    /// This event is raised on each iteration of the
-    /// main loop.
+    /// This delegate is called on each iteration of the main loop.
     ///
-    /// See also <see cref="Timeout"/>
+    /// See also Timeout
     public static void delegate() iteration;
 
     // Private variables
-    static Container[] toplevels;
-    static short last_color_pair;
-    static bool inited;
-    static Container empty_container;
+    private static Container[] toplevels;
+    private static short last_color_pair;
+    private static bool inited;
+    private static Container empty_container;
 
     /// Creates a new Curses color to be used by Gui.cs apps
     public static int MakeColor(short f, short b)
@@ -131,20 +133,23 @@ public class Application {
         return empty_container;
     }
 
-    static WINDOW* main_window;
+    private static WINDOW* main_window;
+    private static bool using_color;
+    private static int cols, lines;
+
+    /// The applications MainLoop.
     static MainLoop mainLoop;
 
-    static bool using_color = false;
-    static int cols, lines;
-
+    /// Determine of the application is using colors.
+    ///
+    /// During the initialisation of the terminal, this is set according to the
+    /// capabilities of the terminal.
     public static @property bool UsingColor()
     {
         return using_color;
     }
 
-    ///
-    ///   Initializes the runtime.
-    ///
+    /// Initializes the runtime.
     public static void Init()
     {
         if (inited)
@@ -246,29 +251,29 @@ public class Application {
         });
     }
 
-    ///   The number of lines on the screen
+    /// The number of lines on the screen
     static public @property int Lines()
     {
         return lines;
     }
 
-    ///   The number of columns on the screen
+    /// The number of columns on the screen
     static public @property int Cols()
     {
         return cols;
     }
 
-    ///   Displays a message on a modal dialog box.
+    /// Displays a message on a modal dialog box.
     ///
-    ///   The error boolean indicates whether this is an
-    ///   error message box or not.
+    /// The error boolean indicates whether this is an error message box or
+    /// not.
     static public void Msg(bool error, string caption, string t)
     {
         string[] lines;
-        int last = 0;
-        size_t max_w = 0;
+        int last;
+        size_t max_w;
         string x;
-        for (int i = 0; i < t.count; i++)
+        for (int i; i < t.count; i++)
         {
             if (t[t.index(i)] == '\n') {
                 x = t.substring(last, i - last);
@@ -297,15 +302,15 @@ public class Application {
         Application.Run(d);
     }
 
-    ///   Displays an error message.
+    /// Displays an error message.
     static public void Error(string caption, string text)
     {
         Msg(true, caption, text);
     }
 
-    ///   Displays an error message.
+    /// Displays an error message.
     ///
-    ///   Overload that allows for String.Format parameters.
+    /// Overload that allows for `std.format` parameters.
     static public void Error(string caption, string format, A...)(A args)
     {
         string t = format(format, args);
@@ -313,15 +318,15 @@ public class Application {
         Msg(true, caption, t);
     }
 
-    ///   Displays an informational message.
+    /// Displays an informational message.
     static public void Info(string caption, string text)
     {
         Msg(false, caption, text);
     }
 
-    ///   Displays an informational message.
+    /// Displays an informational message.
     ///
-    ///   Overload that allows for String.Format parameters.
+    /// Overload that allows for `std.format` parameters.
     static public void Info(string caption, string format, A...)(A args)
     {
         string t = format(format, args);
@@ -329,18 +334,18 @@ public class Application {
         Msg(false, caption, t);
     }
 
-    static void Shutdown()
+    private static void Shutdown()
     {
         endwin();
     }
 
-    static void Redraw(Container container)
+    private static void Redraw(Container container)
     {
         container.Redraw();
         refresh();
     }
 
-    ///   Forces a repaint of the screen.
+    /// Forces a repaint of the screen.
     public static void Refresh()
     {
         Container last = null;
@@ -359,14 +364,12 @@ public class Application {
 
     /// Starts running a new container or dialog box.
     ///
-    /// Use this method if you want to start the dialog, but
-    /// you want to control the main loop execution manually
-    /// by calling the RunLoop method (for example, to start
-    /// the dialog, but continuing to process events).
+    /// Use this method if you want to start the dialog, but you want to
+    /// control the main loop execution manually by calling the RunLoop method
+    /// (for example, to start the dialog, but continuing to process events).
     ///
-    /// Use the returned value as the argument to RunLoop
-    /// and later to the End method to remove the container
-    /// from the screen.
+    /// Use the returned value as the argument to RunLoop and later to the End
+    /// method to remove the container from the screen.
     static public RunState Begin(Container container)
     {
         if (container is null)
@@ -392,8 +395,7 @@ public class Application {
 
     /// Runs the main loop for the created dialog
     ///
-    /// Calling this method will block until the
-    /// dialog has completed execution.
+    /// Calling this method will block until the dialog has completed execution.
     public static void RunLoop(RunState state)
     {
         RunLoop(state, true);
@@ -401,8 +403,8 @@ public class Application {
 
     /// Runs the main loop for the created dialog
     ///
-    /// Use the wait parameter to control whether this is a
-    /// blocking or non-blocking call.
+    /// Use the wait parameter to control whether this is a blocking or
+    /// non-blocking call.
     public static void RunLoop(RunState state, bool wait)
     {
         if (state is null)
@@ -421,6 +423,7 @@ public class Application {
         }
     }
 
+    /// Stop the main loop.
     public static void Stop()
     {
         if (toplevels.length == 0)
@@ -432,9 +435,8 @@ public class Application {
 
     /// Runs the main loop on the given container.
     ///
-    /// This method is used to start processing events
-    /// for the main application, but it is also used to
-    /// run modal dialog boxes.
+    /// This method is used to start processing events for the main
+    /// application, but it is also used to run modal dialog boxes.
     static public void Run(Container container)
     {
         auto runToken = Begin(container);
@@ -452,7 +454,7 @@ public class Application {
     }
 
     // Called by the Dispose handler.
-    static void End(Container container)
+    package static void End(Container container)
     {
         toplevels = toplevels.remove!(c => c == container);
 
@@ -462,7 +464,7 @@ public class Application {
             Refresh();
     }
 
-    static void ProcessChar(Container container)
+    private static void ProcessChar(Container container)
     {
         wchar_t ch;
         get_wch(&ch);
@@ -532,14 +534,12 @@ public class Application {
     }
 
     /// Suspends the process by sending SIGTSTP to itself
-    /// <returns>The suspend.</returns>
-    static bool Suspend()
+    private static void Suspend()
     {
         killpg(0, SIGTSTP);
-        return true;
     }
 
-    static void Resize()
+    private static void Resize()
     {
         EmptyContainer.Clear();
         foreach (c; toplevels) {

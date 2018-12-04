@@ -34,19 +34,16 @@ import deimos.ncurses;
 import ctui.keys;
 import ctui.widgets.widget;
 
-/// Model for the <see cref="ListView"/> widget.
+/// Model for the ListView widget.
 ///
-/// Consumers of the <see cref="ListView"/> widget should
-/// implement this interface
+/// Consumers of the ListView widget should implement this interface
 public interface IListProvider {
     /// Number of items in the model.
     ///
-    /// This should return the number of items in the
-    /// model.
+    /// This should return the number of items in the model.
     @property int Items();
 
-    /// Whether the ListView should allow items to be
-    /// marked.
+    /// Whether the ListView should allow items to be marked.
     @property bool AllowMark();
 
     /// Whether the given item is marked.
@@ -70,18 +67,18 @@ public interface IListProvider {
     void SelectedChanged();
 }
 
-///   A Listview widget.
+/// A Listview widget.
 ///
-///   This widget renders a list of data.   The actual
-///   rendering is implemented by an instance of the class
-///   IListProvider that must be supplied at construction time.
+/// This widget renders a list of data. The actual rendering is implemented
+/// by an instance of the class IListProvider that must be supplied at
+/// construction time.
 public class ListView : Widget {
-    int top;
-    int selected;
-    bool allow_mark;
-    IListProvider provider;
+    private int top;
+    private int selected;
+    private bool allow_mark;
+    private IListProvider provider;
 
-    ///   Public constructor.
+    /// Public constructor.
     public this(int x, int y, int w, int h, IListProvider provider)
     {
         super(x, y, w, h);
@@ -92,13 +89,11 @@ public class ListView : Widget {
         allow_mark = provider.AllowMark;
     }
 
-    ///   This method can be invoked by the model to
-    ///   notify the view that the contents of the model
-    ///   have changed.
+    /// This method can be invoked by the model to notify the view that the
+    /// contents of the model have changed.
     ///
-    ///   Invoke this method to invalidate the contents of
-    ///   the ListView and force the ListView to repaint
-    ///   the contents displayed.
+    /// Invoke this method to invalidate the contents of the ListView and
+    /// force the ListView to repaint the contents displayed.
     public void ProviderChanged()
     {
         if (top > provider.Items) {
@@ -116,7 +111,7 @@ public class ListView : Widget {
         Redraw();
     }
 
-    void SelectedChanged()
+    private void SelectedChanged()
     {
         provider.SelectedChanged();
     }
@@ -222,7 +217,7 @@ public class ListView : Widget {
         refresh();
     }
 
-    ///   Returns the index of the currently selected item.
+    /// Gets / sets the index of the currently selected item.
     public @property int Selected()
     {
         if (provider.Items == 0)
@@ -230,6 +225,7 @@ public class ListView : Widget {
         return selected;
     }
 
+    /// ditto
     public @property int Selected(int value)
     {
         if (value >= provider.Items)

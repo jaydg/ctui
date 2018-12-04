@@ -36,10 +36,10 @@ import ctui.application;
 import ctui.widgets.container;
 import ctui.widgets.widget;
 
-///   Framed-container widget.
+/// Framed-container widget.
 ///
-///   A container that provides a frame around its children,
-///   and an optional title.
+/// A container that provides a frame around its children,
+/// and an optional title.
 public class Frame : Container
 {
     public string Title;

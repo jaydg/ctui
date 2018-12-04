@@ -42,20 +42,19 @@ import ctui.widgets.widget;
 /// A Dialog is a container that can also have a number of
 /// buttons at the bottom
 ///
-/// Dialogs are containers that can have a set of buttons at
-/// the bottom.   Dialogs are automatically centered on the
-/// screen, and on screen changes the buttons are
-/// relaid out.
+/// Dialogs are containers that can have a set of buttons at the bottom.
+/// Dialogs are automatically centered on the screen, and on screen changes
+/// the buttons are relaid out.
 ///
-/// To make the dialog box run until an option has been
-/// executed, you would typically create the dialog box and
-/// then call Application.Run on the Dialog instance.
+/// To make the dialog box run until an option has been executed, you would
+/// typically create the dialog box and then call Application.Run on the
+/// Dialog instance.
 public class Dialog : Frame
 {
-    int button_len;
-    Button[] buttons;
+    private int button_len;
+    private Button[] buttons;
 
-    const int button_space = 3;
+    private const int button_space = 3;
 
     /// Public constructor.
     public this(int w, int h, string title)

@@ -35,8 +35,13 @@ import ctui.widgets.button;
 import ctui.widgets.dialog;
 import ctui.widgets.label;
 
+/// Dynamic dialogue
 public class MessageBox
 {
+    /// Create a message box with the given title, displays the message and
+    /// creates buttons with the given string labels.
+    ///
+    /// Returns: the index of the clicked button
     public static int Query(int width, int height, string title, string message, string[] buttons)
     {
         auto d = new Dialog(width, height, title);

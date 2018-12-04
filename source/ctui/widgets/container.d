@@ -37,10 +37,9 @@ import ctui.widgets.widget;
 
 /// Container widget, can host other widgets.
 ///
-/// This implements the foundation for other containers
-/// (like Dialogs and Frames) that can host other widgets
-/// inside their boundaries. It provides focus handling
-/// and event routing.
+/// This implements the foundation for other containers (like Dialogs and
+/// Frames) that can host other widgets inside their boundaries. It provides
+/// focus handling and event routing.
 public class Container : Widget
 {
     Widget[] widgets;
@@ -106,9 +105,8 @@ public class Container : Widget
 
     /// Focuses the specified widget in this container.
     ///
-    /// Focuses the specified widge, taking the focus
-    /// away from any previously focused widgets.   This
-    /// method only works if the widget specified
+    /// Focuses the specified widge, taking the focus away from any previously
+    /// focused widgets. This method only works if the widget specified
     /// supports being focused.
     public void SetFocus(Widget w)
     {
@@ -125,8 +123,7 @@ public class Container : Widget
         focused.PositionCursor();
     }
 
-    /// Focuses the first possible focusable widget in
-    /// the contained widgets.
+    /// Focuses the first possible focusable widget in the contained widgets.
     public void EnsureFocus()
     {
         if (focused is null)
@@ -240,15 +237,10 @@ public class Container : Widget
         return false;
     }
 
+    /// Returns the base position for child widgets to paint on.
     ///
-    ///   Returns the base position for child widgets to
-    ///   paint on.
-    ///
-    ///
-    ///   This method is typically overwritten by
-    ///   containers that want to have some padding (like
-    ///   Frames or Dialogs).
-    ///
+    /// This method is typically overwritten by containers that want to have
+    /// some padding (like Frames or Dialogs).
     public void GetBase(out int row, out int col)
     {
         row = 0;
@@ -271,11 +263,7 @@ public class Container : Widget
             move(row + y, col + x);
     }
 
-    ///
-    ///   Adds a widget to this container.
-    ///
-    ///
-    ///
+    /// Adds a widget to this container.
     public void Add(Widget w)
     {
         widgets ~= w;
@@ -284,11 +272,7 @@ public class Container : Widget
             this.CanFocus = true;
     }
 
-    ///
-    ///   Removes all the widgets from this container.
-    ///
-    ///
-    ///
+    /// Removes all the widgets from this container.
     public void RemoveAll()
     {
         Widget[] tmp;
@@ -299,11 +283,7 @@ public class Container : Widget
             Remove(w);
     }
 
-    ///
-    ///   Removes a widget from this container.
-    ///
-    ///
-    ///
+    /// Removes a widget from this container.
     public void Remove(Widget w)
     {
         if (w is null)
@@ -403,8 +383,7 @@ public class Container : Widget
     /// Raised when the size of this container changes.
     public void delegate() sizeChanged;
 
-    /// This method is invoked when the size of this
-    /// container changes.
+    /// This method is invoked when the size of this container changes.
     public void SizeChanged()
     {
         if (sizeChanged)

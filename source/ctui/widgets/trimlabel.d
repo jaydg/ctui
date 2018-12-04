@@ -36,12 +36,11 @@ import ctui.widgets.widget;
 
 /// A label that can be trimmed to a given position
 ///
-/// Just like a label, but it can be trimmed to a given
-/// position if the text being displayed overflows the
-/// specified width.
+/// Just like a label, but it can be trimmed to a given position if the text
+/// being displayed overflows the specified width.
 public class TrimLabel : Label
 {
-    string original;
+    private string original;
 
     /// Public constructor.
     public this(int x, int y, int w, string s)
@@ -52,7 +51,7 @@ public class TrimLabel : Label
         SetString(w, s);
     }
 
-    void SetString(int w, string s)
+    private void SetString(int w, string s)
     {
         if ((fill & Fill.Horizontal) != 0)
             w = container.w - container.Border * 2 - x;
@@ -80,6 +79,7 @@ public class TrimLabel : Label
         return original;
     }
 
+    /// ditto
     public override @property string Text(string value)
     {
         super.Text = value;

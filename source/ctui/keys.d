@@ -28,31 +28,50 @@
 
 module ctui.keys;
 
-// Keys in addition to what Curses constants provide
+/// Keys in addition to what the Curses constants provide
 enum Keys
 {
+    ///
     CtrlA = 1,
+    ///
     CtrlB = 2,
+    ///
     CtrlC = 3,
+    ///
     CtrlD = 4,
+    ///
     CtrlE = 5,
+    ///
     CtrlF = 6,
+    ///
     Tab = 9,
+    ///
     CtrlK = 11,
+    ///
     CtrlN = 14,
+    ///
     CtrlP = 16,
+    ///
     CtrlV = 22,
+    ///
     CtrlY = 25,
+    ///
     CtrlZ = 26,
-
+    ///
     Esc = 27,
+    ///
     Enter = '\n',
-
+    ///
     ShiftTab = 353,
     // We encode ESC + char (what Alt-char generates) as 0x2000 + char
     Alt = 0x2000,
 }
 
+/// Check if the given key contains the Alt key
+///
+/// Returns:
+///     0 if the given key wasn't generated with Alt;
+///     or the key value minus Alt when the key was generated with Alt
 public int isAlt(int key)
 {
     if ((key & Keys.Alt) != 0)

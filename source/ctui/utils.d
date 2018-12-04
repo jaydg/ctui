@@ -27,11 +27,14 @@ module ctui.utils;
 
 import std.utf;
 
+/// Creates a substring of str, starting at start.
 string substring(string str, size_t start)
 {
     return str[str.toUTFindex(start) .. $];
 
 }
+
+/// Creates a substring of str of the given length, starting at start.
 string substring(string str, size_t start, size_t length)
 {
     immutable first = str.toUTFindex(start);

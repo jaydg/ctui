@@ -37,7 +37,10 @@ import std.algorithm : minElement, remove;
 import ctui.application;
 import ctui.widgets.container;
 
+/// A delegate that is used by AddWatch and AddTimeout.
 public alias Callback = bool delegate();
+
+/// A delegate used by AddIdle.
 public alias Handler = bool delegate();
 
 public class RunState {
@@ -64,12 +67,10 @@ public class RunState {
     }
 }
 
-/// Simple main loop implementation that can be used to monitor
-/// file descriptor, run timers and idle handlers.
-///
-/// Monitoring of file descriptors is only available on Unix, there
-/// does not seem to be a way of supporting this on Windows.
+/// Simple main loop implementation that can be used to monitor file
+/// descriptor, run timers and idle handlers.
 public class MainLoop {
+    /// Conditions of file descriptors that can be monitored.
     enum Condition {
         /// There is data to read
         PollIn = POLLIN,
@@ -85,40 +86,40 @@ public class MainLoop {
         PollNval = POLLNVAL,
     }
 
-    class Watch {
+    private class Watch {
         public Condition condition;
         public Callback callback;
         public int fd;
 
-        public this(Condition _condition, Callback _callback, int _fd)
+        public this(Condition condition, Callback callback, int fd)
         {
-            condition = _condition;
-            callback = _callback;
-            fd = _fd;
+            this.condition = condition;
+            this.callback = callback;
+            this.fd = fd;
         }
     }
 
-    class Timeout {
+    private class Timeout {
         public Duration span;
         public Callback callback;
 
-        public this(Duration _span, Callback _callback)
+        public this(Duration span, Callback callback)
         {
-            span = _span;
-            callback = _callback;
+            this.span = span;
+            this.callback = callback;
         }
     }
 
-    Watch[int] descriptorWatchers;
-    Timeout[long] timeouts;
-    Handler[] idleHandlers;
+    private Watch[int] descriptorWatchers;
+    private Timeout[long] timeouts;
+    private Handler[] idleHandlers;
 
-    pollfd[] pollmap;
-    bool poll_dirty = true;
-    int[2] wakeupPipes;
-    static int ignore;
+    private pollfd[] pollmap;
+    private bool poll_dirty = true;
+    private int[2] wakeupPipes;
+    private static int ignore;
 
-    ///  Default constructor
+    /// Default constructor
     public this()
     {
         pipe(wakeupPipes);
@@ -129,12 +130,12 @@ public class MainLoop {
         });
     }
 
-    void Wakeup()
+    private void Wakeup()
     {
         write(wakeupPipes[1], &ignore, 1);
     }
 
-    /// Executes the specified @idleHandler on the idle loop.
+    /// Executes the specified idleHandler on the idle loop.
     /// The return value is a token to remove it.
     public Handler AddIdle(Handler idleHandler)
     {
@@ -142,7 +143,7 @@ public class MainLoop {
         return idleHandler;
     }
 
-    ///   Removes the specified idleHandler from processing.
+    /// Removes the specified idleHandler from processing.
     public void RemoveIdle(Handler idleHandler)
     {
         synchronized idleHandlers = idleHandlers.remove!(h => h == idleHandler);
@@ -150,12 +151,11 @@ public class MainLoop {
 
     /// Watches a file descriptor for activity.
     ///
-    /// When the condition is met, the provided callback
-    /// is invoked.  If the callback returns false, the
-    /// watch is automatically removed.
+    /// When the condition is met, the provided callback is invoked. If
+    /// callback returns false, the watch is automatically removed.
     ///
-    /// The return value is a token that represents this watch, you can
-    /// use this token to remove the watch by calling RemoveWatch.
+    /// The return value is a token that represents this watch, you can use
+    /// this token to remove the watch by calling RemoveWatch.
     public Watch AddWatch(int fileDescriptor, Condition condition, Callback callback)
     {
         if (callback is null)
@@ -193,9 +193,9 @@ public class MainLoop {
 
     /// Adds a timeout to the mainloop.
     ///
-    /// When time time specified passes, the callback will be invoked.
-    /// If the callback returns true, the timeout will be reset, repeating
-    /// the invocation. If it returns false, the timeout will stop.
+    /// When time time specified passes, the callback will be invoked. If
+    /// callback returns true, the timeout will be reset, repeating the
+    /// invocation. If it returns false, the timeout will stop.
     ///
     /// The returned value is a token that can be used to stop the timeout
     /// by calling RemoveTimeout.
@@ -210,9 +210,9 @@ public class MainLoop {
         return AddTimeout(time, timeout);
     }
 
-    ///   Removes a previously scheduled timeout
+    /// Removes a previously scheduled timeout
     ///
-    ///   The token parameter is the value returned by AddTimeout.
+    /// The token parameter is the value returned by AddTimeout.
     public void RemoveTimeout(long timeout)
     {
         timeouts.remove(timeout);
@@ -328,8 +328,10 @@ public class MainLoop {
     /// You use this to process all pending events (timers, idle handlers
     /// and file watches).
     ///
-    /// You can use it like this:
-    ///     while (main.EventsPending()) MainIteration();
+    /// Example:
+    /// ---
+    /// while (main.EventsPending()) MainIteration();
+    /// ---
     public void MainIteration()
     {
         if (timeouts.length > 0)

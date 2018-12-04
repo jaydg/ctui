@@ -48,14 +48,14 @@ import ctui.widgets.widget;
 /// Text data entry widget
 ///
 /// The Entry widget provides Emacs-like editing
-/// functionality,  and mouse support.
+/// functionality, and mouse support.
 public class Entry : Widget
 {
-    string text, kill;
-    size_t first, point;
-    int color;
-    bool used;
-    bool secret;
+    private string text, kill;
+    private size_t first, point;
+    private int color;
+    private bool used;
+    private bool secret;
 
     /// Changed event, raised when the text has clicked.
     ///
@@ -63,7 +63,7 @@ public class Entry : Widget
     /// raised when the text in the entry changes.
     public void delegate() changed;
 
-    ///   Public constructor.
+    /// Public constructor.
     public this(int x, int y, int w, string s)
     {
         super(x, y, w, 1);
@@ -104,7 +104,7 @@ public class Entry : Widget
             return text;
         }
 
-        /// Sets the secret property.
+        /// Gets / sets the secret property.
         ///
         /// This makes the text entry suitable for entering passwords.
         bool Secret()
@@ -112,17 +112,19 @@ public class Entry : Widget
             return secret;
         }
 
+        /// ditto
         bool Secret(bool value)
         {
             return secret = value;
         }
 
-        /// The color used to display the text
+        /// The color used to display the text.
         int Color()
         {
             return color;
         }
 
+        /// ditto
         int Color(int value)
         {
             color = value;
@@ -136,6 +138,7 @@ public class Entry : Widget
             return cast(int)point;
         }
     }
+
     /// Sets the cursor position.
     public override void PositionCursor()
     {
@@ -162,7 +165,7 @@ public class Entry : Widget
         PositionCursor();
     }
 
-    void Adjust()
+    private void Adjust()
     {
         if (point < first) {
             first = point;
@@ -174,7 +177,7 @@ public class Entry : Widget
         refresh();
     }
 
-    void SetText(string new_text)
+    private void SetText(string new_text)
     {
         if (new_text != text) {
             text = new_text;
@@ -301,7 +304,7 @@ public class Entry : Widget
         return true;
     }
 
-    size_t WordForward(size_t p)
+    private size_t WordForward(size_t p)
     {
         if (p >= text.count) {
             return -1;
@@ -331,7 +334,7 @@ public class Entry : Widget
         return -1;
     }
 
-    size_t WordBackward(size_t p)
+    private size_t WordBackward(size_t p)
     {
         if (p == 0)
             return -1;

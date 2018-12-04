@@ -37,12 +37,15 @@ import ctui.widgets.container;
 /// The fill values apply from the given x, y values, they will not do
 /// a full fill, you must compute x, y yourself.
 public enum Fill {
+    /// no fill
     None = 0,
+    /// horizontal fill
     Horizontal = 1,
+    /// vertical fill
     Vertical = 2
 }
 
-///   Base class for creating curses widgets
+/// Base class for creating curses widgets
 public abstract class Widget
 {
     /// Points to the container of this widget
@@ -54,20 +57,27 @@ public abstract class Widget
     /// The y position of this widget
     public int y;
 
-    /// The width of this widget, it is the area that receives mouse events and that must be repainted.
+    /// The width of this widget, it is the area that receives mouse events
+    ///  and that must be repainted.
     public int w;
 
-    /// The height of this widget, it is the area that receives mouse events and that must be repainted.
+    /// The height of this widget, it is the area that receives mouse events
+    /// and that must be repainted.
     public int h;
 
-    bool can_focus;
-    bool has_focus;
+    package bool can_focus;
+    package bool has_focus;
+
+    /// Fill setting
+    ///
+    /// To fill both horizonally and vertically, combine the values:
+    /// `Fill.Horizontal | Fill.Vertical`
     public Fill fill;
 
     /// Public constructor for widgets
     ///
-    /// Constructs a widget that starts at position (x,y) and has width w and height h.
-    /// These parameters are used by the methods <see cref="Clear"/> and <see cref="Redraw"/>
+    /// Constructs a widget that starts at position (x,y) and has width w and
+    /// height h. These parameters are used by the methods Clear and Redraw.
     public this(int x, int y, int w, int h)
     {
         this.x = x;
@@ -79,10 +89,9 @@ public abstract class Widget
 
     /// Focus status of this widget
     ///
-    /// This is used typically by derived classes to flag whether
-    /// this widget can receive focus or not.    Focus is activated
-    /// by either clicking with the mouse on that widget or by using
-    /// the tab key.
+    /// This is used typically by derived classes to flag whether this widget
+    /// can receive focus or not. Focus is activated by either clicking with
+    /// the mouse on that widget or by using the tab key.
     public @property bool CanFocus()
     {
         return can_focus;
@@ -112,21 +121,16 @@ public abstract class Widget
 
     /// Moves inside the first location inside the container
     ///
-    /// This moves the current cursor position to the specified
-    /// line and column relative to the container
-    /// client area where this widget is located.
+    /// This moves the current cursor position to the specified line and col
+    /// relative to the container client area where this widget is located.
     ///
-    /// The difference between this
-    /// method and <see cref="BaseMove"/> is that this
-    /// method goes to the beginning of the client area
-    /// inside the container while <see cref="BaseMove"/> goes to the first
-    /// position that container uses.
+    /// The difference between this method and BaseMove is that this method
+    /// goes to the beginning of the client area inside the container while
+    /// BaseMove goes to the first position that container uses.
     ///
-    /// For example, a Frame usually takes up a couple
-    /// of characters for padding.   This method would
-    /// position the cursor inside the client area,
-    /// while <see cref="BaseMove"/> would position
-    /// the cursor at the top of the frame.
+    /// For example, a Frame usually takes up a couple of characters for
+    /// padding. This method would position the cursor inside the client area,
+    /// while BaseMove would position  the cursor at the top of the frame.
     public void Move(int line, int col)
     {
         container.ContainerMove(line, col);
@@ -135,21 +139,16 @@ public abstract class Widget
 
     /// Move relative to the top of the container
     ///
-    /// This moves the current cursor position to the specified
-    /// line and column relative to the start of the container
-    /// where this widget is located.
+    /// This moves the current cursor position to the specified line and col
+    /// relative to the start of the container where this widget is located.
     ///
-    /// The difference between this
-    /// method and <see cref="Move"/> is that this
-    /// method goes to the beginning of the container,
-    /// while <see cref="Move"/> goes to the first
+    /// The difference between this method and Move is that this method goes
+    /// to the beginning of the container, while Move goes to the first
     /// position that widgets should use.
     ///
-    /// For example, a Frame usually takes up a couple
-    /// of characters for padding.   This method would
-    /// position the cursor at the beginning of the
-    /// frame, while <see cref="Move"/> would position
-    /// the cursor within the frame.
+    /// For example, a Frame usually takes up a couple of characters for
+    /// padding. This method would position the cursor at the beginning of the
+    /// frame, while Move would position the cursor within the frame.
     public void BaseMove(int line, int col)
     {
         container.ContainerBaseMove(line, col);
@@ -170,34 +169,30 @@ public abstract class Widget
 
     /// Redraws the current widget, must be overwritten.
     ///
-    /// This method should be overwritten by classes
-    /// that derive from Widget.   The default
-    /// implementation of this method just fills out
-    /// the region with the character 'x'.
+    /// This method should be overwritten by classes that derive from Widget.
+    /// The default implementation of this method just fills out the region
+    /// with the character 'x'.
     ///
-    /// Widgets are responsible for painting the
-    /// entire region that they have been allocated.
+    /// Widgets are responsible for painting the entire region that they have
+    /// been allocated.
     public void Redraw()
     {
-        for (int line = 0; line < h; line++) {
+        for (int line; line < h; line++) {
             Move(y + line, x);
-            for (int col = 0; col < w; col++) {
+            for (int col; col < w; col++) {
                 addch('x');
             }
         }
     }
 
-    /// If the widget is focused, gives the widget a
-    /// chance to process the keystroke.
+    /// If the widget is focused, gives the widget a chance to process the
+    /// keystroke.
     ///
-    /// Widgets can override this method if they are
-    /// interested in processing the given keystroke.
-    /// If they consume the keystroke, they must
-    /// return true to stop the keystroke from being
-    /// processed by other widgets or consumed by the
-    /// widget engine.    If they return false, the
-    /// keystroke will be passed out to other widgets
-    /// for processing.
+    /// Widgets can override this method if they are interested in processing
+    /// the given keystroke. If they consume the keystroke, they must return
+    /// true to stop the keystroke from being processed by other widgets or
+    /// consumed by the widget engine. If they return false, the keystroke will
+    /// be passed out to other widgets for processing.
     public bool ProcessKey(wchar_t key)
     {
         return false;
@@ -205,56 +200,44 @@ public abstract class Widget
 
     /// Gives widgets a chance to process the given mouse event.
     ///
-    /// Widgets can inspect the value of
-    /// ev.ButtonState to determine if this is a
-    /// message they are interested in (typically
-    /// ev.bstate &amp; BUTTON1_CLICKED).
+    /// Widgets can inspect the value of ev.ButtonState to determine if
+    /// this is a message they are interested in (typically
+    /// `ev.bstate & BUTTON1_CLICKED`).
     public void ProcessMouse(MEVENT* ev)
     {
     }
 
-    /// This method can be overwritten by widgets that
-    /// want to provide accelerator functionality
-    /// (Alt-key for example).
+    /// This method can be overwritten by widgets that want to provide
+    /// accelerator functionality (Alt-_key for example).
     ///
-    /// Before keys are sent to the widgets on the
-    /// current Container, all the widgets are
-    /// processed and the key is passed to the widgets
-    /// to allow some of them to process the keystroke
-    /// as a hot-key.
+    /// Before keys are sent to the widgets on the current Container, all the
+    /// widgets are processed and key is passed to the widgets to allow some
+    /// of them to process the keystroke as a hot-_key.
     ///
-    /// For example, if you implement a button that
-    /// has a hotkey ok "o", you would catch the
-    /// combination Alt-o here.  If the event is
-    /// caught, you must return true to stop the
-    /// keystroke from being dispatched to other
+    /// For example, if you implement a button that has a hotkey ok "o", you
+    /// would catch the combination Alt-o here. If the event is caught, you
+    /// must return true to stop the keystroke from being dispatched to other
     /// widgets.
     ///
-    /// Typically to check if the keystroke is an
-    /// Alt-key combination, you would use
-    /// isAlt(key) and then Char.ToUpper(key)
-    /// to compare with your hotkey.
+    /// Typically to check if the keystroke is an Alt-_key combination, you
+    /// would use `isAlt(key)` and then `std.uni.toUpper(key)` to compare
+    /// with your hotkey.
     public bool ProcessHotKey(wchar_t key)
     {
         return false;
     }
 
-    /// This method can be overwritten by widgets that
-    /// want to provide accelerator functionality
-    /// (Alt-key for example), but without
-    /// interefering with normal ProcessKey behavior.
+    /// This method can be overwritten by widgets that want to provide
+    /// accelerator functionality (Alt-_key for example), but without
+    /// interfering with normal ProcessKey behavior.
     ///
-    /// After keys are sent to the widgets on the
-    /// current Container, all the widgets are
-    /// processed and the key is passed to the widgets
-    /// to allow some of them to process the keystroke
-    /// as a cold-key.
+    /// After keys are sent to the widgets on the current Container, all the
+    /// widgets are processed and key is passed to the widgets to allow
+    /// some of them to process the keystroke as a cold-_key.
     ///
-    /// This functionality is used, for example, by
-    /// default buttons to act on the enter key.
-    /// Processing this as a hot-key would prevent
-    /// non-default buttons from consuming the enter
-    /// keypress when they have the focus.
+    /// This functionality is used, for example, by default buttons to act on
+    /// the enter _key. Processing this as a hot-_key would prevent non-default
+    /// buttons from consuming the enter keypress when they have the focus.
     public bool ProcessColdKey(wchar_t key)
     {
         return false;
@@ -262,22 +245,17 @@ public abstract class Widget
 
     /// Moves inside the first location inside the container
     ///
-    /// A helper routine that positions the cursor at
-    /// the logical beginning of the widget.   The
-    /// default implementation merely puts the cursor at
-    /// the beginning, but derived classes should find a
-    /// suitable spot for the cursor to be shown.
+    /// A helper routine that positions the cursor at the logical beginning of
+    /// the widget. The default implementation merely puts the cursor at the
+    /// beginning, but derived classes should find a suitable spot for the
+    /// cursor to be shown.
     ///
-    /// This method must be overwritten by most
-    /// widgets since screen repaints can happen at
-    /// any point and it is important to leave the
-    /// cursor in a position that would make sense for
-    /// the user (as not all terminals support hiding
-    /// the cursor), and give the user an impression of
-    /// where the cursor is.   For a button, that
-    /// would be the position where the hotkey is, for
-    /// an entry the location of the editing cursor
-    /// and so on.
+    /// This method must be overwritten by most widgets since screen repaints
+    /// can happen at any point and it is important to leave the cursor in a
+    /// position that would make sense for the user (as not all terminals
+    /// support hiding the cursor), and give the user an impression of where
+    /// the cursor is. For a button, that would be the position where the
+    /// hotkey is, for an entry the location of the editing cursor and so on.
     public void PositionCursor()
     {
         Move(y, x);
@@ -285,18 +263,15 @@ public abstract class Widget
 
     /// Method to relayout on size changes.
     ///
-    /// This method can be overwritten by widgets that
-    /// might be interested in adjusting their
-    /// contents or children (if they are
-    /// containers).
+    /// This method can be overwritten by widgets that might be interested in
+    /// adjusting their contents or children (if they are containers).
     public void DoSizeChanged()
     {
     }
 
     /// Utility function to draw frames
     ///
-    /// Draws a frame with the current color in the
-    /// specified coordinates.
+    /// Draws a frame with the current color in the specified coordinates.
     static public void DrawFrame(int col, int line, int width, int height)
     {
         DrawFrame(col, line, width, height, false);
@@ -304,8 +279,8 @@ public abstract class Widget
 
     /// Utility function to draw strings that contain a hotkey
     ///
-    /// Draws a string with the given color. If a character "_" is
-    /// found, then the next character is drawn using the hotcolor.
+    /// Draws the string s with the given color. If a character "__" is
+    /// found in s, then the next character is drawn using hotcolor.
     static public void DrawHotString(string s, int hotcolor, int color)
     {
         attrset(color);

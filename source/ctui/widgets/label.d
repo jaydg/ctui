@@ -40,16 +40,17 @@ public class Label : Widget
     protected string text;
     public int Color = -1;
 
-    ///
-    ///   Public constructor: creates a label at the given
-    ///   coordinate with the given string.
-    ///
+    /// Public constructor: creates a label at the given
+    /// coordinate with the given string.
     public this(int x, int y, string s)
     {
         super(x, y, cast(int)s.count, 1);
         text = s;
     }
 
+    /// Public constructor
+    ///
+    /// Ths variant accepts `std.format` format strings and arguments.
     public this(int x, int y, string s, Args...)(Args args)
     {
         text = format(s, args);
@@ -67,14 +68,13 @@ public class Label : Widget
         addstr(text.toStringz);
     }
 
-    ///
-    ///   The text displayed by this widget.
-    ///
+    /// The text displayed by this widget.
     public @property string Text()
     {
         return text;
     }
 
+    /// ditto
     public @property string Text(string value)
     {
         attrset(ColorNormal);

@@ -36,43 +36,35 @@ import deimos.ncurses;
 
 import ctui.widgets.widget;
 
+/// CheckBox widget
+///
+/// Provides an on/off toggle that the user can set.
 public class CheckBox : Widget {
-    string text;
-    int hot_pos = -1;
-    char hot_key;
-    bool checked;
+    private string text;
+    private int hot_pos = -1;
+    private char hot_key;
+    private bool checked;
 
+    /// Toggled event, raised when the CheckButton is toggled.
     ///
-    ///   Toggled event, raised when the CheckButton is toggled.
-    ///
-    ///
-    ///   Client code can hook up to this event, it is
-    ///   raised when the checkbutton is activated either with
-    ///   the mouse or the keyboard.
-    ///
+    /// Client code can hook up to this event, it is raised when the
+    /// checkbutton is activated either with the mouse or the keyboard.
     public void delegate() toggled;
 
+    /// Public constructor, creates a CheckButton based on
+    /// the given text at the given position.
     ///
-    ///   Public constructor, creates a CheckButton based on
-    ///   the given text at the given position.
-    ///
-    ///
-    ///   The size of CheckButton is computed based on the
-    ///   text length. This CheckButton is not toggled.
-    ///
+    /// The size of CheckButton is computed based on the
+    /// text length. This CheckButton is not toggled.
     public this(int x, int y, string s)
     {
         this(x, y, s, false);
     }
 
+    /// Public constructor, creates a CheckButton based on
+    /// the given text at the given position and a state.
     ///
-    ///   Public constructor, creates a CheckButton based on
-    ///   the given text at the given position and a state.
-    ///
-    ///
-    ///   The size of CheckButton is computed based on the
-    ///   text length.
-    ///
+    /// The size of CheckButton is computed based on the text length.
     public this(int x, int y, string s, bool is_checked)
     {
         super(x, y, cast(int)s.count + 4, 1);
@@ -84,9 +76,7 @@ public class CheckBox : Widget {
 
     public @property
     {
-        ///
-        ///    The state of the checkbox.
-        ///
+        /// The state of the checkbox.
         public bool Checked()
         {
             return checked;
@@ -97,14 +87,13 @@ public class CheckBox : Widget {
             return checked = value;
         }
 
-        ///
-        ///   The text displayed by this widget.
-        ///
+        /// The text displayed by this widget.
         public string Text()
         {
             return text;
         }
 
+        /// ditto
         string Text(string value)
         {
             text = value;
