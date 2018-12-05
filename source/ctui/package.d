@@ -1,10 +1,7 @@
 //
-// Simple curses-based GUI toolkit, core
+// Simple curses-based GUI toolkit
 //
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
-//
-// Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -43,6 +40,7 @@ public {
     import ctui.widgets.listview;
     import ctui.widgets.menubar;
     import ctui.widgets.messagebox;
+    import ctui.widgets.radiogroup;
     import ctui.widgets.trimlabel;
     import ctui.widgets.widget;
 
