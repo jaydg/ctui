@@ -200,19 +200,19 @@ private class LogWidget : Widget {
     }
 }
 
-private static Label status_progress, status_state, status_peers,
+private static ProgressBar status_progress;
+private static Label status_state, status_peers,
     status_tracker, status_up, status_up_speed, status_down,
     status_down_speed, status_warnings, status_failures, iteration;
 
 private static Frame setupStatus()
 {
     Frame fstatus = new Frame("Status");
-    int y = 0;
+    int y;
     int x = 13;
     string init = "<init>";
 
-    fstatus.Add(status_progress = new Label(x, y, "0%"));
-    status_progress.Color = status_progress.ColorHotNormal;
+    fstatus.Add(status_progress = new ProgressBar(x, y, 24));
     fstatus.Add(new Label(1, y++, "Progress:"));
 
     fstatus.Add(status_state = new Label(x, y, init));
@@ -278,10 +278,10 @@ private static void layoutDialogs(Frame ftorrents, Frame fstatus, Frame fdetails
     fprogress.h = midy;
 }
 
-private static void updateStatus()
+private static void updateStatus(int iteration)
 {
     immutable ct = Clock.currTime.toString.substring(0, 20);
-    status_progress.Text = ct;
+    status_progress.fraction = (iteration % 100) / 100.0;
     status_state.Text = ct;
     status_peers.Text = ct;
     status_up.Text = "1000";
@@ -338,13 +338,9 @@ void main()
     Frame fstatus = setupStatus();
     top.Add(fstatus);
 
-    iteration = new Label(35, 0, "0");
-    fstatus.Add(iteration);
-
     int it;
     Application.mainLoop.AddTimeout(dur!"seconds"(1), {
-        iteration.Text = to!string(it++);
-        updateStatus();
+        updateStatus(it++);
         log_widget.AddText(format!"Iteration %d"(it));
         Application.Refresh();
         return true;
@@ -355,7 +351,7 @@ void main()
         layoutDialogs(frame, fstatus, fdetails, fprogress);
     };
 
-    updateStatus();
+    updateStatus(it);
 
     Application.Run(top);
 }

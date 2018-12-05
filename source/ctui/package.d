@@ -40,6 +40,7 @@ public {
     import ctui.widgets.listview;
     import ctui.widgets.menubar;
     import ctui.widgets.messagebox;
+    import ctui.widgets.progressbar;
     import ctui.widgets.radiogroup;
     import ctui.widgets.trimlabel;
     import ctui.widgets.widget;
