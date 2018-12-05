@@ -11,9 +11,9 @@ import std.utf : count;
 import ctui;
 import ctui.utils;
 
-static void OptionsDialog()
+private static void optionsDialog()
 {
-    Dialog d = new Dialog(62, 15, "Options");
+    Dialog d = new Dialog(62, 18, "Options");
 
     d.Add(new Label(1, 1, "  Download Directory:"));
     d.Add(new Label(1, 3, "         Listen Port:"));
@@ -21,6 +21,7 @@ static void OptionsDialog()
     d.Add(new Label(35,5, "kB/s"));
     d.Add(new Label(1, 7, "Download Speed Limit:"));
     d.Add(new Label(35,7, "kB/s"));
+    d.Add(new Label(1, 9, "        Stealth Mode:"));
 
     Entry download_dir = new Entry(24, 1, 30, "~/Download");
     d.Add(download_dir);
@@ -34,7 +35,10 @@ static void OptionsDialog()
     Entry download_limit = new Entry(24, 7, 10, "1024");
     d.Add(download_limit);
 
-    bool ok = false;
+    RadioGroup stealthMode = new RadioGroup(24, 9, ["Off", "Partial", "Full"]);
+    d.Add(stealthMode);
+
+    bool ok;
 
     Button b = new Button("Ok", true);
     b.clicked = { ok = true; b.container.running = false; };
@@ -47,10 +51,8 @@ static void OptionsDialog()
     Application.Run(d);
 
     if (ok) {
-        int v;
-
         try {
-            v = to!int(listen_port.Text);
+            to!int(listen_port.Text);
         } catch (ConvException) {
             Application.Error("Error", format!"The value `%s' is not a valid port number"(listen_port.Text));
             return;
@@ -64,15 +66,14 @@ static void OptionsDialog()
     }
 }
 
-static void AddDialog()
+private static void addDialog()
 {
     int cols = cast(int)(Application.Cols * 0.7);
     Dialog d = new Dialog(cols, 8, "Add");
-    Entry e;
-    string name = null;
+    string name;
 
     d.Add(new Label(1, 0, "Torrent file:"));
-    e = new Entry(1, 1, cols - 6, getcwd);
+    Entry e = new Entry(1, 1, cols - 6, getcwd);
     d.Add(e);
 
     // buttons
@@ -97,7 +98,7 @@ static void AddDialog()
     }
 }
 
-public class TorrentDetailsList : IListProvider {
+private class TorrentDetailsList : IListProvider {
     public ListView view;
 
     void SetListView(ListView v)
@@ -141,10 +142,10 @@ public class TorrentDetailsList : IListProvider {
     }
 }
 
-public class LogWidget : Widget {
-    string[80] messages;
-    size_t head, tail;
-    int count;
+private class LogWidget : Widget {
+    private string[80] messages;
+    private size_t head, tail;
+    private int count;
 
     public this(int x, int y)
     {
@@ -180,10 +181,10 @@ public class LogWidget : Widget {
 
             Move(y + l, x);
 
-            size_t sl = messages[item].count;
+            immutable sl = messages[item].count;
             if (sl < w) {
                 addstr(messages[item].toStringz);
-                for (int fi = 0; fi < w - sl; fi++)
+                for (int fi; fi < w - sl; fi++)
                     addch (' ');
             } else {
                 addstr(messages[item].substring (0, w).toStringz);
@@ -199,11 +200,11 @@ public class LogWidget : Widget {
     }
 }
 
-static Label status_progress, status_state, status_peers, status_tracker,
-             status_up, status_up_speed, status_down, status_down_speed,
-             status_warnings, status_failures, iteration;
+private static Label status_progress, status_state, status_peers,
+    status_tracker, status_up, status_up_speed, status_down,
+    status_down_speed, status_warnings, status_failures, iteration;
 
-static Frame SetupStatus()
+private static Frame setupStatus()
 {
     Frame fstatus = new Frame("Status");
     int y = 0;
@@ -246,13 +247,11 @@ static Frame SetupStatus()
 //
 // We split this, so if the terminal resizes, we resize accordingly
 //
-static void LayoutDialogs(Frame ftorrents, Frame fstatus, Frame fdetails, Frame fprogress)
+private static void layoutDialogs(Frame ftorrents, Frame fstatus, Frame fdetails, Frame fprogress)
 {
-    int cols = Application.Cols;
-    int lines = Application.Lines;
-
-    int midx = Application.Cols / 2;
-    int midy = Application.Lines / 2;
+    immutable cols = Application.Cols;
+    immutable midx = Application.Cols / 2;
+    immutable midy = Application.Lines / 2;
 
     // Torrents
     ftorrents.x = 0;
@@ -275,13 +274,13 @@ static void LayoutDialogs(Frame ftorrents, Frame fstatus, Frame fdetails, Frame 
     // fprogress
     fprogress.x = midx;
     fprogress.y = midy;
-    fprogress.w = midx + Application.Cols % 2;
+    fprogress.w = midx + cols % 2;
     fprogress.h = midy;
 }
 
-static void UpdateStatus()
+private static void updateStatus()
 {
-    string ct = Clock.currTime.toString.substring(0, 20);
+    immutable ct = Clock.currTime.toString.substring(0, 20);
     status_progress.Text = ct;
     status_state.Text = ct;
     status_peers.Text = ct;
@@ -299,12 +298,12 @@ void main()
 
     // Add
     Button badd = new Button(1, 1, "Add");
-    badd.clicked = { AddDialog(); };
+    badd.clicked = { addDialog(); };
     frame.Add(badd);
 
     // Options
     Button boptions = new Button(9, 1, "Options");
-    boptions.clicked = { OptionsDialog(); };
+    boptions.clicked = { optionsDialog(); };
     frame.Add(boptions);
 
     // Quit
@@ -336,27 +335,27 @@ void main()
     top.Add(fdetails);
 
     // Status
-    Frame fstatus = SetupStatus();
+    Frame fstatus = setupStatus();
     top.Add(fstatus);
 
     iteration = new Label(35, 0, "0");
     fstatus.Add(iteration);
 
-    int it = 0;
+    int it;
     Application.mainLoop.AddTimeout(dur!"seconds"(1), {
         iteration.Text = to!string(it++);
-        UpdateStatus();
+        updateStatus();
         log_widget.AddText(format!"Iteration %d"(it));
         Application.Refresh();
         return true;
     });
 
-    LayoutDialogs(frame, fstatus, fdetails, fprogress);
+    layoutDialogs(frame, fstatus, fdetails, fprogress);
     top.sizeChanged = {
-        LayoutDialogs(frame, fstatus, fdetails, fprogress);
+        layoutDialogs(frame, fstatus, fdetails, fprogress);
     };
 
-    UpdateStatus();
+    updateStatus();
 
     Application.Run(top);
 }
