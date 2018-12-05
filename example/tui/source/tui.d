@@ -4,6 +4,7 @@ import core.stdc.stddef;
 import std.conv : to, ConvException;
 import std.datetime : Clock;
 import std.file : exists, getcwd, isDir, isFile;
+import std.path : expandTilde;
 import std.string : format, toStringz;
 import std.utf : count;
 
@@ -55,7 +56,8 @@ static void OptionsDialog()
             return;
         }
 
-        if (!exists(download_dir.Text) || !isDir(download_dir.Text)) {
+        auto fullPath = expandTilde(download_dir.Text);
+        if (!exists(fullPath) || !isDir(fullPath)) {
             Application.Error("Error", format!"The directory\n%s\ndoes not exist"(download_dir.Text));
             return;
         }
