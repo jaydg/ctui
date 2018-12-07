@@ -82,7 +82,7 @@ public class RadioGroup : Widget {
             _radioLabels = labels;
             selected = 0;
             cursor = 0;
-            Redraw();
+            redraw();
         }
 
         /// Get the index of currently selected item
@@ -96,12 +96,12 @@ public class RadioGroup : Widget {
             if (changed)
                 changed(idx);
 
-            Redraw();
+            redraw();
             refresh();
         }
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         foreach (int i, label; radioLabels) {
             Move(y + i, x);
@@ -120,10 +120,10 @@ public class RadioGroup : Widget {
             DrawHotString(label, hotColor, normalColor);
         }
 
-        PositionCursor();
+        positionCursor();
     }
 
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         Move(y + cursor, x + 1);
     }
@@ -165,7 +165,7 @@ public class RadioGroup : Widget {
             case KEY_UP:
                 if (cursor > 0) {
                     cursor--;
-                    Redraw();
+                    redraw();
                     refresh();
                     return true;
                 }
@@ -173,7 +173,7 @@ public class RadioGroup : Widget {
             case KEY_DOWN:
                 if (cursor + 1 < radioLabels.length) {
                     cursor++;
-                    Redraw();
+                    redraw();
                     refresh();
                     return true;
                 }
@@ -200,7 +200,7 @@ public class RadioGroup : Widget {
 
         if (ev.y < radioLabels.length) {
             cursor = _selected = ev.y;
-            Redraw();
+            redraw();
             refresh();
         }
     }

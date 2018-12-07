@@ -131,7 +131,7 @@ public class Button : Widget {
        Text = s;
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attrset(hasFocus ? ColorFocus : ColorNormal);
         Move(y, x);
@@ -144,7 +144,7 @@ public class Button : Widget {
         }
     }
 
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         Move(y, x + hot_pos);
     }
@@ -197,7 +197,7 @@ public class Button : Widget {
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             container.setFocus(this);
-            container.Redraw();
+            container.redraw();
 
             if (clicked)
                 clicked();

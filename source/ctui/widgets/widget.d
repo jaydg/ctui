@@ -77,7 +77,7 @@ public abstract class Widget
     /// Public constructor for widgets
     ///
     /// Constructs a widget that starts at position (x,y) and has width w and
-    /// height h. These parameters are used by the methods Clear and Redraw.
+    /// height h. These parameters are used by the methods clear and redraw.
     public this(int x, int y, int w, int h)
     {
         this.x = x;
@@ -115,7 +115,7 @@ public abstract class Widget
     public @property bool hasFocus(bool value)
     {
         has_focus = value;
-        Redraw();
+        redraw();
 
         return has_focus;
     }
@@ -125,13 +125,13 @@ public abstract class Widget
     /// This moves the current cursor position to the specified line and col
     /// relative to the container client area where this widget is located.
     ///
-    /// The difference between this method and BaseMove is that this method
+    /// The difference between this method and baseMove is that this method
     /// goes to the beginning of the client area inside the container while
-    /// BaseMove goes to the first position that container uses.
+    /// baseMove goes to the first position that container uses.
     ///
     /// For example, a Frame usually takes up a couple of characters for
     /// padding. This method would position the cursor inside the client area,
-    /// while BaseMove would position  the cursor at the top of the frame.
+    /// while baseMove would position  the cursor at the top of the frame.
     public void Move(int line, int col)
     {
         container.ContainerMove(line, col);
@@ -150,18 +150,18 @@ public abstract class Widget
     /// For example, a Frame usually takes up a couple of characters for
     /// padding. This method would position the cursor at the beginning of the
     /// frame, while Move would position the cursor within the frame.
-    public void BaseMove(int line, int col)
+    public void baseMove(int line, int col)
     {
-        container.ContainerBaseMove(line, col);
+        container.containerBaseMove(line, col);
     }
 
     /// Clears the widget region withthe current color.
     ///
     /// This clears the entire region used by this widget.
-    public void Clear()
+    public void clear()
     {
         for (int line = 0; line < height; line++) {
-            BaseMove(y + line, x);
+            baseMove(y + line, x);
             for (int col = 0; col < width; col++) {
                 addch(' ');
             }
@@ -176,7 +176,7 @@ public abstract class Widget
     ///
     /// Widgets are responsible for painting the entire region that they have
     /// been allocated.
-    public void Redraw()
+    public void redraw()
     {
         for (int line; line < height; line++) {
             Move(y + line, x);
@@ -257,7 +257,7 @@ public abstract class Widget
     /// support hiding the cursor), and give the user an impression of where
     /// the cursor is. For a button, that would be the position where the
     /// hotkey is, for an entry the location of the editing cursor and so on.
-    public void PositionCursor()
+    public void positionCursor()
     {
         Move(y, x);
     }

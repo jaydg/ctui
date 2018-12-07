@@ -57,7 +57,7 @@ public class Label : Widget
         super(x, y, cast(int)s.count, 1);
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         if (Color != -1)
             attrset(Color);
@@ -82,7 +82,7 @@ public class Label : Widget
         for (int i = 0; i < text.count; i++)
             addch(' ');
         text = value;
-        Redraw();
+        redraw();
 
         return text;
     }

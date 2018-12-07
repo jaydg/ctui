@@ -115,7 +115,7 @@ public class CheckBox : Widget {
         }
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attrset(ColorNormal);
         Move(y, x);
@@ -128,10 +128,10 @@ public class CheckBox : Widget {
             attrset(hasFocus ? ColorHotFocus : ColorHotNormal);
             addch(hot_key);
         }
-        PositionCursor();
+        positionCursor();
     }
 
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         Move(y, x + 1);
     }
@@ -143,7 +143,7 @@ public class CheckBox : Widget {
             if (toggled)
                 toggled();
 
-            Redraw();
+            redraw();
             return true;
         }
         return false;
@@ -153,13 +153,13 @@ public class CheckBox : Widget {
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             container.setFocus(this);
-            container.Redraw();
+            container.redraw();
 
             checked = !checked;
             if (toggled)
                 toggled();
 
-            Redraw();
+            redraw();
         }
     }
 }

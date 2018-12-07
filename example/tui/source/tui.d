@@ -165,7 +165,7 @@ private class LogWidget : Widget {
             tail = (tail + 1) % messages.length;
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attrset(ColorNormal);
 

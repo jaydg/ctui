@@ -86,22 +86,22 @@ public class Container : Widget
             if (w.y >= this.height - Border * 2)
                 continue;
 
-            w.Redraw();
+            w.redraw();
         }
 
         // Return the cursor to its expected position
-        PositionCursor();
+        positionCursor();
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         RedrawChildren();
     }
 
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         if (focused !is null)
-            focused.PositionCursor();
+            focused.positionCursor();
     }
 
     /// Focuses the specified widget in this container.
@@ -121,7 +121,7 @@ public class Container : Widget
         focused.hasFocus = true;
         if (Container wc = cast(Container)w)
             wc.EnsureFocus();
-        focused.PositionCursor();
+        focused.positionCursor();
     }
 
     /// Focuses the first possible focusable widget in the contained widgets.
@@ -256,10 +256,10 @@ public class Container : Widget
             move(row + y, col + x);
     }
 
-    public void ContainerBaseMove(int row, int col)
+    public void containerBaseMove(int row, int col)
     {
         if (container != Application.EmptyContainer && container !is null)
-            container.ContainerBaseMove(row + y, col + x);
+            container.containerBaseMove(row + y, col + x);
         else
             move(row + y, col + x);
     }

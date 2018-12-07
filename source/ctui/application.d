@@ -339,9 +339,9 @@ public class Application {
         endwin();
     }
 
-    private static void Redraw(Container container)
+    private static void redraw(Container container)
     {
-        container.Redraw();
+        container.redraw();
         refresh();
     }
 
@@ -353,13 +353,13 @@ public class Application {
         redrawwin(main_window);
         foreach (c; toplevels)
         {
-            c.Redraw();
+            c.redraw();
             last = c;
         }
 
         refresh();
         if (last !is null)
-            last.PositionCursor();
+            last.positionCursor();
     }
 
     /// Starts running a new container or dialog box.
@@ -386,8 +386,8 @@ public class Application {
         container.Prepare();
         container.SizeChanged();
         container.FocusFirst();
-        Redraw(container);
-        container.PositionCursor();
+        redraw(container);
+        container.positionCursor();
         Refresh();
 
         return rs;
@@ -541,7 +541,7 @@ public class Application {
 
     private static void Resize()
     {
-        EmptyContainer.Clear();
+        EmptyContainer.clear();
         foreach (c; toplevels) {
             c.SizeChanged();
         }

@@ -99,7 +99,7 @@ public class Entry : Widget
             }
 
             first = point > width ? point - width : 0;
-            Redraw();
+            redraw();
 
             return text;
         }
@@ -128,7 +128,7 @@ public class Entry : Widget
         int Color(int value)
         {
             color = value;
-            container.Redraw();
+            container.redraw();
             return color;
         }
 
@@ -140,12 +140,12 @@ public class Entry : Widget
     }
 
     /// Sets the cursor position.
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         Move(y, cast(int)(x + point - first));
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attrset(Color);
         Move(y, x);
@@ -162,7 +162,7 @@ public class Entry : Widget
             printw("%-*s", width, vis.toStringz);
         }
 
-        PositionCursor();
+        positionCursor();
     }
 
     private void Adjust()
@@ -173,7 +173,7 @@ public class Entry : Widget
             first = point - (width / 3);
         }
 
-        Redraw();
+        redraw();
         refresh();
     }
 
@@ -383,7 +383,7 @@ public class Entry : Widget
         if (point < first)
             point = 0;
 
-        container.Redraw();
-        container.PositionCursor();
+        container.redraw();
+        container.positionCursor();
     }
 }

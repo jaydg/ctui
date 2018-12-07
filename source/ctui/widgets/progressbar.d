@@ -65,7 +65,7 @@ public class ProgressBar : Widget {
         public void fraction(float value) {
             _fraction = value;
             isActivity = false;
-            Redraw();
+            redraw();
         }
     }
 
@@ -91,10 +91,10 @@ public class ProgressBar : Widget {
             }
         }
 
-        Redraw();
+        redraw();
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attrset(container.ContainerColorHotFocus);
 

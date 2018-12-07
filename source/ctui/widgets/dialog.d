@@ -118,10 +118,10 @@ public class Dialog : Frame
         super.ContainerMove(row + 1, col + 1);
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attrset(ContainerColorNormal);
-        Clear();
+        clear();
 
         Widget.DrawFrame(x + 1, y + 1, width - 2, height - 2);
         move(y + 1, x + (width - cast(int)Title.count) / 2);

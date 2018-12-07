@@ -69,10 +69,10 @@ public class Frame : Container
         super.ContainerMove(row + 1, col + 1);
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attrset(ContainerColorNormal);
-        Clear();
+        clear();
 
         Widget.DrawFrame(x, y, width, height);
         attrset(Container.ContainerColorNormal);

@@ -108,7 +108,7 @@ public class ListView : Widget {
             else
                 selected = 0;
         }
-        Redraw();
+        redraw();
     }
 
     private void SelectedChanged()
@@ -128,7 +128,7 @@ public class ListView : Widget {
                 if (selected < top)
                     top = selected;
                 SelectedChanged();
-                Redraw();
+                redraw();
                 return true;
             } else
                 return false;
@@ -141,7 +141,7 @@ public class ListView : Widget {
                     top++;
                 }
                 SelectedChanged();
-                Redraw();
+                redraw();
                 return true;
             } else
                 return false;
@@ -158,7 +158,7 @@ public class ListView : Widget {
                 else
                     top = 0;
                 SelectedChanged();
-                Redraw();
+                redraw();
             }
             return true;
 
@@ -170,7 +170,7 @@ public class ListView : Widget {
                 selected = n;
                 top = selected;
                 SelectedChanged();
-                Redraw();
+                redraw();
             }
             return true;
 
@@ -179,12 +179,12 @@ public class ListView : Widget {
         }
     }
 
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         Move(y + (selected - top), x);
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         for (int l = 0; l < height; l++) {
             Move(y + l, x);
@@ -213,7 +213,7 @@ public class ListView : Widget {
 
             provider.Render(y + l, x, width, item);
         }
-        PositionCursor();
+        positionCursor();
         refresh();
     }
 
@@ -234,7 +234,7 @@ public class ListView : Widget {
         selected = value;
         SelectedChanged();
 
-        Redraw();
+        redraw();
 
         return value;
     }
@@ -256,6 +256,6 @@ public class ListView : Widget {
         selected = ev.y - top;
         SelectedChanged();
 
-        Redraw();
+        redraw();
     }
 }

@@ -201,7 +201,7 @@ package class Menu : Container {
         super(x, y, width + 4, cast(int)barItems.children.length + 2);
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         attron(Application.ColorMenu);
 
@@ -236,11 +236,11 @@ package class Menu : Container {
             printw("%s", item.help.toStringz);
         }
 
-        PositionCursor();
+        positionCursor();
         refresh();
     }
 
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         Move(2 + current, x + 2);
     }
@@ -260,13 +260,13 @@ package class Menu : Container {
             current--;
             if (current < 0)
                 current = cast(int)barItems.children.length - 1;
-            Redraw();
+            redraw();
             break;
         case KEY_DOWN:
             current++;
             if (current == barItems.children.length)
                 current = 0;
-            Redraw();
+            redraw();
             break;
         case KEY_LEFT:
             host.PreviousMenu();
@@ -356,7 +356,7 @@ public class MenuBar : Container
         selected = -1;
     }
 
-    public override void Redraw()
+    public override void redraw()
     {
         Move(0, 0);
         attron(Application.ColorFocus);
@@ -381,10 +381,10 @@ public class MenuBar : Container
             pos += menu.width + 3;
         }
 
-        PositionCursor();
+        positionCursor();
     }
 
-    public override void PositionCursor()
+    public override void positionCursor()
     {
         int pos;
         foreach (int i, menu; menus) {
@@ -413,7 +413,7 @@ public class MenuBar : Container
     {
         if (openMenu !is null) {
             container.Remove(openMenu);
-            container.Redraw();
+            container.redraw();
         }
 
         int col;
@@ -459,7 +459,7 @@ public class MenuBar : Container
         }
 
         openMenu = null;
-        container.Redraw();
+        container.redraw();
         refresh();
     }
 
