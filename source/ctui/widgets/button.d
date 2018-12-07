@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, button widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -44,11 +42,11 @@ import ctui.widgets.widget;
 /// processes hotkeys (the first uppercase letter in the button becomes the
 /// hotkey).
 public class Button : Widget {
-    string text;
-    string shown_text;
-    char hot_key;
-    int  hot_pos = -1;
-    bool is_default;
+    private string _text;
+    private string shown_text;
+    private char hot_key;
+    private int  hot_pos = -1;
+    private bool is_default;
 
     /// Clicked event, raised when the button is clicked.
     ///
@@ -85,16 +83,16 @@ public class Button : Widget {
         this(x, y, s, false);
     }
 
-    /// The text displayed by this widget.
-    public @property string Text()
+    /// Get the text displayed by this widget.
+    public @property string text()
     {
-        return text;
+        return _text;
     }
 
-    /// ditto
-    public @property string Text(string value)
+    /// Set the text displayed by this widget.
+    public @property string text(string value)
     {
-        text = value;
+        _text = value;
         if (is_default)
             shown_text = "[< " ~ value ~ " >]";
         else
@@ -128,7 +126,7 @@ public class Button : Widget {
        canFocus = true;
 
        this.is_default = is_default;
-       Text = s;
+       text = s;
     }
 
     public override void redraw()
@@ -149,7 +147,7 @@ public class Button : Widget {
         Move(y, x + hot_pos);
     }
 
-    bool CheckKey(int key)
+    private bool checkKey(int key)
     {
         if (toUpper(key) == hot_key) {
             container.setFocus(this);
@@ -163,9 +161,9 @@ public class Button : Widget {
 
     public override bool processHotKey(wchar_t key)
     {
-        int k = isAlt(key);
+        immutable k = isAlt(key);
         if (k != 0)
-            return CheckKey(k);
+            return checkKey(k);
 
         return false;
     }
@@ -179,7 +177,7 @@ public class Button : Widget {
             return true;
         }
 
-        return CheckKey(key);
+        return checkKey(key);
     }
 
     public override bool processKey(wchar_t c)
