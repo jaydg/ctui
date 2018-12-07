@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, checkbox widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,10 +38,10 @@ import ctui.widgets.widget;
 ///
 /// Provides an on/off toggle that the user can set.
 public class CheckBox : Widget {
-    private string text;
+    private string _text;
     private int hot_pos = -1;
     private char hot_key;
-    private bool checked;
+    private bool _checked;
 
     /// Toggled event, raised when the CheckButton is toggled.
     ///
@@ -69,34 +67,35 @@ public class CheckBox : Widget {
     {
         super(x, y, cast(int)s.count + 4, 1);
         checked = is_checked;
-        Text = s;
+        text = s;
 
         canFocus = true;
     }
 
     public @property
     {
-        /// The state of the checkbox.
-        public bool Checked()
+        /// Get the state of the checkbox.
+        bool checked()
         {
-            return checked;
+            return _checked;
         }
 
-        public bool Checked(bool value)
+        /// Set the state of the checkbox.
+        bool checked(bool value)
         {
-            return checked = value;
+            return _checked = value;
         }
 
-        /// The text displayed by this widget.
-        public string Text()
+        /// Get the text displayed by this widget.
+        string text()
         {
-            return text;
+            return _text;
         }
 
-        /// ditto
-        string Text(string value)
+        /// Get the text displayed by this widget.
+        string text(string value)
         {
-            text = value;
+            _text = value;
 
             int i = 0;
             hot_pos = -1;
@@ -111,7 +110,7 @@ public class CheckBox : Widget {
                 i++;
             }
 
-            return text;
+            return _text;
         }
     }
 
@@ -122,7 +121,7 @@ public class CheckBox : Widget {
         addstr(checked ? "[X] ".toStringz : "[ ]".toStringz);
         attrset(hasFocus ? colorFocus : colorNormal);
         Move(y, x + 3);
-        addstr(Text.toStringz);
+        addstr(text.toStringz);
         if (hot_pos != -1) {
             Move(y, x + 3 + hot_pos);
             attrset(hasFocus ? colorHotFocus : colorHotNormal);
