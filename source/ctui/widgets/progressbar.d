@@ -85,8 +85,8 @@ public class ProgressBar : Widget {
             if (activityPos < 0) {
                 activityPos = 1;
                 delta = 1;
-            } else if (activityPos >= w) {
-                activityPos = w - 2;
+            } else if (activityPos >= width) {
+                activityPos = width - 2;
                 delta = -1;
             }
         }
@@ -101,20 +101,20 @@ public class ProgressBar : Widget {
         Move (y, x);
 
         if (isActivity) {
-            foreach (i; 0 .. w)
+            foreach (i; 0 .. width)
                 if (i == activityPos) {
                     printw("▒");
                 } else {
                     addch(' ');
                 }
         } else {
-            immutable mid = to!int(fraction * w);
+            immutable mid = to!int(fraction * width);
 
             int i;
             for (; i < mid; i++) {
                     printw("▒");
             }
-            for (; i < w; i++) {
+            for (; i < width; i++) {
                 addch(' ');
             }
         }

@@ -98,7 +98,7 @@ public class Entry : Widget
                 point = text.count;
             }
 
-            first = point > w ? point - w : 0;
+            first = point > width ? point - width : 0;
             Redraw();
 
             return text;
@@ -151,15 +151,15 @@ public class Entry : Widget
         Move(y, x);
 
         if (secret) {
-            int vislength = min(text.count, w);
+            int vislength = min(text.count, width);
             char[] asterixes = new char[vislength + 1];
             asterixes[] = '*';
             asterixes[vislength] = 0;
-            printw("%-*s", w, asterixes.ptr);
+            printw("%-*s", width, asterixes.ptr);
         } else {
-            size_t l = min(text.count - first, w);
-            string vis = text.substring(first, l).leftJustify(w);
-            printw("%-*s", w, vis.toStringz);
+            size_t l = min(text.count - first, width);
+            string vis = text.substring(first, l).leftJustify(width);
+            printw("%-*s", width, vis.toStringz);
         }
 
         PositionCursor();
@@ -169,8 +169,8 @@ public class Entry : Widget
     {
         if (point < first) {
             first = point;
-        } else if (first + point >= w) {
-            first = point - (w / 3);
+        } else if (first + point >= width) {
+            first = point - (width / 3);
         }
 
         Redraw();

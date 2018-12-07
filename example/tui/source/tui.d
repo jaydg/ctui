@@ -174,7 +174,7 @@ private class LogWidget : Widget {
             ? head - tail
             : (head + messages.length) - tail;
 
-        for (l = h - 1; l >= 0 && n-- > 0; l--) {
+        for (l = height - 1; l >= 0 && n-- > 0; l--) {
             long item = head - 1 - i;
             if (item < 0)
                 item = messages.length + item;
@@ -182,19 +182,19 @@ private class LogWidget : Widget {
             Move(y + l, x);
 
             immutable sl = messages[item].count;
-            if (sl < w) {
+            if (sl < width) {
                 addstr(messages[item].toStringz);
-                for (int fi; fi < w - sl; fi++)
+                for (int fi; fi < width - sl; fi++)
                     addch (' ');
             } else {
-                addstr(messages[item].substring (0, w).toStringz);
+                addstr(messages[item].substring (0, width).toStringz);
             }
             i++;
         }
 
         for (; l >= 0; l--) {
             Move (y + l, x);
-            for (i = 0; i < w; i++)
+            for (i = 0; i < width; i++)
                 addch(' ');
         }
     }
@@ -256,26 +256,26 @@ private static void layoutDialogs(Frame ftorrents, Frame fstatus, Frame fdetails
     // Torrents
     ftorrents.x = 0;
     ftorrents.y = 0;
-    ftorrents.w = cols - 40;
-    ftorrents.h = midy;
+    ftorrents.width = cols - 40;
+    ftorrents.height = midy;
 
     // Status: Always 40x12
     fstatus.x = cols - 40;
     fstatus.y = 0;
-    fstatus.w = 40;
-    fstatus.h = midy;
+    fstatus.width = 40;
+    fstatus.height = midy;
 
     // Details
     fdetails.x = 0;
     fdetails.y = midy;
-    fdetails.w = midx;
-    fdetails.h = midy;
+    fdetails.width = midx;
+    fdetails.height = midy;
 
     // fprogress
     fprogress.x = midx;
     fprogress.y = midy;
-    fprogress.w = midx + cols % 2;
-    fprogress.h = midy;
+    fprogress.width = midx + cols % 2;
+    fprogress.height = midy;
 }
 
 private static void updateStatus(int iteration)

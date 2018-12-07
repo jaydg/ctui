@@ -54,9 +54,9 @@ public class TrimLabel : Label
     private void SetString(int w, string s)
     {
         if ((fill & Fill.Horizontal) != 0)
-            w = container.w - container.Border * 2 - x;
+            w = container.width - container.Border * 2 - x;
 
-        this.w = w;
+        this.width = w;
         if (s.count > w) {
             if (w < 5)
                 text = s.substring(0, w);
@@ -83,7 +83,7 @@ public class TrimLabel : Label
     public override @property string Text(string value)
     {
         super.Text = value;
-        SetString(w, value);
+        SetString(width, value);
 
         return super.Text;
     }

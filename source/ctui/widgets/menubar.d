@@ -216,7 +216,7 @@ package class Menu : Container {
                     ? Application.ColorMenuSelected
                     : Application.ColorMenu);
 
-            for (int p; p < Container.w - 2; p++)
+            for (int p; p < Container.width - 2; p++)
                 if (item is null)
                     printw("─");
                 else
@@ -232,7 +232,7 @@ package class Menu : Container {
 
             // The help string
             int l = cast(int)item.help.count;
-            Move(i + 2, Container.w - l - 2);
+            Move(i + 2, Container.width - l - 2);
             printw("%s", item.help.toStringz);
         }
 
@@ -360,7 +360,7 @@ public class MenuBar : Container
     {
         Move(0, 0);
         attron(Application.ColorFocus);
-        for (int i; i < Container.w; i++)
+        for (int i; i < Container.width; i++)
             addch(' ');
 
         int pos = 1;

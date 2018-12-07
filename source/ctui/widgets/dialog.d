@@ -87,13 +87,13 @@ public class Dialog : Frame
         if (buttons == null)
             return;
 
-        int p = (w - button_len) / 2;
+        int p = (width - button_len) / 2;
 
         foreach (b; buttons) {
             b.x = p;
-            b.y = h - 5;
+            b.y = height - 5;
 
-            p += b.w + button_space;
+            p += b.width + button_space;
         }
     }
 
@@ -101,7 +101,7 @@ public class Dialog : Frame
     public void AddButton(Button b)
     {
         buttons ~= b;
-        button_len += b.w + button_space;
+        button_len += b.width + button_space;
 
         Add(b);
     }
@@ -123,8 +123,8 @@ public class Dialog : Frame
         attrset(ContainerColorNormal);
         Clear();
 
-        Widget.DrawFrame(x + 1, y + 1, w - 2, h - 2);
-        move(y + 1, x + (w - cast(int)Title.count) / 2);
+        Widget.DrawFrame(x + 1, y + 1, width - 2, height - 2);
+        move(y + 1, x + (width - cast(int)Title.count) / 2);
         addch(' ');
         attrset(Application.ColorDialogHotNormal);
         addstr(Title.toStringz);
@@ -149,8 +149,8 @@ public class Dialog : Frame
     {
         super.DoSizeChanged();
 
-        x = (Application.Cols - w) / 2;
-        y = (Application.Lines - h) / 3;
+        x = (Application.Cols - width) / 2;
+        y = (Application.Lines - height) / 3;
 
         LayoutButtons();
     }

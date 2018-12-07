@@ -137,7 +137,7 @@ public class ListView : Widget {
         case KEY_DOWN:
             if (selected + 1 < provider.Items) {
                 selected++;
-                if (selected >= top + h) {
+                if (selected >= top + height) {
                     top++;
                 }
                 SelectedChanged();
@@ -148,12 +148,12 @@ public class ListView : Widget {
 
         case Keys.CtrlV:
         case KEY_NPAGE:
-            n = (selected + h);
+            n = (selected + height);
             if (n > provider.Items)
                 n = provider.Items - 1;
             if (n != selected) {
                 selected = n;
-                if (provider.Items >= h)
+                if (provider.Items >= height)
                     top = selected;
                 else
                     top = 0;
@@ -163,7 +163,7 @@ public class ListView : Widget {
             return true;
 
         case KEY_PPAGE:
-            n = (selected - h);
+            n = (selected - height);
             if (n < 0)
                 n = 0;
             if (n != selected) {
@@ -186,13 +186,13 @@ public class ListView : Widget {
 
     public override void Redraw()
     {
-        for (int l = 0; l < h; l++) {
+        for (int l = 0; l < height; l++) {
             Move(y + l, x);
             int item = l + top;
 
             if (item >= provider.Items) {
                 attrset(ColorNormal);
-                for (int c = 0; c < w; c++)
+                for (int c = 0; c < width; c++)
                     addch(' ');
                 continue;
             }
@@ -211,7 +211,7 @@ public class ListView : Widget {
                     attrset(ColorNormal);
             }
 
-            provider.Render(y + l, x, w, item);
+            provider.Render(y + l, x, width, item);
         }
         PositionCursor();
         refresh();

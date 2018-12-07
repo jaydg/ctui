@@ -81,9 +81,9 @@ public class Container : Widget
     {
         foreach (w; widgets) {
             // Poor man's clipping.
-            if (w.x >= this.w - Border * 2)
+            if (w.x >= this.width - Border * 2)
                 continue;
-            if (w.y >= this.h - Border * 2)
+            if (w.y >= this.height - Border * 2)
                 continue;
 
             w.Redraw();
@@ -355,10 +355,10 @@ public class Container : Widget
             int wx = w.x + bx;
             int wy = w.y + by;
 
-            if ((ev.x < wx) || (ev.x > (wx + w.w - 1)))
+            if ((ev.x < wx) || (ev.x > (wx + w.width - 1)))
                 continue;
 
-            if ((ev.y < wy) || (ev.y > (wy + w.h - 1)))
+            if ((ev.y < wy) || (ev.y > (wy + w.height - 1)))
                 continue;
 
             ev.x -= bx;
@@ -375,11 +375,11 @@ public class Container : Widget
             widget.DoSizeChanged();
 
             if ((widget.fill & Fill.Horizontal) != 0) {
-                widget.w = w - (Border * 2) - widget.x;
+                widget.width = width - (Border * 2) - widget.x;
             }
 
             if ((widget.fill & Fill.Vertical) != 0)
-                widget.h = h - (Border * 2) - widget.y;
+                widget.height = height - (Border * 2) - widget.y;
         }
     }
 

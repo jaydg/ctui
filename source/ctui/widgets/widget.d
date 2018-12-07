@@ -59,11 +59,11 @@ public abstract class Widget
 
     /// The width of this widget, it is the area that receives mouse events
     ///  and that must be repainted.
-    public int w;
+    public int width;
 
     /// The height of this widget, it is the area that receives mouse events
     /// and that must be repainted.
-    public int h;
+    public int height;
 
     package bool can_focus;
     package bool has_focus;
@@ -82,8 +82,8 @@ public abstract class Widget
     {
         this.x = x;
         this.y = y;
-        this.w = w;
-        this.h = h;
+        this.width = w;
+        this.height = h;
         container = Application.EmptyContainer;
     }
 
@@ -159,9 +159,9 @@ public abstract class Widget
     /// This clears the entire region used by this widget.
     public void Clear()
     {
-        for (int line = 0; line < h; line++) {
+        for (int line = 0; line < height; line++) {
             BaseMove(y + line, x);
-            for (int col = 0; col < w; col++) {
+            for (int col = 0; col < width; col++) {
                 addch(' ');
             }
         }
@@ -177,9 +177,9 @@ public abstract class Widget
     /// been allocated.
     public void Redraw()
     {
-        for (int line; line < h; line++) {
+        for (int line; line < height; line++) {
             Move(y + line, x);
-            for (int col; col < w; col++) {
+            for (int col; col < width; col++) {
                 addch('x');
             }
         }
