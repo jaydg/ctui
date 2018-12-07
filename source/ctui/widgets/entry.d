@@ -374,7 +374,7 @@ public class Entry : Widget
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED)
             return;
 
-        container.setFocus(this);
+        container.focused = this;
 
         // We could also set the cursor position.
         point = first + (ev.x - x);

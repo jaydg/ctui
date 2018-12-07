@@ -145,7 +145,7 @@ public class RadioGroup : Widget {
                             selected = i;
                             cursor = i;
                             if (!super.hasFocus()) {
-                                container.setFocus(this);
+                                container.focused = this;
                             }
 
                             return true;
@@ -194,7 +194,7 @@ public class RadioGroup : Widget {
             return;
         }
 
-        container.setFocus(this);
+        container.focused = this;
 
         ev.y -= y;
 

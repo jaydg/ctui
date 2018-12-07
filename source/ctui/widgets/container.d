@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, container widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,6 +28,7 @@ module ctui.widgets.container;
 
 import core.stdc.stddef;
 import std.algorithm : remove;
+import std.algorithm.iteration : filter;
 import std.range : retro;
 import deimos.ncurses;
 
@@ -43,19 +42,29 @@ import ctui.widgets.widget;
 /// focus handling and event routing.
 public class Container : Widget
 {
-    Widget[] widgets;
-    Widget focused = null;
+    private Widget[] widgets;
+
+    ///
     public bool running;
 
+    ///
     public int containerColorNormal;
+
+    ///
     public int containerColorFocus;
+
+    ///
     public int containerColorHotNormal;
+
+    ///
     public int containerColorHotFocus;
 
+    ///
     public int border;
 
     static this();
 
+    /// Array Indexing: access the container's children by index
     public ref Widget opIndex(size_t index)
     {
         return widgets[index];
@@ -104,23 +113,41 @@ public class Container : Widget
             focused.positionCursor();
     }
 
+    private Widget _focused = null;
+
+    /// Get the currently focused widget
+    public @property Widget focused()
+    {
+        return _focused;
+    }
+
     /// Focuses the specified widget in this container.
     ///
     /// Focuses the specified widge, taking the focus away from any previously
     /// focused widgets. This method only works if the widget specified
     /// supports being focused.
-    public void setFocus(Widget w)
+    public @property void focused(Widget w)
     {
-        if (!w.canFocus)
+        if (w !is null && !w.canFocus)
             return;
+
         if (focused == w)
             return;
+
         if (focused !is null)
             focused.hasFocus = false;
-        focused = w;
+
+        _focused = w;
+
+        if (focused is null)
+            return;
+
         focused.hasFocus = true;
-        if (Container wc = cast(Container)w)
-            wc.ensureFocus();
+
+        if (Container c = cast(Container)w) {
+            c.ensureFocus();
+        }
+
         focused.positionCursor();
     }
 
@@ -134,25 +161,18 @@ public class Container : Widget
     /// Focuses the first widget in the contained widgets.
     public void focusFirst()
     {
-        foreach (w; widgets) {
-            if (w.canFocus) {
-                setFocus(w);
-                return;
-            }
+        foreach (w; widgets.filter!(w => w.canFocus)) {
+            focused = w;
+            return;
         }
     }
 
     /// Focuses the last widget in the contained widgets.
     public void focusLast()
     {
-        for (ulong i = widgets.length; i > 0; ) {
-            i--;
-
-            Widget w = widgets[i];
-            if (w.canFocus) {
-                setFocus(w);
-                return;
-            }
+        foreach (w; retro(widgets).filter!(w => w.canFocus)) {
+            focused = w;
+            return;
         }
     }
 
@@ -163,35 +183,32 @@ public class Container : Widget
             focusLast();
             return true;
         }
-        ulong focused_idx = -1;
-        for (ulong i = widgets.length; i > 0; )
-        {
-            i--;
-            Widget w = widgets[i];
 
+        if (Container c = cast(Container)focused) {
+            if (c.focusPrev())
+                return true;
+        }
+
+        bool found_current;
+        foreach (w; retro(widgets).filter!(w => w.canFocus))
+        {
             if (w.hasFocus) {
-                if (Container c = cast(Container)w) {
-                    if (c.focusPrev())
-                        return true;
-                }
-                focused_idx = i;
+                found_current = true;
                 continue;
             }
-            if (w.canFocus && focused_idx != -1) {
-                focused.hasFocus = false;
 
-                Container c = cast(Container)w;
-                if (c !is null && c.canFocus)
-                {
+            if (found_current) {
+                focused = w;
+
+                if (Container c = cast(Container)w) {
                     c.focusLast();
                 }
-                setFocus(w);
+
                 return true;
             }
         }
 
         if (focused !is null) {
-            focused.hasFocus = false;
             focused = null;
         }
 
@@ -206,35 +223,33 @@ public class Container : Widget
             return focused !is null;
         }
 
-        ulong n = widgets.length;
-        int focused_idx = -1;
-        for (int i = 0; i < n; i++) {
-            Widget w = widgets[i];
+        if (Container c = cast(Container)focused) {
+            if (c.focusNext())
+                return true;
+        }
 
+        bool found_current;
+        foreach (w; widgets.filter!(w => w.canFocus)) {
             if (w.hasFocus) {
-                Container c = cast(Container)w;
-                if (c !is null) {
-                    if (c.focusNext())
-                        return true;
-                }
-                focused_idx = i;
+                found_current = true;
                 continue;
             }
-            if (w.canFocus && focused_idx != -1) {
-                focused.hasFocus = false;
 
-                Container c = cast(Container)w;
-                if (c !is null && c.canFocus) {
+            if (found_current) {
+                focused = w;
+
+                if (Container c = cast(Container)w) {
                     c.focusFirst();
                 }
-                setFocus (w);
+
                 return true;
             }
         }
+
         if (focused !is null) {
-            focused.hasFocus = false;
             focused = null;
         }
+
         return false;
     }
 
@@ -248,6 +263,7 @@ public class Container : Widget
         col = 0;
     }
 
+    ///
     public void containerMove(int row, int col)
     {
         if (container != Application.EmptyContainer && container !is null)
@@ -256,6 +272,7 @@ public class Container : Widget
             move(row + y, col + x);
     }
 
+    ///
     public void containerBaseMove(int row, int col)
     {
         if (container != Application.EmptyContainer && container !is null)
@@ -276,10 +293,8 @@ public class Container : Widget
     /// Removes all the widgets from this container.
     public void removeAll()
     {
-        Widget[] tmp;
+        Widget[] tmp = widgets.dup;
 
-        foreach (w; widgets)
-            tmp ~= w;
         foreach (w; tmp)
             remove(w);
     }
@@ -306,6 +321,7 @@ public class Container : Widget
             if (focused.processKey(key))
                 return true;
         }
+
         return false;
     }
 
@@ -322,6 +338,7 @@ public class Container : Widget
             if (w.processHotKey(key))
                 return true;
         }
+
         return false;
     }
 
@@ -338,6 +355,7 @@ public class Container : Widget
             if (w.processColdKey(key))
                 return true;
         }
+
         return false;
     }
 
@@ -352,8 +370,8 @@ public class Container : Widget
         // Iterate over the widgets backwards to ensure we
         // get widgets higher on the stack first.
         foreach (w; retro(widgets)) {
-            int wx = w.x + bx;
-            int wy = w.y + by;
+            immutable wx = w.x + bx;
+            immutable wy = w.y + by;
 
             if ((ev.x < wx) || (ev.x > (wx + w.width - 1)))
                 continue;

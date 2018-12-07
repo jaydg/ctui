@@ -150,7 +150,7 @@ public class Button : Widget {
     private bool checkKey(int key)
     {
         if (toUpper(key) == hot_key) {
-            container.setFocus(this);
+            container.focused = this;
             if (clicked)
                 clicked();
 
@@ -194,7 +194,7 @@ public class Button : Widget {
     public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
-            container.setFocus(this);
+            container.focused = this;
             container.redraw();
 
             if (clicked)

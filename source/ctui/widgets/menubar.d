@@ -423,7 +423,7 @@ public class MenuBar : Container
         openMenu = new Menu(this, col, 1, menus[index]);
 
         container.add(openMenu);
-        container.setFocus(openMenu);
+        container.focused = openMenu;
     }
 
     // Starts the menu from a hotkey
@@ -455,7 +455,7 @@ public class MenuBar : Container
         container.remove(openMenu);
 
         if (previousFocused && previousFocused.container) {
-            previousFocused.container.setFocus(previousFocused);
+            previousFocused.container.focused = previousFocused;
         }
 
         openMenu = null;

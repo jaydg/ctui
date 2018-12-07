@@ -151,7 +151,7 @@ public class CheckBox : Widget {
     public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
-            container.setFocus(this);
+            container.focused = this;
             container.redraw();
 
             checked = !checked;
