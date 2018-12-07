@@ -133,13 +133,13 @@ public class Button : Widget {
 
     public override void redraw()
     {
-        attrset(hasFocus ? ColorFocus : ColorNormal);
+        attrset(hasFocus ? colorFocus : colorNormal);
         Move(y, x);
         addstr(shown_text.toStringz);
 
         if (hot_pos != -1) {
             Move(y, x + hot_pos);
-            attrset(hasFocus ? ColorHotFocus : ColorHotNormal);
+            attrset(hasFocus ? colorHotFocus : colorHotNormal);
             addch(hot_key);
         }
     }

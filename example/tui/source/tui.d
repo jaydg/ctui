@@ -167,7 +167,7 @@ private class LogWidget : Widget {
 
     public override void redraw()
     {
-        attrset(ColorNormal);
+        attrset(colorNormal);
 
         int i, l;
         size_t n = head > tail

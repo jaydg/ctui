@@ -191,7 +191,7 @@ public class ListView : Widget {
             int item = l + top;
 
             if (item >= provider.Items) {
-                attrset(ColorNormal);
+                attrset(colorNormal);
                 for (int c = 0; c < width; c++)
                     addch(' ');
                 continue;
@@ -201,14 +201,14 @@ public class ListView : Widget {
 
             if (item == selected) {
                 if (marked)
-                    attrset(ColorHotNormal);
+                    attrset(colorHotNormal);
                 else
-                    attrset(ColorFocus);
+                    attrset(colorFocus);
             } else {
                 if (marked)
-                    attrset(ColorHotFocus);
+                    attrset(colorHotFocus);
                 else
-                    attrset(ColorNormal);
+                    attrset(colorNormal);
             }
 
             provider.Render(y + l, x, width, item);

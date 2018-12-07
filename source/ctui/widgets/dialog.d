@@ -60,10 +60,10 @@ public class Dialog : Frame
     public this(int w, int h, string title)
     {
         super((Application.Cols - w) / 2, (Application.Lines - h) / 3, w, h, title);
-        ContainerColorNormal = Application.ColorDialogNormal;
-        ContainerColorFocus = Application.ColorDialogFocus;
-        ContainerColorHotNormal = Application.ColorDialogHotNormal;
-        ContainerColorHotFocus = Application.ColorDialogHotFocus;
+        containerColorNormal = Application.colorDialogNormal;
+        containerColorFocus = Application.colorDialogFocus;
+        containerColorHotNormal = Application.colorDialogHotNormal;
+        containerColorHotFocus = Application.colorDialogHotFocus;
 
         Border++;
     }
@@ -71,10 +71,10 @@ public class Dialog : Frame
     /// Makes the default style for the dialog use the error colors.
     public void ErrorColors()
     {
-        ContainerColorNormal = Application.ColorError;
-        ContainerColorFocus = Application.ColorErrorFocus;
-        ContainerColorHotFocus = Application.ColorErrorHotFocus;
-        ContainerColorHotNormal = Application.ColorErrorHot;
+        containerColorNormal = Application.colorError;
+        containerColorFocus = Application.colorErrorFocus;
+        containerColorHotFocus = Application.colorErrorHotFocus;
+        containerColorHotNormal = Application.colorErrorHot;
     }
 
     public override void Prepare()
@@ -120,13 +120,13 @@ public class Dialog : Frame
 
     public override void redraw()
     {
-        attrset(ContainerColorNormal);
+        attrset(containerColorNormal);
         clear();
 
         Widget.drawFrame(x + 1, y + 1, width - 2, height - 2);
         move(y + 1, x + (width - cast(int)Title.count) / 2);
         addch(' ');
-        attrset(Application.ColorDialogHotNormal);
+        attrset(Application.colorDialogHotNormal);
         addstr(Title.toStringz);
         addch(' ');
         RedrawChildren();

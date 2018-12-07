@@ -71,14 +71,14 @@ public class Frame : Container
 
     public override void redraw()
     {
-        attrset(ContainerColorNormal);
+        attrset(containerColorNormal);
         clear();
 
         Widget.drawFrame(x, y, width, height);
-        attrset(Container.ContainerColorNormal);
+        attrset(Container.containerColorNormal);
         move(y, x + 1);
         if (hasFocus)
-            attrset(Application.ColorDialogNormal);
+            attrset(Application.colorDialogNormal);
         if (Title != null) {
             addch(' ');
             addstr(Title.toStringz);

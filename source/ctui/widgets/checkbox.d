@@ -117,15 +117,15 @@ public class CheckBox : Widget {
 
     public override void redraw()
     {
-        attrset(ColorNormal);
+        attrset(colorNormal);
         Move(y, x);
         addstr(checked ? "[X] ".toStringz : "[ ]".toStringz);
-        attrset(hasFocus ? ColorFocus : ColorNormal);
+        attrset(hasFocus ? colorFocus : colorNormal);
         Move(y, x + 3);
         addstr(Text.toStringz);
         if (hot_pos != -1) {
             Move(y, x + 3 + hot_pos);
-            attrset(hasFocus ? ColorHotFocus : ColorHotNormal);
+            attrset(hasFocus ? colorHotFocus : colorHotNormal);
             addch(hot_key);
         }
         positionCursor();

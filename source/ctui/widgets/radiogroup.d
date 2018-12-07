@@ -105,16 +105,16 @@ public class RadioGroup : Widget {
     {
         foreach (int i, label; radioLabels) {
             Move(y + i, x);
-            attron(container.ContainerColorNormal);
+            attron(colorNormal);
             printw(i == selected ? "(o) " : "( ) ");
 
             int hotColor, normalColor;
             if (i == selected) {
-                hotColor = container.ContainerColorHotFocus;
-                normalColor = container.ContainerColorFocus;
+                hotColor = colorHotFocus;
+                normalColor = colorFocus;
             } else {
-                hotColor = container.ContainerColorHotNormal;
-                normalColor = container.ContainerColorNormal;
+                hotColor = colorHotNormal;
+                normalColor = colorNormal;
             }
 
             drawHotString(label, hotColor, normalColor);

@@ -47,10 +47,10 @@ public class Container : Widget
     Widget focused = null;
     public bool running;
 
-    public int ContainerColorNormal;
-    public int ContainerColorFocus;
-    public int ContainerColorHotNormal;
-    public int ContainerColorHotFocus;
+    public int containerColorNormal;
+    public int containerColorFocus;
+    public int containerColorHotNormal;
+    public int containerColorHotFocus;
 
     public int Border;
 
@@ -65,10 +65,10 @@ public class Container : Widget
     public this(int x, int y, int w, int h)
     {
         super(x, y, w, h);
-        ContainerColorNormal = Application.ColorNormal;
-        ContainerColorFocus = Application.ColorFocus;
-        ContainerColorHotNormal = Application.ColorHotNormal;
-        ContainerColorHotFocus = Application.ColorHotFocus;
+        containerColorNormal = Application.colorNormal;
+        containerColorFocus = Application.colorFocus;
+        containerColorHotNormal = Application.colorHotNormal;
+        containerColorHotFocus = Application.colorHotFocus;
     }
 
     /// Called on top-level container before starting up.

@@ -52,62 +52,62 @@ import ctui.widgets.label;
 /// to it and finally calling `Application.Run()` on the toplevel container).
 public class Application {
     /// Color used for unfocused widgets.
-    public static int ColorNormal;
+    public static int colorNormal;
 
     /// Color used for focused widgets.
-    public static int ColorFocus;
+    public static int colorFocus;
 
     /// Color used for hotkeys in unfocused widgets.
-    public static int ColorHotNormal;
+    public static int colorHotNormal;
 
     /// Color used for hotkeys in focused widgets.
-    public static int ColorHotFocus;
+    public static int colorHotFocus;
 
     /// Color used for marked entries.
-    public static int ColorMarked;
+    public static int colorMarked;
 
     /// Color used for marked entries that are currently
     /// selected with the cursor.
-    public static int ColorMarkedSelected;
+    public static int colorMarkedSelected;
 
     /// Color for unfocused widgets on a dialog.
-    public static int ColorDialogNormal;
+    public static int colorDialogNormal;
 
     /// Color for focused widgets on a dialog.
-    public static int ColorDialogFocus;
+    public static int colorDialogFocus;
 
     /// Color for hotkeys in an unfocused widget on a dialog.
-    public static int ColorDialogHotNormal;
+    public static int colorDialogHotNormal;
 
     /// Color for a hotkey in a focused widget on a dialog.
-    public static int ColorDialogHotFocus;
+    public static int colorDialogHotFocus;
 
     /// Color used for error text.
-    public static int ColorError;
+    public static int colorError;
 
     /// Color used for focused widgets on an error dialog.
-    public static int ColorErrorFocus;
+    public static int colorErrorFocus;
 
     /// Color used for hotkeys in error dialogs
-    public static int ColorErrorHot;
+    public static int colorErrorHot;
 
     /// Color used for hotkeys in a focused widget in an error dialog
-    public static int ColorErrorHotFocus;
+    public static int colorErrorHotFocus;
 
     /// The basic color of the terminal.
-    public static int ColorBasic;
+    public static int colorBasic;
 
     /// The regular color for a selected item on a menu
-    public static int ColorMenuSelected;
+    public static int colorMenuSelected;
 
     /// The hot color for a selected item on a menu
-    public static int ColorMenuHotSelected;
+    public static int colorMenuHotSelected;
 
     /// The regular color for a menu entry
-    public static int ColorMenu;
+    public static int colorMenu;
 
     /// The hot color for a menu entry
-    public static int ColorMenuHot;
+    public static int colorMenuHot;
 
     /// This delegate is called on each iteration of the main loop.
     ///
@@ -193,51 +193,51 @@ public class Application {
 
         if (UsingColor)
         {
-            ColorNormal = MakeColor(COLOR_WHITE, COLOR_BLUE);
-            ColorFocus = MakeColor(COLOR_BLACK, COLOR_CYAN);
-            ColorHotNormal = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_BLUE);
-            ColorHotFocus = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_CYAN);
+            colorNormal = MakeColor(COLOR_WHITE, COLOR_BLUE);
+            colorFocus = MakeColor(COLOR_BLACK, COLOR_CYAN);
+            colorHotNormal = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_BLUE);
+            colorHotFocus = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_CYAN);
 
-            ColorMenu = A_BOLD | MakeColor(COLOR_WHITE, COLOR_CYAN);
-            ColorMenuHot = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_CYAN);
-            ColorMenuSelected = A_BOLD | MakeColor(COLOR_WHITE, COLOR_BLACK);
-            ColorMenuHotSelected = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_BLACK);
+            colorMenu = A_BOLD | MakeColor(COLOR_WHITE, COLOR_CYAN);
+            colorMenuHot = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_CYAN);
+            colorMenuSelected = A_BOLD | MakeColor(COLOR_WHITE, COLOR_BLACK);
+            colorMenuHotSelected = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_BLACK);
 
-            ColorMarked = ColorHotNormal;
-            ColorMarkedSelected = ColorHotFocus;
+            colorMarked = colorHotNormal;
+            colorMarkedSelected = colorHotFocus;
 
-            ColorDialogNormal    = MakeColor(COLOR_BLACK, COLOR_WHITE);
-            ColorDialogFocus     = MakeColor(COLOR_BLACK, COLOR_CYAN);
-            ColorDialogHotNormal = MakeColor(COLOR_BLUE,  COLOR_WHITE);
-            ColorDialogHotFocus  = MakeColor(COLOR_BLUE,  COLOR_CYAN);
+            colorDialogNormal    = MakeColor(COLOR_BLACK, COLOR_WHITE);
+            colorDialogFocus     = MakeColor(COLOR_BLACK, COLOR_CYAN);
+            colorDialogHotNormal = MakeColor(COLOR_BLUE,  COLOR_WHITE);
+            colorDialogHotFocus  = MakeColor(COLOR_BLUE,  COLOR_CYAN);
 
-            ColorError = A_BOLD | MakeColor(COLOR_WHITE, COLOR_RED);
-            ColorErrorFocus = MakeColor(COLOR_BLACK, COLOR_WHITE);
-            ColorErrorHot = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_RED);
-            ColorErrorHotFocus = ColorErrorHot;
+            colorError = A_BOLD | MakeColor(COLOR_WHITE, COLOR_RED);
+            colorErrorFocus = MakeColor(COLOR_BLACK, COLOR_WHITE);
+            colorErrorHot = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_RED);
+            colorErrorHotFocus = colorErrorHot;
         } else {
-            ColorNormal = A_NORMAL;
-            ColorFocus = A_REVERSE;
-            ColorHotNormal = A_BOLD;
-            ColorHotFocus = A_REVERSE | A_BOLD;
+            colorNormal = A_NORMAL;
+            colorFocus = A_REVERSE;
+            colorHotNormal = A_BOLD;
+            colorHotFocus = A_REVERSE | A_BOLD;
 
-            ColorMenu = A_REVERSE;
-            ColorMenuHot = A_NORMAL;
-            ColorMenuSelected = A_BOLD;
-            ColorMenuHotSelected = A_NORMAL;
+            colorMenu = A_REVERSE;
+            colorMenuHot = A_NORMAL;
+            colorMenuSelected = A_BOLD;
+            colorMenuHotSelected = A_NORMAL;
 
-            ColorMarked = A_BOLD;
-            ColorMarkedSelected = A_REVERSE | A_BOLD;
+            colorMarked = A_BOLD;
+            colorMarkedSelected = A_REVERSE | A_BOLD;
 
-            ColorDialogNormal = A_REVERSE;
-            ColorDialogFocus = A_NORMAL;
-            ColorDialogHotNormal = A_BOLD;
-            ColorDialogHotFocus = A_NORMAL;
+            colorDialogNormal = A_REVERSE;
+            colorDialogFocus = A_NORMAL;
+            colorDialogHotNormal = A_BOLD;
+            colorDialogHotFocus = A_NORMAL;
 
-            ColorError = A_BOLD;
+            colorError = A_BOLD;
         }
 
-        ColorBasic = MakeColor(-1, -1);
+        colorBasic = MakeColor(-1, -1);
 
         mainLoop = new MainLoop();
         mainLoop.AddWatch(0, MainLoop.Condition.PollIn, {

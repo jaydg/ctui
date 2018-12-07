@@ -333,26 +333,26 @@ public abstract class Widget
     }
 
     /// The color used for rendering an unfocused widget.
-    public @property int ColorNormal()
+    public @property int colorNormal()
     {
-        return container.ContainerColorNormal;
+        return container.containerColorNormal;
     }
 
     /// The color used for rendering a focused widget.
-    public @property int ColorFocus()
+    public @property int colorFocus()
     {
-        return container.ContainerColorFocus;
+        return container.containerColorFocus;
     }
 
     /// The color used for rendering the hotkey on an unfocused widget.
-    public @property int ColorHotNormal()
+    public @property int colorHotNormal()
     {
-        return container.ContainerColorHotNormal;
+        return container.containerColorHotNormal;
     }
 
     /// The color used to render a hotkey in a focused widget.
-    public @property int ColorHotFocus()
+    public @property int colorHotFocus()
     {
-        return container.ContainerColorHotFocus;
+        return container.containerColorHotFocus;
     }
 }

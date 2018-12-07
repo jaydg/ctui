@@ -38,7 +38,7 @@ import ctui.widgets.widget;
 public class Label : Widget
 {
     protected string text;
-    public int Color = -1;
+    public int color = -1;
 
     /// Public constructor: creates a label at the given
     /// coordinate with the given string.
@@ -59,10 +59,10 @@ public class Label : Widget
 
     public override void redraw()
     {
-        if (Color != -1)
-            attrset(Color);
+        if (color != -1)
+            attrset(color);
         else
-            attrset(ColorNormal);
+            attrset(colorNormal);
 
         Move(y, x);
         addstr(text.toStringz);
@@ -77,7 +77,7 @@ public class Label : Widget
     /// ditto
     public @property string Text(string value)
     {
-        attrset(ColorNormal);
+        attrset(colorNormal);
         Move(y, x);
         for (int i = 0; i < text.count; i++)
             addch(' ');

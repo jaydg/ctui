@@ -96,7 +96,7 @@ public class ProgressBar : Widget {
 
     public override void redraw()
     {
-        attrset(container.ContainerColorHotFocus);
+        attrset(colorHotFocus);
 
         Move (y, x);
 

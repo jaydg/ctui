@@ -203,7 +203,7 @@ package class Menu : Container {
 
     public override void redraw()
     {
-        attron(Application.ColorMenu);
+        attron(Application.colorMenu);
 
         drawFrame(x, y, width + 4, cast(int)barItems.children.length + 2, true);
 
@@ -211,10 +211,10 @@ package class Menu : Container {
             Move(i + 2, x + 1);
 
             attron(item is null
-                ? Application.ColorMenuSelected
+                ? Application.colorMenuSelected
                 : i == current
-                    ? Application.ColorMenuSelected
-                    : Application.ColorMenu);
+                    ? Application.colorMenuSelected
+                    : Application.colorMenu);
 
             for (int p; p < Container.width - 2; p++)
                 if (item is null)
@@ -227,8 +227,8 @@ package class Menu : Container {
 
             Move(i + 2, x + 2);
             drawHotString(item.title,
-                i == current ? Application.ColorMenuHotSelected : Application.ColorMenuHot,
-                i == current ? Application.ColorMenuSelected : Application.ColorMenu);
+                i == current ? Application.colorMenuHotSelected : Application.colorMenuHot,
+                i == current ? Application.colorMenuSelected : Application.colorMenu);
 
             // The help string
             int l = cast(int)item.help.count;
@@ -359,7 +359,7 @@ public class MenuBar : Container
     public override void redraw()
     {
         Move(0, 0);
-        attron(Application.ColorFocus);
+        attron(Application.colorFocus);
         for (int i; i < Container.width; i++)
             addch(' ');
 
@@ -370,11 +370,11 @@ public class MenuBar : Container
 
             int hotColor, normalColor;
             if (i == selected) {
-                hotColor = Application.ColorMenuHotSelected;
-                normalColor = Application.ColorMenuSelected;
+                hotColor = Application.colorMenuHotSelected;
+                normalColor = Application.colorMenuSelected;
             } else {
-                hotColor = Application.ColorMenuHot;
-                normalColor = Application.ColorMenu;
+                hotColor = Application.colorMenuHot;
+                normalColor = Application.colorMenu;
             }
 
             drawHotString(menu.title, hotColor, normalColor);

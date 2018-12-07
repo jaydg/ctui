@@ -53,7 +53,7 @@ public class Entry : Widget
 {
     private string text, kill;
     private size_t first, point;
-    private int color;
+    private int _color;
     private bool used;
     private bool secret;
 
@@ -74,7 +74,7 @@ public class Entry : Widget
         point = s.count;
         first = point > w ? point - w : 0;
         canFocus = true;
-        Color = Application.ColorDialogFocus;
+        color = Application.colorDialogFocus;
     }
 
     public @property
@@ -119,17 +119,17 @@ public class Entry : Widget
         }
 
         /// The color used to display the text.
-        int Color()
+        int color()
         {
-            return color;
+            return _color;
         }
 
         /// ditto
-        int Color(int value)
+        int color(int value)
         {
-            color = value;
+            _color = value;
             container.redraw();
-            return color;
+            return _color;
         }
 
         /// The current cursor position.
@@ -147,7 +147,7 @@ public class Entry : Widget
 
     public override void redraw()
     {
-        attrset(Color);
+        attrset(color);
         Move(y, x);
 
         if (secret) {
