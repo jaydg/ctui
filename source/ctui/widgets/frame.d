@@ -77,7 +77,7 @@ public class Frame : Container
         Widget.DrawFrame(x, y, width, height);
         attrset(Container.ContainerColorNormal);
         move(y, x + 1);
-        if (HasFocus)
+        if (hasFocus)
             attrset(Application.ColorDialogNormal);
         if (Title != null) {
             addch(' ');

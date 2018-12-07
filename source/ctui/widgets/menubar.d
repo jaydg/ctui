@@ -196,7 +196,7 @@ package class Menu : Container {
     {
         this.barItems = barItems;
         this.host = host;
-        CanFocus = true;
+        canFocus = true;
 
         super(x, y, width + 4, cast(int)barItems.children.length + 2);
     }
@@ -352,7 +352,7 @@ public class MenuBar : Container
     {
         super(0, 0, Application.Cols, 1);
         this.menus = menus;
-        CanFocus = false;
+        canFocus = false;
         selected = -1;
     }
 
@@ -423,7 +423,7 @@ public class MenuBar : Container
         openMenu = new Menu(this, col, 1, menus[index]);
 
         container.Add(openMenu);
-        container.SetFocus(openMenu);
+        container.setFocus(openMenu);
     }
 
     // Starts the menu from a hotkey
@@ -455,7 +455,7 @@ public class MenuBar : Container
         container.Remove(openMenu);
 
         if (previousFocused && previousFocused.container) {
-            previousFocused.container.SetFocus(previousFocused);
+            previousFocused.container.setFocus(previousFocused);
         }
 
         openMenu = null;

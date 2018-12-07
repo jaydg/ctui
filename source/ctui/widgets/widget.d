@@ -92,12 +92,12 @@ public abstract class Widget
     /// This is used typically by derived classes to flag whether this widget
     /// can receive focus or not. Focus is activated by either clicking with
     /// the mouse on that widget or by using the tab key.
-    public @property bool CanFocus()
+    public @property bool canFocus()
     {
         return can_focus;
     }
 
-    public @property bool CanFocus(bool value)
+    public @property bool canFocus(bool value)
     {
         return can_focus = value;
     }
@@ -106,12 +106,13 @@ public abstract class Widget
     ///
     /// A widget can grab the focus by setting this value to true and
     /// the current focus status can be inquired by using this property.
-    public @property bool HasFocus()
+    public @property bool hasFocus()
     {
         return has_focus;
     }
 
-    public @property bool HasFocus(bool value)
+    /// ditto
+    public @property bool hasFocus(bool value)
     {
         has_focus = value;
         Redraw();

@@ -125,7 +125,7 @@ public class Button : Widget {
     public this(int x, int y, string s, bool is_default)
     {
        super(x, y, cast(int)s.count + 4 + (is_default ? 2 : 0), 1);
-       CanFocus = true;
+       canFocus = true;
 
        this.is_default = is_default;
        Text = s;
@@ -133,13 +133,13 @@ public class Button : Widget {
 
     public override void Redraw()
     {
-        attrset(HasFocus ? ColorFocus : ColorNormal);
+        attrset(hasFocus ? ColorFocus : ColorNormal);
         Move(y, x);
         addstr(shown_text.toStringz);
 
         if (hot_pos != -1) {
             Move(y, x + hot_pos);
-            attrset(HasFocus ? ColorHotFocus : ColorHotNormal);
+            attrset(hasFocus ? ColorHotFocus : ColorHotNormal);
             addch(hot_key);
         }
     }
@@ -152,7 +152,7 @@ public class Button : Widget {
     bool CheckKey(int key)
     {
         if (toUpper(key) == hot_key) {
-            container.SetFocus(this);
+            container.setFocus(this);
             if (clicked)
                 clicked();
 
@@ -196,7 +196,7 @@ public class Button : Widget {
     public override void ProcessMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
-            container.SetFocus(this);
+            container.setFocus(this);
             container.Redraw();
 
             if (clicked)

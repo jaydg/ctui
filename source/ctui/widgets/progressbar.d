@@ -48,7 +48,7 @@ public class ProgressBar : Widget {
     public this(int x, int y, int w)
     {
         super(x, y, w, 1);
-        CanFocus = false;
+        canFocus = false;
         fraction = 0;
     }
 

@@ -71,7 +71,7 @@ public class CheckBox : Widget {
         checked = is_checked;
         Text = s;
 
-        CanFocus = true;
+        canFocus = true;
     }
 
     public @property
@@ -120,12 +120,12 @@ public class CheckBox : Widget {
         attrset(ColorNormal);
         Move(y, x);
         addstr(checked ? "[X] ".toStringz : "[ ]".toStringz);
-        attrset(HasFocus ? ColorFocus : ColorNormal);
+        attrset(hasFocus ? ColorFocus : ColorNormal);
         Move(y, x + 3);
         addstr(Text.toStringz);
         if (hot_pos != -1) {
             Move(y, x + 3 + hot_pos);
-            attrset(HasFocus ? ColorHotFocus : ColorHotNormal);
+            attrset(hasFocus ? ColorHotFocus : ColorHotNormal);
             addch(hot_key);
         }
         PositionCursor();
@@ -152,7 +152,7 @@ public class CheckBox : Widget {
     public override void ProcessMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
-            container.SetFocus(this);
+            container.setFocus(this);
             container.Redraw();
 
             checked = !checked;

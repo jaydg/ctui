@@ -109,16 +109,16 @@ public class Container : Widget
     /// Focuses the specified widge, taking the focus away from any previously
     /// focused widgets. This method only works if the widget specified
     /// supports being focused.
-    public void SetFocus(Widget w)
+    public void setFocus(Widget w)
     {
-        if (!w.CanFocus)
+        if (!w.canFocus)
             return;
         if (focused == w)
             return;
         if (focused !is null)
-            focused.HasFocus = false;
+            focused.hasFocus = false;
         focused = w;
-        focused.HasFocus = true;
+        focused.hasFocus = true;
         if (Container wc = cast(Container)w)
             wc.EnsureFocus();
         focused.PositionCursor();
@@ -135,8 +135,8 @@ public class Container : Widget
     public void FocusFirst()
     {
         foreach (w; widgets) {
-            if (w.CanFocus) {
-                SetFocus(w);
+            if (w.canFocus) {
+                setFocus(w);
                 return;
             }
         }
@@ -149,8 +149,8 @@ public class Container : Widget
             i--;
 
             Widget w = widgets[i];
-            if (w.CanFocus) {
-                SetFocus(w);
+            if (w.canFocus) {
+                setFocus(w);
                 return;
             }
         }
@@ -169,7 +169,7 @@ public class Container : Widget
             i--;
             Widget w = widgets[i];
 
-            if (w.HasFocus) {
+            if (w.hasFocus) {
                 if (Container c = cast(Container)w) {
                     if (c.FocusPrev())
                         return true;
@@ -177,21 +177,21 @@ public class Container : Widget
                 focused_idx = i;
                 continue;
             }
-            if (w.CanFocus && focused_idx != -1) {
-                focused.HasFocus = false;
+            if (w.canFocus && focused_idx != -1) {
+                focused.hasFocus = false;
 
                 Container c = cast(Container)w;
-                if (c !is null && c.CanFocus)
+                if (c !is null && c.canFocus)
                 {
                     c.FocusLast();
                 }
-                SetFocus(w);
+                setFocus(w);
                 return true;
             }
         }
 
         if (focused !is null) {
-            focused.HasFocus = false;
+            focused.hasFocus = false;
             focused = null;
         }
 
@@ -211,7 +211,7 @@ public class Container : Widget
         for (int i = 0; i < n; i++) {
             Widget w = widgets[i];
 
-            if (w.HasFocus) {
+            if (w.hasFocus) {
                 Container c = cast(Container)w;
                 if (c !is null) {
                     if (c.FocusNext())
@@ -220,19 +220,19 @@ public class Container : Widget
                 focused_idx = i;
                 continue;
             }
-            if (w.CanFocus && focused_idx != -1) {
-                focused.HasFocus = false;
+            if (w.canFocus && focused_idx != -1) {
+                focused.hasFocus = false;
 
                 Container c = cast(Container)w;
-                if (c !is null && c.CanFocus) {
+                if (c !is null && c.canFocus) {
                     c.FocusFirst();
                 }
-                SetFocus (w);
+                setFocus (w);
                 return true;
             }
         }
         if (focused !is null) {
-            focused.HasFocus = false;
+            focused.hasFocus = false;
             focused = null;
         }
         return false;
@@ -269,8 +269,8 @@ public class Container : Widget
     {
         widgets ~= w;
         w.container = this;
-        if (w.CanFocus)
-            this.CanFocus = true;
+        if (w.canFocus)
+            this.canFocus = true;
     }
 
     /// Removes all the widgets from this container.
@@ -297,7 +297,7 @@ public class Container : Widget
         w.container = null;
 
         if (widgets.length < 1)
-            this.CanFocus = false;
+            this.canFocus = false;
     }
 
     public override bool ProcessKey(wchar_t key)

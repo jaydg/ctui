@@ -82,7 +82,7 @@ public class ListView : Widget {
     public this(int x, int y, int w, int h, IListProvider provider)
     {
         super(x, y, w, h);
-        CanFocus = true;
+        canFocus = true;
 
         this.provider = provider;
         provider.SetListView(this);

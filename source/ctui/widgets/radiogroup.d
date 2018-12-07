@@ -60,16 +60,16 @@ public class RadioGroup : Widget {
 
         this.selected = selected;
         this.radioLabels = radioLabels;
-        CanFocus = true;
+        canFocus = true;
     }
 
     private string[] _radioLabels;
 
     @property {
-        public override bool HasFocus(bool value)
+        public override bool hasFocus(bool value)
         {
             curs_set(value);
-            return super.HasFocus(value);
+            return super.hasFocus(value);
         }
 
         /// Get the radio labels
@@ -144,8 +144,8 @@ public class RadioGroup : Widget {
                         if (nextIsHot && c == key) {
                             selected = i;
                             cursor = i;
-                            if (!super.HasFocus()) {
-                                container.SetFocus(this);
+                            if (!super.hasFocus()) {
+                                container.setFocus(this);
                             }
 
                             return true;
@@ -194,7 +194,7 @@ public class RadioGroup : Widget {
             return;
         }
 
-        container.SetFocus(this);
+        container.setFocus(this);
 
         ev.y -= y;
 

@@ -73,16 +73,16 @@ public class Entry : Widget
         text = s;
         point = s.count;
         first = point > w ? point - w : 0;
-        CanFocus = true;
+        canFocus = true;
         Color = Application.ColorDialogFocus;
     }
 
     public @property
     {
-        public override bool HasFocus(bool value)
+        public override bool hasFocus(bool value)
         {
             curs_set(value);
-            return super.HasFocus(value);
+            return super.hasFocus(value);
         }
 
         /// Sets or gets the text in the entry.
@@ -374,7 +374,7 @@ public class Entry : Widget
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED)
             return;
 
-        container.SetFocus(this);
+        container.setFocus(this);
 
         // We could also set the cursor position.
         point = first + (ev.x - x);
