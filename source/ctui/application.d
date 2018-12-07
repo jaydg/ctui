@@ -480,7 +480,7 @@ public class Application {
             MEVENT ev;
 
             if (OK == getmouse(&ev)) {
-                container.ProcessMouse(&ev);
+                container.processMouse(&ev);
             }
 
             return;
@@ -495,13 +495,13 @@ public class Application {
             timeout(-1);
         }
 
-        if (container.ProcessHotKey(ch))
+        if (container.processHotKey(ch))
             return;
 
-        if (container.ProcessKey(ch))
+        if (container.processKey(ch))
             return;
 
-        if (container.ProcessColdKey(ch))
+        if (container.processColdKey(ch))
             return;
 
         // Control-c, quit the current operation.

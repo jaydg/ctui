@@ -117,7 +117,7 @@ public class RadioGroup : Widget {
                 normalColor = container.ContainerColorNormal;
             }
 
-            DrawHotString(label, hotColor, normalColor);
+            drawHotString(label, hotColor, normalColor);
         }
 
         positionCursor();
@@ -131,7 +131,7 @@ public class RadioGroup : Widget {
     /// Changed event, raised when the selected item is changed.
     public void delegate(int selection) changed;
 
-    public override bool ProcessColdKey(wchar_t key)
+    public override bool processColdKey(wchar_t key)
     {
         if (key.isAlphaNum()) {
             key = key.toUpper();
@@ -159,7 +159,7 @@ public class RadioGroup : Widget {
         return false;
     }
 
-    public override bool ProcessKey(wchar_t key)
+    public override bool processKey(wchar_t key)
     {
         switch (key) {
             case KEY_UP:
@@ -188,7 +188,7 @@ public class RadioGroup : Widget {
         return false;
     }
 
-    public override void ProcessMouse(MEVENT *ev)
+    public override void processMouse(MEVENT *ev)
     {
         if (!(ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED)) {
             return;

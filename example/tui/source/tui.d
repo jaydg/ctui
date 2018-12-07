@@ -132,7 +132,7 @@ private class TorrentDetailsList : IListProvider {
         }
     }
 
-    bool ProcessKey(wchar_t ch)
+    bool processKey(wchar_t ch)
     {
         return false;
     }

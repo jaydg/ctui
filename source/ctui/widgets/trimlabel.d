@@ -67,7 +67,7 @@ public class TrimLabel : Label
             text = s;
     }
 
-    public override void DoSizeChanged()
+    public override void doSizeChanged()
     {
         if ((fill & Fill.Horizontal) != 0)
             SetString(0, original);

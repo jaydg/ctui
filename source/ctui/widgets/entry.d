@@ -188,7 +188,7 @@ public class Entry : Widget
         }
     }
 
-    public override bool ProcessKey(wchar_t key)
+    public override bool processKey(wchar_t key)
     {
         switch (key) {
         case 127:
@@ -369,7 +369,7 @@ public class Entry : Widget
         return -1;
     }
 
-    public override void ProcessMouse(MEVENT* ev)
+    public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED)
             return;

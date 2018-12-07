@@ -61,7 +61,7 @@ public interface IListProvider {
     ///
     /// The model should return true if the key was
     /// processed, false otherwise.
-    bool ProcessKey(wchar_t ch);
+    bool processKey(wchar_t ch);
 
     /// Callback: invoked when the selected item has changed.
     void SelectedChanged();
@@ -116,7 +116,7 @@ public class ListView : Widget {
         provider.SelectedChanged();
     }
 
-    public override bool ProcessKey(wchar_t c)
+    public override bool processKey(wchar_t c)
     {
         int n;
 
@@ -175,7 +175,7 @@ public class ListView : Widget {
             return true;
 
         default:
-            return provider.ProcessKey(c);
+            return provider.processKey(c);
         }
     }
 
@@ -239,7 +239,7 @@ public class ListView : Widget {
         return value;
     }
 
-    public override void ProcessMouse(MEVENT* ev)
+    public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED)
             return;

@@ -300,48 +300,48 @@ public class Container : Widget
             this.canFocus = false;
     }
 
-    public override bool ProcessKey(wchar_t key)
+    public override bool processKey(wchar_t key)
     {
         if (focused !is null) {
-            if (focused.ProcessKey(key))
+            if (focused.processKey(key))
                 return true;
         }
         return false;
     }
 
-    public override bool ProcessHotKey(wchar_t key)
+    public override bool processHotKey(wchar_t key)
     {
         if (focused !is null)
-            if (focused.ProcessHotKey(key))
+            if (focused.processHotKey(key))
                 return true;
 
         foreach (w; widgets) {
             if (w == focused)
                 continue;
 
-            if (w.ProcessHotKey(key))
+            if (w.processHotKey(key))
                 return true;
         }
         return false;
     }
 
-    public override bool ProcessColdKey(wchar_t key)
+    public override bool processColdKey(wchar_t key)
     {
         if (focused !is null)
-            if (focused.ProcessColdKey(key))
+            if (focused.processColdKey(key))
                 return true;
 
         foreach (w; widgets) {
             if (w == focused)
                 continue;
 
-            if (w.ProcessColdKey(key))
+            if (w.processColdKey(key))
                 return true;
         }
         return false;
     }
 
-    public override void ProcessMouse(MEVENT* ev)
+    public override void processMouse(MEVENT* ev)
     {
         int bx, by;
 
@@ -364,15 +364,15 @@ public class Container : Widget
             ev.x -= bx;
             ev.y -= by;
 
-            w.ProcessMouse(ev);
+            w.processMouse(ev);
             return;
         }
     }
 
-    public override void DoSizeChanged()
+    public override void doSizeChanged()
     {
         foreach (widget; widgets) {
-            widget.DoSizeChanged();
+            widget.doSizeChanged();
 
             if ((widget.fill & Fill.Horizontal) != 0) {
                 widget.width = width - (Border * 2) - widget.x;
@@ -392,6 +392,6 @@ public class Container : Widget
         if (sizeChanged)
             sizeChanged();
 
-        DoSizeChanged();
+        doSizeChanged();
     }
 }

@@ -123,7 +123,7 @@ public class Dialog : Frame
         attrset(ContainerColorNormal);
         clear();
 
-        Widget.DrawFrame(x + 1, y + 1, width - 2, height - 2);
+        Widget.drawFrame(x + 1, y + 1, width - 2, height - 2);
         move(y + 1, x + (width - cast(int)Title.count) / 2);
         addch(' ');
         attrset(Application.ColorDialogHotNormal);
@@ -132,7 +132,7 @@ public class Dialog : Frame
         RedrawChildren();
     }
 
-    public override bool ProcessKey(wchar_t key)
+    public override bool processKey(wchar_t key)
     {
         if (key == Keys.Esc) {
             running = false;
@@ -142,12 +142,12 @@ public class Dialog : Frame
             return true;
         }
 
-        return super.ProcessKey(key);
+        return super.processKey(key);
     }
 
-    public override void DoSizeChanged()
+    public override void doSizeChanged()
     {
-        super.DoSizeChanged();
+        super.doSizeChanged();
 
         x = (Application.Cols - width) / 2;
         y = (Application.Lines - height) / 3;

@@ -136,7 +136,7 @@ public class CheckBox : Widget {
         Move(y, x + 1);
     }
 
-    public override bool ProcessKey(wchar_t c)
+    public override bool processKey(wchar_t c)
     {
         if (c == ' ') {
             checked = !checked;
@@ -149,7 +149,7 @@ public class CheckBox : Widget {
         return false;
     }
 
-    public override void ProcessMouse(MEVENT* ev)
+    public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             container.setFocus(this);

@@ -161,7 +161,7 @@ public class Button : Widget {
         return false;
     }
 
-    public override bool ProcessHotKey(wchar_t key)
+    public override bool processHotKey(wchar_t key)
     {
         int k = isAlt(key);
         if (k != 0)
@@ -170,7 +170,7 @@ public class Button : Widget {
         return false;
     }
 
-    public override bool ProcessColdKey(wchar_t key)
+    public override bool processColdKey(wchar_t key)
     {
         if (is_default && key == '\n') {
             if (clicked)
@@ -182,7 +182,7 @@ public class Button : Widget {
         return CheckKey(key);
     }
 
-    public override bool ProcessKey(wchar_t c)
+    public override bool processKey(wchar_t c)
     {
         if (c == '\n' || c == ' ' || toUpper(c) == hot_key) {
             if (clicked)
@@ -193,7 +193,7 @@ public class Button : Widget {
         return false;
     }
 
-    public override void ProcessMouse(MEVENT* ev)
+    public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             container.setFocus(this);

@@ -194,7 +194,7 @@ public abstract class Widget
     /// true to stop the keystroke from being processed by other widgets or
     /// consumed by the widget engine. If they return false, the keystroke will
     /// be passed out to other widgets for processing.
-    public bool ProcessKey(wchar_t key)
+    public bool processKey(wchar_t key)
     {
         return false;
     }
@@ -204,7 +204,7 @@ public abstract class Widget
     /// Widgets can inspect the value of ev.ButtonState to determine if
     /// this is a message they are interested in (typically
     /// `ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED`).
-    public void ProcessMouse(MEVENT* ev)
+    public void processMouse(MEVENT* ev)
     {
     }
 
@@ -223,7 +223,7 @@ public abstract class Widget
     /// Typically to check if the keystroke is an Alt-_key combination, you
     /// would use `isAlt(key)` and then `std.uni.toUpper(key)` to compare
     /// with your hotkey.
-    public bool ProcessHotKey(wchar_t key)
+    public bool processHotKey(wchar_t key)
     {
         return false;
     }
@@ -239,7 +239,7 @@ public abstract class Widget
     /// This functionality is used, for example, by default buttons to act on
     /// the enter _key. Processing this as a hot-_key would prevent non-default
     /// buttons from consuming the enter keypress when they have the focus.
-    public bool ProcessColdKey(wchar_t key)
+    public bool processColdKey(wchar_t key)
     {
         return false;
     }
@@ -266,23 +266,23 @@ public abstract class Widget
     ///
     /// This method can be overwritten by widgets that might be interested in
     /// adjusting their contents or children (if they are containers).
-    public void DoSizeChanged()
+    public void doSizeChanged()
     {
     }
 
     /// Utility function to draw frames
     ///
     /// Draws a frame with the current color in the specified coordinates.
-    static public void DrawFrame(int col, int line, int width, int height)
+    static public void drawFrame(int col, int line, int width, int height)
     {
-        DrawFrame(col, line, width, height, false);
+        drawFrame(col, line, width, height, false);
     }
 
     /// Utility function to draw strings that contain a hotkey
     ///
     /// Draws the string s with the given color. If the character "__" is
     /// found in s, the next character is drawn using hotcolor.
-    static public void DrawHotString(string s, int hotcolor, int color)
+    static public void drawHotString(string s, int hotcolor, int color)
     {
         int attr = color;
 
@@ -301,7 +301,7 @@ public abstract class Widget
     /// Utility function to draw frames
     ///
     /// Draws a frame with the current color in the specified coordinates.
-    static public void DrawFrame(int col, int line, int width, int height, bool fill)
+    static public void drawFrame(int col, int line, int width, int height, bool fill)
     {
         move(line, col);
         printw("┌");

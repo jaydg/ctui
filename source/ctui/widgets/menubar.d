@@ -205,7 +205,7 @@ package class Menu : Container {
     {
         attron(Application.ColorMenu);
 
-        DrawFrame(x, y, width + 4, cast(int)barItems.children.length + 2, true);
+        drawFrame(x, y, width + 4, cast(int)barItems.children.length + 2, true);
 
         foreach (int i, item; barItems.children) {
             Move(i + 2, x + 1);
@@ -226,7 +226,7 @@ package class Menu : Container {
                 continue;
 
             Move(i + 2, x + 2);
-            DrawHotString(item.title,
+            drawHotString(item.title,
                 i == current ? Application.ColorMenuHotSelected : Application.ColorMenuHot,
                 i == current ? Application.ColorMenuSelected : Application.ColorMenu);
 
@@ -253,7 +253,7 @@ package class Menu : Container {
             action();
     }
 
-    public override bool ProcessKey(wchar_t key)
+    public override bool processKey(wchar_t key)
     {
         switch (key) {
         case KEY_UP:
@@ -297,7 +297,7 @@ package class Menu : Container {
         return true;
     }
 
-    public override void ProcessMouse(MEVENT* ev)
+    public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             if (ev.y < 1)
@@ -377,7 +377,7 @@ public class MenuBar : Container
                 normalColor = Application.ColorMenu;
             }
 
-            DrawHotString(menu.title, hotColor, normalColor);
+            drawHotString(menu.title, hotColor, normalColor);
             pos += menu.width + 3;
         }
 
@@ -485,7 +485,7 @@ public class MenuBar : Container
         OpenMenu(selected);
     }
 
-    public override bool ProcessHotKey(wchar_t key)
+    public override bool processHotKey(wchar_t key)
     {
         if (key == KEY_F(9)) {
             StartMenu();
@@ -503,10 +503,10 @@ public class MenuBar : Container
             }
         }
 
-        return super.ProcessHotKey(key);
+        return super.processHotKey(key);
     }
 
-    public override void ProcessMouse(MEVENT* ev)
+    public override void processMouse(MEVENT* ev)
     {
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             int pos = 1;

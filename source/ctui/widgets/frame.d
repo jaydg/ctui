@@ -74,7 +74,7 @@ public class Frame : Container
         attrset(ContainerColorNormal);
         clear();
 
-        Widget.DrawFrame(x, y, width, height);
+        Widget.drawFrame(x, y, width, height);
         attrset(Container.ContainerColorNormal);
         move(y, x + 1);
         if (hasFocus)
