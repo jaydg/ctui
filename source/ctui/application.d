@@ -293,10 +293,10 @@ public class Application {
             d.ErrorColors();
 
         for (int i = 0; i < lines.length; i++)
-            d.Add(new Label(1, i + 1, lines[i]));
+            d.add(new Label(1, i + 1, lines[i]));
 
         Button b = new Button(0, 0, "Ok", true);
-        d.AddButton(b);
+        d.addButton(b);
         b.clicked = { b.container.running = false; };
 
         Application.Run(d);
@@ -383,9 +383,9 @@ public class Application {
 
         toplevels ~= container;
 
-        container.Prepare();
-        container.SizeChanged();
-        container.FocusFirst();
+        container.prepare();
+        container.sizeChanged();
+        container.focusFirst();
         redraw(container);
         container.positionCursor();
         Refresh();
@@ -523,12 +523,12 @@ public class Application {
         // Focus handling
         //
         if (ch == Keys.Tab) {
-            if (!container.FocusNext())
-                container.FocusNext();
+            if (!container.focusNext())
+                container.focusNext();
             refresh();
         } else if (ch == Keys.ShiftTab) {
-            if (!container.FocusPrev())
-                container.FocusPrev();
+            if (!container.focusPrev())
+                container.focusPrev();
             refresh();
         }
     }
@@ -543,7 +543,7 @@ public class Application {
     {
         EmptyContainer.clear();
         foreach (c; toplevels) {
-            c.SizeChanged();
+            c.sizeChanged();
         }
         Refresh();
     }

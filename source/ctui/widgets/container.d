@@ -52,7 +52,7 @@ public class Container : Widget
     public int containerColorHotNormal;
     public int containerColorHotFocus;
 
-    public int Border;
+    public int border;
 
     static this();
 
@@ -72,18 +72,18 @@ public class Container : Widget
     }
 
     /// Called on top-level container before starting up.
-    public void Prepare ()
+    public void prepare()
     {
     }
 
     /// Used to redraw all the children in this container.
-    public void RedrawChildren()
+    public void redrawChildren()
     {
         foreach (w; widgets) {
             // Poor man's clipping.
-            if (w.x >= this.width - Border * 2)
+            if (w.x >= this.width - border * 2)
                 continue;
-            if (w.y >= this.height - Border * 2)
+            if (w.y >= this.height - border * 2)
                 continue;
 
             w.redraw();
@@ -95,7 +95,7 @@ public class Container : Widget
 
     public override void redraw()
     {
-        RedrawChildren();
+        redrawChildren();
     }
 
     public override void positionCursor()
@@ -120,19 +120,19 @@ public class Container : Widget
         focused = w;
         focused.hasFocus = true;
         if (Container wc = cast(Container)w)
-            wc.EnsureFocus();
+            wc.ensureFocus();
         focused.positionCursor();
     }
 
     /// Focuses the first possible focusable widget in the contained widgets.
-    public void EnsureFocus()
+    public void ensureFocus()
     {
         if (focused is null)
-            FocusFirst();
+            focusFirst();
     }
 
     /// Focuses the first widget in the contained widgets.
-    public void FocusFirst()
+    public void focusFirst()
     {
         foreach (w; widgets) {
             if (w.canFocus) {
@@ -143,7 +143,7 @@ public class Container : Widget
     }
 
     /// Focuses the last widget in the contained widgets.
-    public void FocusLast()
+    public void focusLast()
     {
         for (ulong i = widgets.length; i > 0; ) {
             i--;
@@ -157,10 +157,10 @@ public class Container : Widget
     }
 
     /// Focuses the previous widget.
-    public bool FocusPrev()
+    public bool focusPrev()
     {
         if (focused is null) {
-            FocusLast();
+            focusLast();
             return true;
         }
         ulong focused_idx = -1;
@@ -171,7 +171,7 @@ public class Container : Widget
 
             if (w.hasFocus) {
                 if (Container c = cast(Container)w) {
-                    if (c.FocusPrev())
+                    if (c.focusPrev())
                         return true;
                 }
                 focused_idx = i;
@@ -183,7 +183,7 @@ public class Container : Widget
                 Container c = cast(Container)w;
                 if (c !is null && c.canFocus)
                 {
-                    c.FocusLast();
+                    c.focusLast();
                 }
                 setFocus(w);
                 return true;
@@ -199,10 +199,10 @@ public class Container : Widget
     }
 
     /// Focuses the next widget.
-    public bool FocusNext()
+    public bool focusNext()
     {
         if (focused is null) {
-            FocusFirst();
+            focusFirst();
             return focused !is null;
         }
 
@@ -214,7 +214,7 @@ public class Container : Widget
             if (w.hasFocus) {
                 Container c = cast(Container)w;
                 if (c !is null) {
-                    if (c.FocusNext())
+                    if (c.focusNext())
                         return true;
                 }
                 focused_idx = i;
@@ -225,7 +225,7 @@ public class Container : Widget
 
                 Container c = cast(Container)w;
                 if (c !is null && c.canFocus) {
-                    c.FocusFirst();
+                    c.focusFirst();
                 }
                 setFocus (w);
                 return true;
@@ -242,16 +242,16 @@ public class Container : Widget
     ///
     /// This method is typically overwritten by containers that want to have
     /// some padding (like Frames or Dialogs).
-    public void GetBase(out int row, out int col)
+    public void getBase(out int row, out int col)
     {
         row = 0;
         col = 0;
     }
 
-    public void ContainerMove(int row, int col)
+    public void containerMove(int row, int col)
     {
         if (container != Application.EmptyContainer && container !is null)
-            container.ContainerMove(row + y, col + x);
+            container.containerMove(row + y, col + x);
         else
             move(row + y, col + x);
     }
@@ -265,7 +265,7 @@ public class Container : Widget
     }
 
     /// Adds a widget to this container.
-    public void Add(Widget w)
+    public void add(Widget w)
     {
         widgets ~= w;
         w.container = this;
@@ -274,18 +274,18 @@ public class Container : Widget
     }
 
     /// Removes all the widgets from this container.
-    public void RemoveAll()
+    public void removeAll()
     {
         Widget[] tmp;
 
         foreach (w; widgets)
             tmp ~= w;
         foreach (w; tmp)
-            Remove(w);
+            remove(w);
     }
 
     /// Removes a widget from this container.
-    public void Remove(Widget w)
+    public void remove(Widget w)
     {
         if (w is null)
             return;
@@ -345,7 +345,7 @@ public class Container : Widget
     {
         int bx, by;
 
-        GetBase(bx, by);
+        getBase(bx, by);
         ev.x -= x;
         ev.y -= y;
 
@@ -375,23 +375,28 @@ public class Container : Widget
             widget.doSizeChanged();
 
             if ((widget.fill & Fill.Horizontal) != 0) {
-                widget.width = width - (Border * 2) - widget.x;
+                widget.width = width - (border * 2) - widget.x;
             }
 
             if ((widget.fill & Fill.Vertical) != 0)
-                widget.height = height - (Border * 2) - widget.y;
+                widget.height = height - (border * 2) - widget.y;
         }
     }
 
-    /// Raised when the size of this container changes.
-    public void delegate() sizeChanged;
+    private void delegate() _sizeChanged;
 
     /// This method is invoked when the size of this container changes.
-    public void SizeChanged()
+    public void sizeChanged()
     {
-        if (sizeChanged)
-            sizeChanged();
+        if (_sizeChanged)
+            _sizeChanged();
 
         doSizeChanged();
+    }
+
+    /// Raised when the size of this container changes.
+    public void sizeChanged(void delegate() action)
+    {
+        _sizeChanged = action;
     }
 }

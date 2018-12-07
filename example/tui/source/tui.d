@@ -15,38 +15,38 @@ private static void optionsDialog()
 {
     Dialog d = new Dialog(62, 18, "Options");
 
-    d.Add(new Label(1, 1, "  Download Directory:"));
-    d.Add(new Label(1, 3, "         Listen Port:"));
-    d.Add(new Label(1, 5, "  Upload Speed Limit:"));
-    d.Add(new Label(35,5, "kB/s"));
-    d.Add(new Label(1, 7, "Download Speed Limit:"));
-    d.Add(new Label(35,7, "kB/s"));
-    d.Add(new Label(1, 9, "        Stealth Mode:"));
+    d.add(new Label(1, 1, "  Download Directory:"));
+    d.add(new Label(1, 3, "         Listen Port:"));
+    d.add(new Label(1, 5, "  Upload Speed Limit:"));
+    d.add(new Label(35,5, "kB/s"));
+    d.add(new Label(1, 7, "Download Speed Limit:"));
+    d.add(new Label(35,7, "kB/s"));
+    d.add(new Label(1, 9, "        Stealth Mode:"));
 
     Entry download_dir = new Entry(24, 1, 30, "~/Download");
-    d.Add(download_dir);
+    d.add(download_dir);
 
     Entry listen_port = new Entry(24, 3, 6, "34");
-    d.Add(listen_port);
+    d.add(listen_port);
 
     Entry upload_limit = new Entry(24, 5, 10, "1024");
-    d.Add(upload_limit);
+    d.add(upload_limit);
 
     Entry download_limit = new Entry(24, 7, 10, "1024");
-    d.Add(download_limit);
+    d.add(download_limit);
 
     RadioGroup stealthMode = new RadioGroup(24, 9, ["Off", "Partial", "Full"]);
-    d.Add(stealthMode);
+    d.add(stealthMode);
 
     bool ok;
 
     Button b = new Button("Ok", true);
     b.clicked = { ok = true; b.container.running = false; };
-    d.AddButton(b);
+    d.addButton(b);
 
     b = new Button("Cancel");
     b.clicked = { b.container.running = false; };
-    d.AddButton(b);
+    d.addButton(b);
 
     Application.Run(d);
 
@@ -72,9 +72,9 @@ private static void addDialog()
     Dialog d = new Dialog(cols, 8, "Add");
     string name;
 
-    d.Add(new Label(1, 0, "Torrent file:"));
+    d.add(new Label(1, 0, "Torrent file:"));
     Entry e = new Entry(1, 1, cols - 6, getcwd);
-    d.Add(e);
+    d.add(e);
 
     // buttons
     Button b = new Button("Ok", true);
@@ -82,11 +82,11 @@ private static void addDialog()
         b.container.running = false;
         name = e.Text;
     };
-    d.AddButton(b);
+    d.addButton(b);
 
     b = new Button("Cancel");
     b.clicked = { b.container.running = false; };
-    d.AddButton(b);
+    d.addButton(b);
 
     Application.Run(d);
 
@@ -212,33 +212,33 @@ private static Frame setupStatus()
     int x = 13;
     string init = "<init>";
 
-    fstatus.Add(status_progress = new ProgressBar(x, y, 24));
-    fstatus.Add(new Label(1, y++, "Progress:"));
+    fstatus.add(status_progress = new ProgressBar(x, y, 24));
+    fstatus.add(new Label(1, y++, "Progress:"));
 
-    fstatus.Add(status_state = new Label(x, y, init));
-    fstatus.Add(new Label(1, y++, "State:"));
+    fstatus.add(status_state = new Label(x, y, init));
+    fstatus.add(new Label(1, y++, "State:"));
 
-    fstatus.Add(status_peers = new Label(x, y, init));
-    fstatus.Add(new Label(1, y++, "Peers:"));
+    fstatus.add(status_peers = new Label(x, y, init));
+    fstatus.add(new Label(1, y++, "Peers:"));
 
-    fstatus.Add(status_tracker = new Label(x, y, init));
-    fstatus.Add(new Label(1, y++, "Tracker: "));
+    fstatus.add(status_tracker = new Label(x, y, init));
+    fstatus.add(new Label(1, y++, "Tracker: "));
     y++;
 
-    fstatus.Add(new Label(1, y++, "Upload:"));
-    fstatus.Add(new Label(16, y, "KB   Speed: "));
-    fstatus.Add(status_up = new Label(1, y, init));
-    fstatus.Add(status_up_speed = new Label(28, y, init));
+    fstatus.add(new Label(1, y++, "Upload:"));
+    fstatus.add(new Label(16, y, "KB   Speed: "));
+    fstatus.add(status_up = new Label(1, y, init));
+    fstatus.add(status_up_speed = new Label(28, y, init));
     y++;
-    fstatus.Add(new Label (1, y++, "Download:"));
-    fstatus.Add(new Label (16, y, "KB   Speed: "));
-    fstatus.Add(status_down = new Label(1, y, init));
-    fstatus.Add(status_down_speed = new Label(28, y, init));
+    fstatus.add(new Label (1, y++, "Download:"));
+    fstatus.add(new Label (16, y, "KB   Speed: "));
+    fstatus.add(status_down = new Label(1, y, init));
+    fstatus.add(status_down_speed = new Label(28, y, init));
     y += 2;
-    fstatus.Add(status_warnings = new Label(11, y, init));
-    fstatus.Add(new Label (1, y++, "Warnings: "));
-    fstatus.Add(status_failures = new Label(11, y, init));
-    fstatus.Add(new Label (1, y++, "Failures: "));
+    fstatus.add(status_warnings = new Label(11, y, init));
+    fstatus.add(new Label (1, y++, "Warnings: "));
+    fstatus.add(status_failures = new Label(11, y, init));
+    fstatus.add(new Label (1, y++, "Failures: "));
     y += 2;
 
     return fstatus;
@@ -294,49 +294,49 @@ void main()
 
     auto top = new Container(0, 0, Application.Cols, Application.Lines);
     auto frame = new Frame(0, 0, Application.Cols, Application.Lines, "List");
-    top.Add(frame);
+    top.add(frame);
 
     // Add
     Button badd = new Button(1, 1, "Add");
     badd.clicked = { addDialog(); };
-    frame.Add(badd);
+    frame.add(badd);
 
     // Options
     Button boptions = new Button(9, 1, "Options");
     boptions.clicked = { optionsDialog(); };
-    frame.Add(boptions);
+    frame.add(boptions);
 
     // Quit
     Button bquit = new Button(21, 1, "Quit");
     bquit.clicked = { top.running = false; };
-    frame.Add(bquit);
+    frame.add(bquit);
 
     ListView list = new ListView(1, 5, 0, 0, new TorrentDetailsList());
     list.fill = Fill.Horizontal | Fill.Vertical;
-    frame.Add(list);
+    frame.add(list);
 
     Frame fprogress = new Frame("Messages");
     LogWidget log_widget = new LogWidget(0, 0);
-    fprogress.Add(log_widget);
-    top.Add(fprogress);
+    fprogress.add(log_widget);
+    top.add(fprogress);
 
     // Details
     Frame fdetails = new Frame("Details");
-    fdetails.Add(new Label(1, 1, "Files for: "));
+    fdetails.add(new Label(1, 1, "Files for: "));
     TrimLabel torrent_name = new TrimLabel(12, 1, 10, "");
     torrent_name.fill = Fill.Horizontal;
-    fdetails.Add(torrent_name);
+    fdetails.add(torrent_name);
 
     auto details_list = new TorrentDetailsList();
     auto list_details = new ListView(1, 3, 0, 0, details_list);
     list_details.fill = Fill.Horizontal | Fill.Vertical;
-    fdetails.Add(list_details);
+    fdetails.add(list_details);
 
-    top.Add(fdetails);
+    top.add(fdetails);
 
     // Status
     Frame fstatus = setupStatus();
-    top.Add(fstatus);
+    top.add(fstatus);
 
     int it;
     Application.mainLoop.AddTimeout(dur!"seconds"(1), {

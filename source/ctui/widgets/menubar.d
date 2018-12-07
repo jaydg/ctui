@@ -412,7 +412,7 @@ public class MenuBar : Container
     package void OpenMenu(int index)
     {
         if (openMenu !is null) {
-            container.Remove(openMenu);
+            container.remove(openMenu);
             container.redraw();
         }
 
@@ -422,7 +422,7 @@ public class MenuBar : Container
 
         openMenu = new Menu(this, col, 1, menus[index]);
 
-        container.Add(openMenu);
+        container.add(openMenu);
         container.setFocus(openMenu);
     }
 
@@ -452,7 +452,7 @@ public class MenuBar : Container
     package void CloseMenu()
     {
         selected = -1;
-        container.Remove(openMenu);
+        container.remove(openMenu);
 
         if (previousFocused && previousFocused.container) {
             previousFocused.container.setFocus(previousFocused);

@@ -55,18 +55,18 @@ public class Frame : Container
     {
         super(x, y, w, h);
         Title = title;
-        Border++;
+        border++;
     }
 
-    public override void GetBase(out int row, out int col)
+    public override void getBase(out int row, out int col)
     {
         row = 1;
         col = 1;
     }
 
-    public override void ContainerMove(int row, int col)
+    public override void containerMove(int row, int col)
     {
-        super.ContainerMove(row + 1, col + 1);
+        super.containerMove(row + 1, col + 1);
     }
 
     public override void redraw()
@@ -84,11 +84,6 @@ public class Frame : Container
             addstr(Title.toStringz);
             addch(' ');
         }
-        RedrawChildren();
-    }
-
-    public override void Add(Widget w)
-    {
-        super.Add(w);
+        redrawChildren();
     }
 }

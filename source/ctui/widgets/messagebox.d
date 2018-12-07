@@ -55,11 +55,11 @@ public class MessageBox
                 clicked = n;
                 d.running = false;
             };
-            d.AddButton(b);
+            d.addButton(b);
         }
         if (message !is null) {
             Label l = new Label((width - 4 - cast(int)message.count) / 2, 0, message);
-            d.Add(l);
+            d.add(l);
         }
 
         Application.Run(d);

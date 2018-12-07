@@ -55,7 +55,7 @@ public class Entry : Widget
     private size_t first, point;
     private int _color;
     private bool used;
-    private bool secret;
+    private bool _secret;
 
     /// Changed event, raised when the text has clicked.
     ///
@@ -107,15 +107,15 @@ public class Entry : Widget
         /// Gets / sets the secret property.
         ///
         /// This makes the text entry suitable for entering passwords.
-        bool Secret()
+        bool secret()
         {
-            return secret;
+            return _secret;
         }
 
         /// ditto
-        bool Secret(bool value)
+        bool secret(bool value)
         {
-            return secret = value;
+            return _secret = value;
         }
 
         /// The color used to display the text.
@@ -133,7 +133,7 @@ public class Entry : Widget
         }
 
         /// The current cursor position.
-        int CursorPosition()
+        int cursorPosition()
         {
             return cast(int)point;
         }

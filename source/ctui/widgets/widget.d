@@ -134,7 +134,7 @@ public abstract class Widget
     /// while baseMove would position  the cursor at the top of the frame.
     public void Move(int line, int col)
     {
-        container.ContainerMove(line, col);
+        container.containerMove(line, col);
     }
 
 

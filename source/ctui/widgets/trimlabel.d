@@ -54,7 +54,7 @@ public class TrimLabel : Label
     private void SetString(int w, string s)
     {
         if ((fill & Fill.Horizontal) != 0)
-            w = container.width - container.Border * 2 - x;
+            w = container.width - container.border * 2 - x;
 
         this.width = w;
         if (s.count > w) {

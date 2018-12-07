@@ -65,7 +65,7 @@ public class Dialog : Frame
         containerColorHotNormal = Application.colorDialogHotNormal;
         containerColorHotFocus = Application.colorDialogHotFocus;
 
-        Border++;
+        border++;
     }
 
     /// Makes the default style for the dialog use the error colors.
@@ -77,12 +77,12 @@ public class Dialog : Frame
         containerColorHotNormal = Application.colorErrorHot;
     }
 
-    public override void Prepare()
+    public override void prepare()
     {
-        LayoutButtons();
+        layoutButtons();
     }
 
-    void LayoutButtons()
+    private void layoutButtons()
     {
         if (buttons == null)
             return;
@@ -98,24 +98,24 @@ public class Dialog : Frame
     }
 
     /// Adds a button to the dialog
-    public void AddButton(Button b)
+    public void addButton(Button b)
     {
         buttons ~= b;
         button_len += b.width + button_space;
 
-        Add(b);
+        add(b);
     }
 
-    public override void GetBase(out int row, out int col)
+    public override void getBase(out int row, out int col)
     {
-        super.GetBase(row, col);
+        super.getBase(row, col);
         row++;
         col++;
     }
 
-    public override void ContainerMove(int row, int col)
+    public override void containerMove(int row, int col)
     {
-        super.ContainerMove(row + 1, col + 1);
+        super.containerMove(row + 1, col + 1);
     }
 
     public override void redraw()
@@ -129,7 +129,7 @@ public class Dialog : Frame
         attrset(Application.colorDialogHotNormal);
         addstr(Title.toStringz);
         addch(' ');
-        RedrawChildren();
+        redrawChildren();
     }
 
     public override bool processKey(wchar_t key)
@@ -152,6 +152,6 @@ public class Dialog : Frame
         x = (Application.Cols - width) / 2;
         y = (Application.Lines - height) / 3;
 
-        LayoutButtons();
+        layoutButtons();
     }
 }
