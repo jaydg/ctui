@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, label widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,7 +35,7 @@ import ctui.widgets.widget;
 /// Label widget, displays a string at a given position.
 public class Label : Widget
 {
-    protected string text;
+    protected string _text;
     public int color = -1;
 
     /// Public constructor: creates a label at the given
@@ -69,19 +67,19 @@ public class Label : Widget
     }
 
     /// The text displayed by this widget.
-    public @property string Text()
+    public @property string text()
     {
-        return text;
+        return _text;
     }
 
     /// ditto
-    public @property string Text(string value)
+    public @property string text(string value)
     {
         attrset(colorNormal);
         Move(y, x);
-        for (int i = 0; i < text.count; i++)
+        for (int i = 0; i < _text.count; i++)
             addch(' ');
-        text = value;
+        _text = value;
         redraw();
 
         return text;

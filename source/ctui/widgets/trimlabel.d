@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, trimmed label widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -48,10 +46,10 @@ public class TrimLabel : Label
         super(x, y, s);
         original = s;
 
-        SetString(w, s);
+        setString(w, s);
     }
 
-    private void SetString(int w, string s)
+    private void setString(int w, string s)
     {
         if ((fill & Fill.Horizontal) != 0)
             w = container.width - container.border * 2 - x;
@@ -59,32 +57,31 @@ public class TrimLabel : Label
         this.width = w;
         if (s.count > w) {
             if (w < 5)
-                text = s.substring(0, w);
+                _text = s.substring(0, w);
             else {
-                text = s.substring(0, w/2-2) ~ "..." ~ s.substring(s.count - w/2+1);
+                _text = s.substring(0, w/2-2) ~ "..." ~ s.substring(s.count - w/2+1);
             }
         } else
-            text = s;
+            _text = s;
     }
 
     public override void doSizeChanged()
     {
         if ((fill & Fill.Horizontal) != 0)
-            SetString(0, original);
+            setString(0, original);
     }
 
     /// The text displayed by this widget.
-    public override @property string Text()
+    public override @property string text()
     {
         return original;
     }
 
     /// ditto
-    public override @property string Text(string value)
+    public override @property string text(string value)
     {
-        super.Text = value;
-        SetString(width, value);
+        setString(width, value);
 
-        return super.Text;
+        return super.text;
     }
 }

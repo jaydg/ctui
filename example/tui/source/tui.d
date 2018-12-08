@@ -282,10 +282,10 @@ private static void updateStatus(int iteration)
 {
     immutable ct = Clock.currTime.toString.substring(0, 20);
     status_progress.fraction = (iteration % 100) / 100.0;
-    status_state.Text = ct;
-    status_peers.Text = ct;
-    status_up.Text = "1000";
-    status_up_speed.Text = "Lots";
+    status_state.text = ct;
+    status_peers.text = ct;
+    status_up.text = "1000";
+    status_up_speed.text = "Lots";
 }
 
 void main()
