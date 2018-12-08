@@ -101,25 +101,25 @@ private static void addDialog()
 private class TorrentDetailsList : IListProvider {
     public ListView view;
 
-    void SetListView(ListView v)
+    void setListView(ListView v)
     {
         view = v;
     }
 
-    @property int Items() {
+    @property size_t length() {
         return 5;
     }
 
-    @property bool AllowMark() {
+    @property bool allowMark() {
         return false;
     }
 
-    bool IsMarked(int n)
+    bool isMarked(int n)
     {
         return false;
     }
 
-    void Render(int line, int col, int width, int item)
+    void render(int line, int col, int width, int item)
     {
         string s = format!"%d This is item %d"(item, item);
         if (s.count > width) {
@@ -137,7 +137,7 @@ private class TorrentDetailsList : IListProvider {
         return false;
     }
 
-    void SelectedChanged()
+    void selectedChanged()
     {
     }
 }

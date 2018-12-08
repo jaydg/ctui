@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, listview widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -41,21 +39,21 @@ public interface IListProvider {
     /// Number of items in the model.
     ///
     /// This should return the number of items in the model.
-    @property int Items();
+    @property size_t length();
 
     /// Whether the ListView should allow items to be marked.
-    @property bool AllowMark();
+    @property bool allowMark();
 
     /// Whether the given item is marked.
-    bool IsMarked(int item);
+    bool isMarked(int item);
 
     /// This should render the item at the given line,
     /// col with the specified width.
-    void Render(int line, int col, int width, int item);
+    void render(int line, int col, int width, int item);
 
     /// Callback: this is the way that the model is
     /// hooked up to its actual view.
-    void SetListView(ListView target);
+    void setListView(ListView target);
 
     /// Allows the model to process the given keystroke.
     ///
@@ -64,7 +62,7 @@ public interface IListProvider {
     bool processKey(wchar_t ch);
 
     /// Callback: invoked when the selected item has changed.
-    void SelectedChanged();
+    void selectedChanged();
 }
 
 /// A Listview widget.
@@ -74,8 +72,7 @@ public interface IListProvider {
 /// construction time.
 public class ListView : Widget {
     private int top;
-    private int selected;
-    private bool allow_mark;
+    private int _selected;
     private IListProvider provider;
 
     /// Public constructor.
@@ -85,8 +82,7 @@ public class ListView : Widget {
         canFocus = true;
 
         this.provider = provider;
-        provider.SetListView(this);
-        allow_mark = provider.AllowMark;
+        provider.setListView(this);
     }
 
     /// This method can be invoked by the model to notify the view that the
@@ -94,26 +90,26 @@ public class ListView : Widget {
     ///
     /// Invoke this method to invalidate the contents of the ListView and
     /// force the ListView to repaint the contents displayed.
-    public void ProviderChanged()
+    public void providerChanged()
     {
-        if (top > provider.Items) {
-            if (provider.Items > 1)
-                top = provider.Items -1;
+        if (top > provider.length) {
+            if (provider.length > 1)
+                top = cast(int)provider.length - 1;
             else
                 top = 0;
         }
-        if (selected > provider.Items) {
-            if (provider.Items > 1)
-                selected = provider.Items - 1;
+        if (selected > provider.length) {
+            if (provider.length > 1)
+                selected = cast(int)provider.length - 1;
             else
                 selected = 0;
         }
         redraw();
     }
 
-    private void SelectedChanged()
+    private void selectedChanged()
     {
-        provider.SelectedChanged();
+        provider.selectedChanged();
     }
 
     public override bool processKey(wchar_t c)
@@ -124,10 +120,10 @@ public class ListView : Widget {
         case Keys.CtrlP:
         case KEY_UP:
             if (selected > 0) {
-                selected--;
+                _selected--;
                 if (selected < top)
                     top = selected;
-                SelectedChanged();
+                selectedChanged();
                 redraw();
                 return true;
             } else
@@ -135,12 +131,12 @@ public class ListView : Widget {
 
         case Keys.CtrlN:
         case KEY_DOWN:
-            if (selected + 1 < provider.Items) {
-                selected++;
+            if (selected + 1 < provider.length) {
+                _selected++;
                 if (selected >= top + height) {
                     top++;
                 }
-                SelectedChanged();
+                selectedChanged();
                 redraw();
                 return true;
             } else
@@ -149,15 +145,14 @@ public class ListView : Widget {
         case Keys.CtrlV:
         case KEY_NPAGE:
             n = (selected + height);
-            if (n > provider.Items)
-                n = provider.Items - 1;
+            if (n > provider.length)
+                n = cast(int)provider.length - 1;
             if (n != selected) {
                 selected = n;
-                if (provider.Items >= height)
+                if (provider.length >= height)
                     top = selected;
                 else
                     top = 0;
-                SelectedChanged();
                 redraw();
             }
             return true;
@@ -169,7 +164,6 @@ public class ListView : Widget {
             if (n != selected) {
                 selected = n;
                 top = selected;
-                SelectedChanged();
                 redraw();
             }
             return true;
@@ -188,16 +182,16 @@ public class ListView : Widget {
     {
         for (int l = 0; l < height; l++) {
             Move(y + l, x);
-            int item = l + top;
+            immutable item = l + top;
 
-            if (item >= provider.Items) {
+            if (item >= provider.length) {
                 attrset(colorNormal);
                 for (int c = 0; c < width; c++)
                     addch(' ');
                 continue;
             }
 
-            bool marked = allow_mark ? provider.IsMarked(item) : false;
+            immutable bool marked = provider.allowMark ? provider.isMarked(item) : false;
 
             if (item == selected) {
                 if (marked)
@@ -211,28 +205,29 @@ public class ListView : Widget {
                     attrset(colorNormal);
             }
 
-            provider.Render(y + l, x, width, item);
+            provider.render(y + l, x, width, item);
         }
         positionCursor();
         refresh();
     }
 
-    /// Gets / sets the index of the currently selected item.
-    public @property int Selected()
+    /// Gets the index of the currently selected item.
+    public @property int selected()
     {
-        if (provider.Items == 0)
+        if (provider.length == 0)
             return -1;
-        return selected;
+
+        return _selected;
     }
 
-    /// ditto
-    public @property int Selected(int value)
+    /// Sets the index of the currently selected item.
+    public @property int selected(int value)
     {
-        if (value >= provider.Items)
+        if (value >= provider.length)
             throw new Exception("Invalid argument for value");
 
-        selected = value;
-        SelectedChanged();
+        _selected = value;
+        selectedChanged();
 
         redraw();
 
@@ -250,11 +245,11 @@ public class ListView : Widget {
         if (ev.y < 0)
             return;
 
-        if (ev.y + top >= provider.Items)
+        if (ev.y + top >= provider.length)
             return;
 
         selected = ev.y - top;
-        SelectedChanged();
+        selectedChanged();
 
         redraw();
     }
