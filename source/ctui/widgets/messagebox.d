@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, message box dialogue
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,21 +40,21 @@ public class MessageBox
     /// creates buttons with the given string labels.
     ///
     /// Returns: the index of the clicked button
-    public static int Query(int width, int height, string title, string message, string[] buttons)
+    public static int query(int width, int height, string title, string message, string[] buttons)
     {
         auto d = new Dialog(width, height, title);
         int clicked = -1, count = 0;
 
         foreach (s; buttons)
         {
-            int n = count++;
             Button b = new Button(s);
             b.clicked = {
-                clicked = n;
+                clicked = count++;
                 d.running = false;
             };
             d.addButton(b);
         }
+
         if (message !is null) {
             Label l = new Label((width - 4 - cast(int)message.count) / 2, 0, message);
             d.add(l);
