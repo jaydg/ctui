@@ -1,8 +1,9 @@
 //
-// Simple curses-based GUI toolkit, core
+// Simple curses-based GUI toolkit, menu bar widget
 //
-// Copyright 2007-2011 Novell Inc
-// Copyright 2017 Microsoft Corp
+// Copyright (C) 2007-2011 Novell Inc
+// Copyright (C) 2017 Microsoft Corp
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -80,17 +81,17 @@ public class MenuItem
     }
 
     @property {
-        /// The title for this item.
+        /// Get the title for this item.
         public string title()
         {
             return _title;
         }
 
-        /// ditto
+        /// Set the title for this item.
         public string title(string title)
         {
             this._title = title;
-            this._width = calculateWidth();
+            this._width = cast(int)title.count + cast(int)help.count + 1;
 
             bool nextIsHot;
 
@@ -109,15 +110,10 @@ public class MenuItem
             return title;
         }
 
-        public int width()
+        package int width()
         {
             return _width;
         }
-    }
-
-    private int calculateWidth()
-    {
-        return cast(int)title.count + cast(int)help.count + 1;
     }
 }
 
@@ -168,7 +164,7 @@ public class MenuBarItem
             return title;
         }
 
-        public int width()
+        package int width()
         {
             return _width;
         }
@@ -247,7 +243,7 @@ package class Menu : Container {
 
     private void run(Action action)
     {
-        host.CloseMenu();
+        host.closeMenu();
 
         if (action)
             action();
@@ -269,13 +265,13 @@ package class Menu : Container {
             redraw();
             break;
         case KEY_LEFT:
-            host.PreviousMenu();
+            host.previousMenu();
             break;
         case KEY_RIGHT:
-            host.NextMenu();
+            host.nextMenu();
             break;
         case Keys.Esc:
-            host.CloseMenu();
+            host.closeMenu();
             break;
         case Keys.Enter:
             run(barItems.children[current].action);
@@ -404,15 +400,15 @@ public class MenuBar : Container
     private int selected;
 
     // The currently opened Menu (or null)
-    private Menu openMenu;
+    private Menu _openMenu;
 
     // The Widget that was focused before the MenuBar was activated
     private Widget previousFocused;
 
-    package void OpenMenu(int index)
+    package void openMenu(int index)
     {
-        if (openMenu !is null) {
-            container.remove(openMenu);
+        if (_openMenu !is null) {
+            container.remove(_openMenu);
             container.redraw();
         }
 
@@ -420,60 +416,60 @@ public class MenuBar : Container
         foreach (menu; menus[0 .. index])
             col += menu.width + 3;
 
-        openMenu = new Menu(this, col, 1, menus[index]);
+        _openMenu = new Menu(this, col, 1, menus[index]);
 
-        container.add(openMenu);
-        container.focused = openMenu;
+        container.add(_openMenu);
+        container.focused = _openMenu;
     }
 
     // Starts the menu from a hotkey
-    package void StartMenu()
+    package void startMenu()
     {
-        if (openMenu !is null)
+        if (_openMenu !is null)
             return;
 
         selected = 0;
         previousFocused = container.focused;
-        OpenMenu(selected);
+        openMenu(selected);
     }
 
-    // Activates the menu, handles either first focus, or activating an entry
+    // activates the menu, handles either first focus, or activating an entry
     // when it was already active. For mouse events.
-    void Activate(int idx)
+    private void activate(int idx)
     {
         selected = idx;
-        if (openMenu is null) {
+        if (_openMenu is null) {
             previousFocused = container.focused;
         }
 
-        OpenMenu(idx);
+        openMenu(idx);
     }
 
-    package void CloseMenu()
+    package void closeMenu()
     {
         selected = -1;
-        container.remove(openMenu);
+        container.remove(_openMenu);
 
         if (previousFocused && previousFocused.container) {
             previousFocused.container.focused = previousFocused;
         }
 
-        openMenu = null;
+        _openMenu = null;
         container.redraw();
         refresh();
     }
 
-    package void PreviousMenu()
+    package void previousMenu()
     {
         if (selected <= 0)
             selected = cast(int)menus.length - 1;
         else
             selected--;
 
-        OpenMenu(selected);
+        openMenu(selected);
     }
 
-    package void NextMenu()
+    package void nextMenu()
     {
         if (selected == -1)
             selected = 0;
@@ -482,13 +478,13 @@ public class MenuBar : Container
         else
             selected++;
 
-        OpenMenu(selected);
+        openMenu(selected);
     }
 
     public override bool processHotKey(wchar_t key)
     {
         if (key == KEY_F(9)) {
-            StartMenu();
+            startMenu();
             return true;
         }
 
@@ -497,13 +493,13 @@ public class MenuBar : Container
 
             foreach (int i, menu; menus) {
                 if (menu.hotKey == hotKey) {
-                    Activate(i);
+                    activate(i);
                     return true;
                 }
             }
         }
 
-        return super.processHotKey(key);
+        return false;
     }
 
     public override void processMouse(MEVENT* ev)
@@ -513,7 +509,7 @@ public class MenuBar : Container
 
             foreach (int i, menu; menus) {
                 if (ev.x >= pos && ev.x < pos + menu.width) {
-                    Activate(i);
+                    activate(i);
                 }
 
                 pos += 2 + menu.width + 1;
