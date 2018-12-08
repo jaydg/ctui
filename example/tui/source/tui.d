@@ -52,15 +52,15 @@ private static void optionsDialog()
 
     if (ok) {
         try {
-            to!int(listen_port.Text);
+            to!int(listen_port.text);
         } catch (ConvException) {
-            Application.Error("Error", format!"The value `%s' is not a valid port number"(listen_port.Text));
+            Application.Error("Error", format!"The value `%s' is not a valid port number"(listen_port.text));
             return;
         }
 
-        auto fullPath = expandTilde(download_dir.Text);
+        auto fullPath = expandTilde(download_dir.text);
         if (!exists(fullPath) || !isDir(fullPath)) {
-            Application.Error("Error", format!"The directory\n%s\ndoes not exist"(download_dir.Text));
+            Application.Error("Error", format!"The directory\n%s\ndoes not exist"(download_dir.text));
             return;
         }
     }
@@ -80,7 +80,7 @@ private static void addDialog()
     Button b = new Button("Ok", true);
     b.clicked = {
         b.container.running = false;
-        name = e.Text;
+        name = e.text;
     };
     d.addButton(b);
 

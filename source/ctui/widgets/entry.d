@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, entry widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -36,7 +34,7 @@ import std.string : leftJustify, toStringz;
 import std.uni;
 import std.utf : count;
 
-alias std.conv.text toText;
+alias toText = std.conv.text;
 
 import deimos.ncurses;
 
@@ -51,7 +49,7 @@ import ctui.widgets.widget;
 /// functionality, and mouse support.
 public class Entry : Widget
 {
-    private string text, kill;
+    private string _text, kill;
     private size_t first, point;
     private int _color;
     private bool used;
@@ -79,21 +77,22 @@ public class Entry : Widget
 
     public @property
     {
-        public override bool hasFocus(bool value)
+        override bool hasFocus(bool value)
         {
             curs_set(value);
             return super.hasFocus(value);
         }
 
-        /// Sets or gets the text in the entry.
-        string Text()
+        /// Gets the text in the entry.
+        string text()
         {
-            return text;
+            return _text;
         }
 
-        string Text(string value)
+        /// Sets the text in the entry.
+        string text(string value)
         {
-            text = value;
+            _text = value;
             if (point > text.count) {
                 point = text.count;
             }
@@ -104,15 +103,15 @@ public class Entry : Widget
             return text;
         }
 
-        /// Gets / sets the secret property.
-        ///
-        /// This makes the text entry suitable for entering passwords.
+        /// Gets the secret property.
         bool secret()
         {
             return _secret;
         }
 
-        /// ditto
+        /// Sets the secret property.
+        ///
+        /// This makes the text entry suitable for entering passwords.
         bool secret(bool value)
         {
             return _secret = value;
@@ -165,7 +164,7 @@ public class Entry : Widget
         positionCursor();
     }
 
-    private void Adjust()
+    private void adjust()
     {
         if (point < first) {
             first = point;
@@ -177,7 +176,7 @@ public class Entry : Widget
         refresh();
     }
 
-    private void SetText(string new_text)
+    private void setText(string new_text)
     {
         if (new_text != text) {
             text = new_text;
@@ -196,22 +195,22 @@ public class Entry : Widget
             if (point == 0)
                 return true;
 
-            SetText(text.substring(0, point - 1) ~ text.substring(point));
+            setText(text.substring(0, point - 1) ~ text.substring(point));
             point--;
-            Adjust();
+            adjust();
             break;
 
         case KEY_HOME:
         case Keys.CtrlA: // Home
             point = 0;
-            Adjust();
+            adjust();
             break;
 
         case KEY_LEFT:
         case Keys.CtrlB: // back character
             if (point > 0) {
                 point--;
-                Adjust();
+                adjust();
             }
             break;
 
@@ -221,14 +220,14 @@ public class Entry : Widget
                 break;
             }
 
-            SetText(text.substring(0, point) ~ text.substring(point + 1));
-            Adjust();
+            setText(text.substring(0, point) ~ text.substring(point + 1));
+            adjust();
             break;
 
         case KEY_END:
         case Keys.CtrlE: // End
             point = text.count;
-            Adjust();
+            adjust();
             break;
 
         case KEY_RIGHT:
@@ -237,13 +236,13 @@ public class Entry : Widget
                 break;
             }
             point++;
-            Adjust();
+            adjust();
             break;
 
         case Keys.CtrlK: // kill-to-end
             kill = text.substring(point);
-            SetText(text.substring(0, point));
-            Adjust();
+            setText(text.substring(0, point));
+            adjust();
             break;
 
         case Keys.CtrlY: // Control-y, yank
@@ -251,32 +250,32 @@ public class Entry : Widget
                 return true;
 
             if (point == text.count) {
-                SetText(text ~ kill);
+                setText(text ~ kill);
                 point = text.count;
             } else {
-                SetText(text.substring(0, point) ~ kill ~ text.substring(point));
+                setText(text.substring(0, point) ~ kill ~ text.substring(point));
                 point += kill.count;
             }
 
-            Adjust();
+            adjust();
             break;
 
         case 'b' + Keys.Alt:
-            size_t bw = WordBackward(point);
+            immutable bw = wordBackward(point);
             if (bw != -1) {
                 point = bw;
             }
 
-            Adjust();
+            adjust();
             break;
 
         case 'f' + Keys.Alt:
-            size_t fw = WordForward(point);
+            immutable fw = wordForward(point);
             if (fw != -1) {
                 point = fw;
             }
 
-            Adjust();
+            adjust();
             break;
 
         default:
@@ -286,25 +285,25 @@ public class Entry : Widget
 
             if (used) {
                 if (point == text.count) {
-                    SetText(text ~ toText(key));
+                    setText(text ~ toText(key));
                 } else {
-                    SetText(text.substring(0, point) ~ toText(key) ~ text.substring(point));
+                    setText(text.substring(0, point) ~ toText(key) ~ text.substring(point));
                 }
                 point++;
             } else {
-                SetText("" ~ toText(key));
+                setText("" ~ toText(key));
                 first = 0;
                 point = 1;
             }
             used = true;
-            Adjust();
+            adjust();
             return true;
         }
         used = true;
         return true;
     }
 
-    private size_t WordForward(size_t p)
+    private size_t wordForward(size_t p)
     {
         if (p >= text.count) {
             return -1;
@@ -334,7 +333,7 @@ public class Entry : Widget
         return -1;
     }
 
-    private size_t WordBackward(size_t p)
+    private size_t wordBackward(size_t p)
     {
         if (p == 0)
             return -1;
