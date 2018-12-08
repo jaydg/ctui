@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, frame widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,7 +40,8 @@ import ctui.widgets.widget;
 /// and an optional title.
 public class Frame : Container
 {
-    public string Title;
+    /// The frame title
+    public string title;
 
     /// Creates an empty frame, with the given title
     public this(string title)
@@ -54,7 +53,7 @@ public class Frame : Container
     public this(int x, int y, int w, int h, string title)
     {
         super(x, y, w, h);
-        Title = title;
+        this.title = title;
         border++;
     }
 
@@ -79,9 +78,9 @@ public class Frame : Container
         move(y, x + 1);
         if (hasFocus)
             attrset(Application.colorDialogNormal);
-        if (Title != null) {
+        if (title != null) {
             addch(' ');
-            addstr(Title.toStringz);
+            addstr(title.toStringz);
             addch(' ');
         }
         redrawChildren();

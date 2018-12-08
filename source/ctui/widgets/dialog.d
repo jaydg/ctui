@@ -124,10 +124,10 @@ public class Dialog : Frame
         clear();
 
         Widget.drawFrame(x + 1, y + 1, width - 2, height - 2);
-        move(y + 1, x + (width - cast(int)Title.count) / 2);
+        move(y + 1, x + (width - cast(int)title.count) / 2);
         addch(' ');
         attrset(Application.colorDialogHotNormal);
-        addstr(Title.toStringz);
+        addstr(title.toStringz);
         addch(' ');
         redrawChildren();
     }
