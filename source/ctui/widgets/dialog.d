@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, dialog widget
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,7 +35,6 @@ import ctui.application;
 import ctui.keys;
 import ctui.widgets.button;
 import ctui.widgets.frame;
-import ctui.widgets.widget;
 
 /// A Dialog is a container that can also have a number of
 /// buttons at the bottom
@@ -69,7 +66,7 @@ public class Dialog : Frame
     }
 
     /// Makes the default style for the dialog use the error colors.
-    public void ErrorColors()
+    public void errorColors()
     {
         containerColorNormal = Application.colorError;
         containerColorFocus = Application.colorErrorFocus;
@@ -123,7 +120,7 @@ public class Dialog : Frame
         attrset(containerColorNormal);
         clear();
 
-        Widget.drawFrame(x + 1, y + 1, width - 2, height - 2);
+        drawFrame(x + 1, y + 1, width - 2, height - 2);
         move(y + 1, x + (width - cast(int)title.count) / 2);
         addch(' ');
         attrset(Application.colorDialogHotNormal);

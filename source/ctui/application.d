@@ -290,7 +290,7 @@ public class Application {
 
         Dialog d = new Dialog(cast(int)max(caption.count + 8, max_w + 8), cast(int)lines.length + 7, caption);
         if (error)
-            d.ErrorColors();
+            d.errorColors();
 
         for (int i = 0; i < lines.length; i++)
             d.add(new Label(1, i + 1, lines[i]));
