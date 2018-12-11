@@ -1,10 +1,8 @@
 //
 // mainloop.cs: Simple managed mainloop implementation.
 //
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
-//
 // Copyright (C) 2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,13 +35,13 @@ import std.algorithm : minElement, remove;
 import ctui.application;
 import ctui.widgets.container;
 
-/// A delegate that is used by AddWatch and AddTimeout.
+/// A delegate that is used by addWatch and addTimeout.
 public alias Callback = bool delegate();
 
 /// A delegate used by AddIdle.
 public alias Handler = bool delegate();
 
-public class RunState {
+package class RunState {
     package Container container;
 
     package this(Container c)
@@ -51,14 +49,7 @@ public class RunState {
         container = c;
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        // TODO: figure out logic behind this
-        //GC.SuppressFinalize(this);
-    }
-
-    public void Dispose(bool disposing)
+    package void dispose()
     {
         if (container !is null) {
             Application.End(container);
@@ -124,27 +115,27 @@ public class MainLoop {
     {
         pipe(wakeupPipes);
 
-        AddWatch(wakeupPipes[0], Condition.PollIn, {
+        this.addWatch(wakeupPipes[0], Condition.PollIn, {
             read(wakeupPipes[0], &ignore, 1);
             return true;
         });
     }
 
-    private void Wakeup()
+    private void wakeup()
     {
         write(wakeupPipes[1], &ignore, 1);
     }
 
     /// Executes the specified idleHandler on the idle loop.
     /// The return value is a token to remove it.
-    public Handler AddIdle(Handler idleHandler)
+    public Handler addIdle(Handler idleHandler)
     {
         synchronized idleHandlers ~= idleHandler;
         return idleHandler;
     }
 
     /// Removes the specified idleHandler from processing.
-    public void RemoveIdle(Handler idleHandler)
+    public void removeIdle(Handler idleHandler)
     {
         synchronized idleHandlers = idleHandlers.remove!(h => h == idleHandler);
     }
@@ -155,8 +146,8 @@ public class MainLoop {
     /// callback returns false, the watch is automatically removed.
     ///
     /// The return value is a token that represents this watch, you can use
-    /// this token to remove the watch by calling RemoveWatch.
-    public Watch AddWatch(int fileDescriptor, Condition condition, Callback callback)
+    /// this token to remove the watch by calling removeWatch.
+    public Watch addWatch(int fileDescriptor, Condition condition, Callback callback)
     {
         if (callback is null)
         {
@@ -172,8 +163,8 @@ public class MainLoop {
 
     /// Removes an active watch from the mainloop.
     ///
-    /// The watch parameter is the value returned from AddWatch
-    public void RemoveWatch(Watch watch)
+    /// The watch parameter is the value returned from addWatch
+    public void removeWatch(Watch watch)
     {
         if (watch is null)
         {
@@ -183,7 +174,7 @@ public class MainLoop {
         descriptorWatchers.remove(watch.fd);
     }
 
-    long AddTimeout(Duration time, Timeout timeout)
+    private long addTimeout(Duration time, Timeout timeout)
     {
         long key = (MonoTime.currTime + time).ticks;
         timeouts[key] = timeout;
@@ -199,7 +190,7 @@ public class MainLoop {
     ///
     /// The returned value is a token that can be used to stop the timeout
     /// by calling RemoveTimeout.
-    public long AddTimeout(Duration time, Callback callback)
+    public long addTimeout(Duration time, Callback callback)
     {
         if (callback is null)
         {
@@ -207,18 +198,18 @@ public class MainLoop {
         }
 
         Timeout timeout = new Timeout(time, callback);
-        return AddTimeout(time, timeout);
+        return addTimeout(time, timeout);
     }
 
     /// Removes a previously scheduled timeout
     ///
-    /// The token parameter is the value returned by AddTimeout.
-    public void RemoveTimeout(long timeout)
+    /// The token parameter is the value returned by addTimeout.
+    public void removeTimeout(long timeout)
     {
         timeouts.remove(timeout);
     }
 
-    void UpdatePollMap()
+    private void updatePollMap()
     {
         if (!poll_dirty)
         {
@@ -235,28 +226,27 @@ public class MainLoop {
         }
     }
 
-    void RunTimers()
+    private void runTimers()
     {
-        long now = MonoTime.currTime.ticks;
+        immutable now = MonoTime.currTime.ticks;
         auto copy = timeouts.dup;
 
         timeouts.clear;
-        foreach (k; copy.keys)
+        foreach (key, timeout; copy)
         {
-            auto timeout = copy[k];
-            if (k < now)
+            if (key < now)
             {
                 if (timeout.callback())
-                    AddTimeout(timeout.span, timeout);
+                    addTimeout(timeout.span, timeout);
             }
             else
             {
-                timeouts[k] = timeout;
+                timeouts[key] = timeout;
             }
         }
     }
 
-    void RunIdle()
+    private void runIdle()
     {
         Handler[] iterate;
         synchronized
@@ -273,13 +263,13 @@ public class MainLoop {
         }
     }
 
-    bool running;
+    private bool running;
 
     /// Stops the mainloop.
-    public void Stop()
+    public void stop()
     {
         running = false;
-        Wakeup();
+        wakeup();
     }
 
     /// Determines whether there are pending events to be processed.
@@ -287,14 +277,14 @@ public class MainLoop {
     /// You can use this method if you want to probe if events are pending.
     /// Typically used if you need to flush the input queue while still
     /// running some of your own code in your main thread.
-    public bool EventsPending(bool wait=false)
+    public bool eventsPending(bool wait=false)
     {
         int pollTimeout;
 
         if (timeouts.length > 0)
         {
-            long now = MonoTime.currTime.ticks;
-            long next_timeout = timeouts.keys.minElement;
+            immutable now = MonoTime.currTime.ticks;
+            immutable next_timeout = timeouts.keys.minElement;
 
             pollTimeout = ((next_timeout - now) / (MonoTime.ticksPerSecond / 1000));
 
@@ -313,7 +303,7 @@ public class MainLoop {
             pollTimeout = 0;
         }
 
-        UpdatePollMap();
+        updatePollMap();
 
         int n = poll(pollmap.ptr, cast(nfds_t)pollmap.length, pollTimeout);
 
@@ -330,12 +320,12 @@ public class MainLoop {
     ///
     /// Example:
     /// ---
-    /// while (main.EventsPending()) MainIteration();
+    /// while (main.eventsPending()) mainIteration();
     /// ---
-    public void MainIteration()
+    public void mainIteration()
     {
         if (timeouts.length > 0)
-            RunTimers();
+            runTimers();
 
         foreach (p; pollmap) {
             if (p.revents == 0) {
@@ -353,19 +343,19 @@ public class MainLoop {
 
         if (idleHandlers.length > 0)
         {
-            RunIdle();
+            runIdle();
         }
     }
 
     /// Runs the mainloop.
-    public void Run()
+    public void run()
     {
-        bool prev = running;
+        immutable prev = running;
         running = true;
 
         while (running) {
-            EventsPending(true);
-            MainIteration();
+            eventsPending(true);
+            mainIteration();
         }
 
         running = prev;

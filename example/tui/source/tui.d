@@ -339,7 +339,7 @@ void main()
     top.add(fstatus);
 
     int it;
-    Application.mainLoop.AddTimeout(dur!"seconds"(1), {
+    Application.mainLoop.addTimeout(dur!"seconds"(1), {
         updateStatus(it++);
         log_widget.AddText(format!"Iteration %d"(it));
         Application.Refresh();

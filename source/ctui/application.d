@@ -240,7 +240,7 @@ public class Application {
         colorBasic = MakeColor(-1, -1);
 
         mainLoop = new MainLoop();
-        mainLoop.AddWatch(0, MainLoop.Condition.PollIn, {
+        mainLoop.addWatch(0, MainLoop.Condition.PollIn, {
             Container top = toplevels.length > 0
                 ? toplevels[toplevels.length - 1]
                 : null;
@@ -413,8 +413,8 @@ public class Application {
             throw new Exception("Object is disposed");
 
         for (state.container.running = true; state.container.running;) {
-            if (mainLoop.EventsPending(wait)) {
-                mainLoop.MainIteration();
+            if (mainLoop.eventsPending(wait)) {
+                mainLoop.mainIteration();
                 // per-iteration callback
                 if (iteration)
                     iteration();
@@ -430,7 +430,7 @@ public class Application {
             return;
 
         toplevels[toplevels.length - 1].running = false;
-        mainLoop.Stop();
+        mainLoop.stop();
     }
 
     /// Runs the main loop on the given container.
@@ -450,7 +450,7 @@ public class Application {
         if (state is null)
             throw new Exception("state cannot be null");
 
-        state.Dispose();
+        state.dispose();
     }
 
     // Called by the Dispose handler.

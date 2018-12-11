@@ -8,30 +8,30 @@ void main()
 {
     MainLoop ml = new MainLoop();
 
-    Stamp("Start");
-    ml.AddTimeout(dur!"seconds"(1), {
-        Stamp("second");
+    stamp("Start");
+    ml.addTimeout(dur!"seconds"(1), {
+        stamp("second");
         return true;
     });
 
     int i = 0;
-    ml.AddTimeout(dur!"seconds"(3), {
-        Stamp("three");
+    ml.addTimeout(dur!"seconds"(3), {
+        stamp("three");
         if (++i >= 3)
             return false;
         return true;
     });
 
-    ml.AddTimeout(dur!"seconds"(15), {
-        Stamp("That's all, folks!");
-        ml.Stop();
+    ml.addTimeout(dur!"seconds"(15), {
+        stamp("That's all, folks!");
+        ml.stop();
         return false;
     });
 
-    ml.Run();
+    ml.run();
 }
 
-static void Stamp(string txt)
+private static void stamp(string txt)
 {
     writefln("%s - %s", Clock.currTime, txt);
 }
