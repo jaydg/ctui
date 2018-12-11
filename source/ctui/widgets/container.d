@@ -266,7 +266,7 @@ public class Container : Widget
     ///
     public void containerMove(int row, int col)
     {
-        if (container != Application.EmptyContainer && container !is null)
+        if (container != Application.emptyContainer && container !is null)
             container.containerMove(row + y, col + x);
         else
             deimos.ncurses.move(row + y, col + x);
@@ -275,7 +275,7 @@ public class Container : Widget
     ///
     public void containerBaseMove(int row, int col)
     {
-        if (container != Application.EmptyContainer && container !is null)
+        if (container != Application.emptyContainer && container !is null)
             container.containerBaseMove(row + y, col + x);
         else
             deimos.ncurses.move(row + y, col + x);

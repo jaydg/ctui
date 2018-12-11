@@ -346,7 +346,7 @@ public class MenuBar : Container
     ///     menus = The toplevel menu bar items.
     public this(MenuBarItem[] menus)
     {
-        super(0, 0, Application.Cols, 1);
+        super(0, 0, Application.cols, 1);
         this.menus = menus;
         canFocus = false;
         selected = -1;

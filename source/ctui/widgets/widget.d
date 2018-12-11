@@ -82,7 +82,7 @@ public abstract class Widget
         this.y = y;
         this.width = w;
         this.height = h;
-        container = Application.EmptyContainer;
+        container = Application.emptyContainer;
     }
 
     /// Focus status of this widget

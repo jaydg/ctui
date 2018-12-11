@@ -52,7 +52,7 @@ package class RunState {
     package void dispose()
     {
         if (container !is null) {
-            Application.End(container);
+            Application.end(container);
             container = null;
         }
     }

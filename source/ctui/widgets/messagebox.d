@@ -60,7 +60,7 @@ public class MessageBox
             d.add(l);
         }
 
-        Application.Run(d);
+        Application.run(d);
         return clicked;
     }
 }

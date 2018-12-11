@@ -48,19 +48,19 @@ private static void optionsDialog()
     b.clicked = { b.container.running = false; };
     d.addButton(b);
 
-    Application.Run(d);
+    Application.run(d);
 
     if (ok) {
         try {
             to!int(listen_port.text);
         } catch (ConvException) {
-            Application.Error("Error", format!"The value `%s' is not a valid port number"(listen_port.text));
+            Application.error("Error", format!"The value `%s' is not a valid port number"(listen_port.text));
             return;
         }
 
         auto fullPath = expandTilde(download_dir.text);
         if (!exists(fullPath) || !isDir(fullPath)) {
-            Application.Error("Error", format!"The directory\n%s\ndoes not exist"(download_dir.text));
+            Application.error("Error", format!"The directory\n%s\ndoes not exist"(download_dir.text));
             return;
         }
     }
@@ -68,7 +68,7 @@ private static void optionsDialog()
 
 private static void addDialog()
 {
-    int cols = cast(int)(Application.Cols * 0.7);
+    int cols = cast(int)(Application.cols * 0.7);
     Dialog d = new Dialog(cols, 8, "Add");
     string name;
 
@@ -88,11 +88,11 @@ private static void addDialog()
     b.clicked = { b.container.running = false; };
     d.addButton(b);
 
-    Application.Run(d);
+    Application.run(d);
 
     if (name !is null) {
         if (!exists(name) || !isFile(name)) {
-            Application.Error("Missing File", format!"Torrent file:\n%s\ndoes not exist"(name));
+            Application.error("Missing File", format!"Torrent file:\n%s\ndoes not exist"(name));
             return;
         }
     }
@@ -249,9 +249,9 @@ private static Frame setupStatus()
 //
 private static void layoutDialogs(Frame ftorrents, Frame fstatus, Frame fdetails, Frame fprogress)
 {
-    immutable cols = Application.Cols;
-    immutable midx = Application.Cols / 2;
-    immutable midy = Application.Lines / 2;
+    immutable cols = Application.cols;
+    immutable midx = Application.cols / 2;
+    immutable midy = Application.lines / 2;
 
     // Torrents
     ftorrents.x = 0;
@@ -290,10 +290,10 @@ private static void updateStatus(int iteration)
 
 void main()
 {
-    Application.Init();
+    Application.init();
 
-    auto top = new Container(0, 0, Application.Cols, Application.Lines);
-    auto frame = new Frame(0, 0, Application.Cols, Application.Lines, "List");
+    auto top = new Container(0, 0, Application.cols, Application.lines);
+    auto frame = new Frame(0, 0, Application.cols, Application.lines, "List");
     top.add(frame);
 
     // Add
@@ -342,7 +342,7 @@ void main()
     Application.mainLoop.addTimeout(dur!"seconds"(1), {
         updateStatus(it++);
         log_widget.AddText(format!"Iteration %d"(it));
-        Application.Refresh();
+        Application.refresh();
         return true;
     });
 
@@ -353,5 +353,5 @@ void main()
 
     updateStatus(it);
 
-    Application.Run(top);
+    Application.run(top);
 }

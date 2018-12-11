@@ -56,7 +56,7 @@ public class Dialog : Frame
     /// Public constructor.
     public this(int w, int h, string title)
     {
-        super((Application.Cols - w) / 2, (Application.Lines - h) / 3, w, h, title);
+        super((Application.cols - w) / 2, (Application.lines - h) / 3, w, h, title);
         containerColorNormal = Application.colorDialogNormal;
         containerColorFocus = Application.colorDialogFocus;
         containerColorHotNormal = Application.colorDialogHotNormal;
@@ -146,8 +146,8 @@ public class Dialog : Frame
     {
         super.doSizeChanged();
 
-        x = (Application.Cols - width) / 2;
-        y = (Application.Lines - height) / 3;
+        x = (Application.cols - width) / 2;
+        y = (Application.lines - height) / 3;
 
         layoutButtons();
     }

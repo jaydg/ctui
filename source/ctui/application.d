@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, application driver
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -31,8 +29,10 @@ module ctui.application;
 import core.stdc.locale;
 import core.sys.posix.signal;
 
-import std.algorithm : max, remove;
+import std.algorithm : map, max, remove;
+import std.algorithm.searching : maxElement;
 import std.encoding : index;
+import std.string : splitLines;
 import std.utf : count;
 import deimos.ncurses;
 
@@ -46,10 +46,10 @@ import ctui.widgets.label;
 
 /// ctui Application driver.
 ///
-/// Before using ctui, you must call Application.Init, then you would create
+/// Before using ctui, you must call Application.init, then you would create
 /// your toplevel container (typically by calling:
-/// `new Container(0, 0, Application.Cols, Application.Lines)`, adding widgets
-/// to it and finally calling `Application.Run()` on the toplevel container).
+/// `new Container(0, 0, Application.cols, Application.lines)`, adding widgets
+/// to it and finally calling `Application.run()` on the toplevel container).
 public class Application {
     /// Color used for unfocused widgets.
     public static int colorNormal;
@@ -121,21 +121,21 @@ public class Application {
     private static Container empty_container;
 
     /// Creates a new Curses color to be used by Gui.cs apps
-    public static int MakeColor(short f, short b)
+    public static int makeColor(short f, short b)
     {
         init_pair(++last_color_pair, f, b);
         return cast(int)COLOR_PAIR(last_color_pair);
     }
 
-    /// The singleton EmptyContainer that covers the entire screen.
-    static public @property Container EmptyContainer()
+    /// The singleton emptyContainer that covers the entire screen.
+    static public @property Container emptyContainer()
     {
         return empty_container;
     }
 
     private static WINDOW* main_window;
     private static bool using_color;
-    private static int cols, lines;
+    private static int _cols, _lines;
 
     /// The applications MainLoop.
     static MainLoop mainLoop;
@@ -144,19 +144,19 @@ public class Application {
     ///
     /// During the initialisation of the terminal, this is set according to the
     /// capabilities of the terminal.
-    public static @property bool UsingColor()
+    public static @property bool usingColor()
     {
         return using_color;
     }
 
     /// Initializes the runtime.
-    public static void Init()
+    public static void init()
     {
         if (inited)
             return;
         inited = true;
 
-        empty_container = new Container(0, 0, Application.Cols, Application.Lines);
+        empty_container = new Container(0, 0, Application.cols, Application.lines);
 
         // Install SIGWINCH handler
         sigaction_t action = {
@@ -173,12 +173,12 @@ public class Application {
         if (main_window is null) {
             import std.stdio : writeln;
             writeln("Curses failed to initialize.");
-            throw new Exception("Application.Init failed");
+            throw new Exception("Application.init failed");
         }
 
         // get initial column and line count from curses
-        cols = COLS;
-        lines = LINES;
+        _cols = COLS;
+        _lines = LINES;
 
         raw();
         noecho();
@@ -191,29 +191,29 @@ public class Application {
         start_color();
         use_default_colors();
 
-        if (UsingColor)
+        if (usingColor)
         {
-            colorNormal = MakeColor(COLOR_WHITE, COLOR_BLUE);
-            colorFocus = MakeColor(COLOR_BLACK, COLOR_CYAN);
-            colorHotNormal = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_BLUE);
-            colorHotFocus = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_CYAN);
+            colorNormal = makeColor(COLOR_WHITE, COLOR_BLUE);
+            colorFocus = makeColor(COLOR_BLACK, COLOR_CYAN);
+            colorHotNormal = A_BOLD | makeColor(COLOR_YELLOW, COLOR_BLUE);
+            colorHotFocus = A_BOLD | makeColor(COLOR_YELLOW, COLOR_CYAN);
 
-            colorMenu = A_BOLD | MakeColor(COLOR_WHITE, COLOR_CYAN);
-            colorMenuHot = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_CYAN);
-            colorMenuSelected = A_BOLD | MakeColor(COLOR_WHITE, COLOR_BLACK);
-            colorMenuHotSelected = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_BLACK);
+            colorMenu = A_BOLD | makeColor(COLOR_WHITE, COLOR_CYAN);
+            colorMenuHot = A_BOLD | makeColor(COLOR_YELLOW, COLOR_CYAN);
+            colorMenuSelected = A_BOLD | makeColor(COLOR_WHITE, COLOR_BLACK);
+            colorMenuHotSelected = A_BOLD | makeColor(COLOR_YELLOW, COLOR_BLACK);
 
             colorMarked = colorHotNormal;
             colorMarkedSelected = colorHotFocus;
 
-            colorDialogNormal    = MakeColor(COLOR_BLACK, COLOR_WHITE);
-            colorDialogFocus     = MakeColor(COLOR_BLACK, COLOR_CYAN);
-            colorDialogHotNormal = MakeColor(COLOR_BLUE,  COLOR_WHITE);
-            colorDialogHotFocus  = MakeColor(COLOR_BLUE,  COLOR_CYAN);
+            colorDialogNormal    = makeColor(COLOR_BLACK, COLOR_WHITE);
+            colorDialogFocus     = makeColor(COLOR_BLACK, COLOR_CYAN);
+            colorDialogHotNormal = makeColor(COLOR_BLUE,  COLOR_WHITE);
+            colorDialogHotFocus  = makeColor(COLOR_BLUE,  COLOR_CYAN);
 
-            colorError = A_BOLD | MakeColor(COLOR_WHITE, COLOR_RED);
-            colorErrorFocus = MakeColor(COLOR_BLACK, COLOR_WHITE);
-            colorErrorHot = A_BOLD | MakeColor(COLOR_YELLOW, COLOR_RED);
+            colorError = A_BOLD | makeColor(COLOR_WHITE, COLOR_RED);
+            colorErrorFocus = makeColor(COLOR_BLACK, COLOR_WHITE);
+            colorErrorHot = A_BOLD | makeColor(COLOR_YELLOW, COLOR_RED);
             colorErrorHotFocus = colorErrorHot;
         } else {
             colorNormal = A_NORMAL;
@@ -237,104 +237,91 @@ public class Application {
             colorError = A_BOLD;
         }
 
-        colorBasic = MakeColor(-1, -1);
+        colorBasic = makeColor(-1, -1);
 
         mainLoop = new MainLoop();
         mainLoop.addWatch(0, MainLoop.Condition.PollIn, {
             Container top = toplevels.length > 0
-                ? toplevels[toplevels.length - 1]
+                ? toplevels[cast(int)toplevels.length - 1]
                 : null;
             if (top !is null)
-                ProcessChar(top);
+                processChar(top);
 
             return true;
         });
     }
 
     /// The number of lines on the screen
-    static public @property int Lines()
+    static public @property int lines()
     {
-        return lines;
+        return _lines;
     }
 
     /// The number of columns on the screen
-    static public @property int Cols()
+    static public @property int cols()
     {
-        return cols;
+        return _cols;
     }
 
     /// Displays a message on a modal dialog box.
     ///
     /// The error boolean indicates whether this is an error message box or
     /// not.
-    static public void Msg(bool error, string caption, string t)
+    static public void msg(bool error, string caption, string t)
     {
-        string[] lines;
-        int last;
-        size_t max_w;
-        string x;
-        for (int i; i < t.count; i++)
-        {
-            if (t[t.index(i)] == '\n') {
-                x = t.substring(last, i - last);
-                lines ~= x;
-                last = i + 1;
-                if (x.count > max_w)
-                    max_w = x.count;
-            }
-        }
-        x = t.substring(last);
-        if (x.count > max_w)
-            max_w = x.count;
-        lines ~= x;
+        string[] text = splitLines(t);
+        size_t max_w = text.map!(s => s.count).maxElement;
 
-        Dialog d = new Dialog(cast(int)max(caption.count + 8, max_w + 8), cast(int)lines.length + 7, caption);
-        if (error)
+        Dialog d = new Dialog(cast(int)max(caption.count + 8, max_w + 8), cast(int)text.length + 7, caption);
+
+        if (error) {
             d.errorColors();
+        }
 
-        for (int i = 0; i < lines.length; i++)
-            d.add(new Label(1, i + 1, lines[i]));
+        foreach (int i, line; text) {
+            d.add(new Label(1, i + 1, line));
+        }
 
         Button b = new Button(0, 0, "Ok", true);
         d.addButton(b);
         b.clicked = { b.container.running = false; };
 
-        Application.Run(d);
+        Application.run(d);
     }
 
     /// Displays an error message.
-    static public void Error(string caption, string text)
+    static public void error(string caption, string text)
     {
-        Msg(true, caption, text);
+        msg(true, caption, text);
     }
 
     /// Displays an error message.
     ///
     /// Overload that allows for `std.format` parameters.
-    static public void Error(string caption, string format, A...)(A args)
+    static public void error(string caption, string format, A...)(A args)
     {
         string t = format(format, args);
 
-        Msg(true, caption, t);
+        msg(true, caption, t);
     }
 
     /// Displays an informational message.
-    static public void Info(string caption, string text)
+    static public void info(string caption, string text)
     {
-        Msg(false, caption, text);
+        msg(false, caption, text);
     }
 
     /// Displays an informational message.
     ///
     /// Overload that allows for `std.format` parameters.
-    static public void Info(string caption, string format, A...)(A args)
+    static public void info(string caption, string format, A...)(A args)
     {
         string t = format(format, args);
 
         Msg(false, caption, t);
     }
 
-    private static void Shutdown()
+    private static void shutdown()
     {
         endwin();
     }
@@ -342,11 +329,11 @@ public class Application {
     private static void redraw(Container container)
     {
         container.redraw();
-        refresh();
+        deimos.ncurses.refresh();
     }
 
     /// Forces a repaint of the screen.
-    public static void Refresh()
+    public static void refresh()
     {
         Container last = null;
 
@@ -357,7 +344,7 @@ public class Application {
             last = c;
         }
 
-        refresh();
+        deimos.ncurses.refresh();
         if (last !is null)
             last.positionCursor();
     }
@@ -365,19 +352,19 @@ public class Application {
     /// Starts running a new container or dialog box.
     ///
     /// Use this method if you want to start the dialog, but you want to
-    /// control the main loop execution manually by calling the RunLoop method
+    /// control the main loop execution manually by calling the runLoop method
     /// (for example, to start the dialog, but continuing to process events).
     ///
-    /// Use the returned value as the argument to RunLoop and later to the End
+    /// Use the returned value as the argument to runLoop and later to the end
     /// method to remove the container from the screen.
-    static public RunState Begin(Container container)
+    static public RunState begin(Container container)
     {
         if (container is null)
             throw new Exception("container cannot be null");
 
         RunState rs = new RunState(container);
 
-        Init();
+        init();
 
         timeout(-1);
 
@@ -388,7 +375,7 @@ public class Application {
         container.focusFirst();
         redraw(container);
         container.positionCursor();
-        Refresh();
+        Application.refresh();
 
         return rs;
     }
@@ -396,16 +383,16 @@ public class Application {
     /// Runs the main loop for the created dialog
     ///
     /// Calling this method will block until the dialog has completed execution.
-    public static void RunLoop(RunState state)
+    public static void runLoop(RunState state)
     {
-        RunLoop(state, true);
+        runLoop(state, true);
     }
 
     /// Runs the main loop for the created dialog
     ///
     /// Use the wait parameter to control whether this is a blocking or
     /// non-blocking call.
-    public static void RunLoop(RunState state, bool wait)
+    public static void runLoop(RunState state, bool wait)
     {
         if (state is null)
             throw new Exception("state cannot be null");
@@ -423,13 +410,13 @@ public class Application {
         }
     }
 
-    /// Stop the main loop.
-    public static void Stop()
+    /// stop the main loop.
+    public static void stop()
     {
         if (toplevels.length == 0)
             return;
 
-        toplevels[toplevels.length - 1].running = false;
+        toplevels[cast(int)toplevels.length - 1].running = false;
         mainLoop.stop();
     }
 
@@ -437,15 +424,15 @@ public class Application {
     ///
     /// This method is used to start processing events for the main
     /// application, but it is also used to run modal dialog boxes.
-    static public void Run(Container container)
+    static public void run(Container container)
     {
-        auto runToken = Begin(container);
-        RunLoop(runToken);
-        End(runToken);
+        auto runToken = begin(container);
+        runLoop(runToken);
+        end(runToken);
     }
 
-    /// Use this method to complete an execution started with Begin
-    static public void End(RunState state)
+    /// Use this method to complete an execution started with begin
+    static public void end(RunState state)
     {
         if (state is null)
             throw new Exception("state cannot be null");
@@ -454,24 +441,24 @@ public class Application {
     }
 
     // Called by the Dispose handler.
-    package static void End(Container container)
+    package static void end(Container container)
     {
         toplevels = toplevels.remove!(c => c == container);
 
         if (toplevels.length == 0)
-            Shutdown();
+            shutdown();
         else
-            Refresh();
+            Application.refresh();
     }
 
-    private static void ProcessChar(Container container)
+    private static void processChar(Container container)
     {
         wchar_t ch;
         get_wch(&ch);
 
         if ((ch == -1) || (ch == KEY_RESIZE))
         {
-            Resize();
+            resize();
             return;
         }
 
@@ -489,7 +476,7 @@ public class Application {
         if (ch == Keys.Esc)
         {
             timeout(100);
-            int k = getch();
+            immutable k = getch();
             if (k != ERR && k != Keys.Esc)
                 ch = Keys.Alt | k;
             timeout(-1);
@@ -514,9 +501,9 @@ public class Application {
         // Control-z, suspend execution, then repaint.
         if (ch == Keys.CtrlZ)
         {
-            Suspend();
+            suspend();
             redrawwin(stdscr);
-            refresh();
+            deimos.ncurses.refresh();
         }
 
         //
@@ -525,34 +512,35 @@ public class Application {
         if (ch == Keys.Tab) {
             if (!container.focusNext())
                 container.focusNext();
-            refresh();
+            deimos.ncurses.refresh();
         } else if (ch == Keys.ShiftTab) {
             if (!container.focusPrev())
                 container.focusPrev();
-            refresh();
+            deimos.ncurses.refresh();
         }
     }
 
     /// Suspends the process by sending SIGTSTP to itself
-    private static void Suspend()
+    private static void suspend()
     {
         killpg(0, SIGTSTP);
     }
 
-    private static void Resize()
+    private static void resize()
     {
-        EmptyContainer.clear();
+        emptyContainer.clear();
         foreach (c; toplevels) {
             c.sizeChanged();
         }
-        Refresh();
+
+        Application.refresh();
     }
 
     // SIGWINCH terminal window resize handler
     extern(C)
     private static void sigHandler(int signo, siginfo_t* info, void* ctx) nothrow
     {
-        import core.sys.posix.sys.ioctl;
+        import core.sys.posix.sys.ioctl : TIOCGWINSZ, ioctl, winsize;
 
         winsize size;
         if (ioctl(0, TIOCGWINSZ, &size) != 0) {
@@ -566,15 +554,15 @@ public class Application {
         }
 
         // update Application state
-        Application.lines = size.ws_row;
-        Application.cols = size.ws_col;
+        Application._lines = size.ws_row;
+        Application._cols = size.ws_col;
 
         // resize underlying ncurses data structures
-        resize_term(Application.lines, Application.cols);
+        resize_term(Application._lines, Application._cols);
 
         // resize the application itself
         try {
-            Application.Resize();
+            Application.resize();
         } catch (Exception e) {
             // This is fine.
         }
