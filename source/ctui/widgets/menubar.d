@@ -204,7 +204,7 @@ package class Menu : Container {
         drawFrame(x, y, width + 4, cast(int)barItems.children.length + 2, true);
 
         foreach (int i, item; barItems.children) {
-            Move(i + 2, x + 1);
+            this.move(i + 2, x + 1);
 
             attron(item is null
                 ? Application.colorMenuSelected
@@ -221,14 +221,14 @@ package class Menu : Container {
             if (item is null)
                 continue;
 
-            Move(i + 2, x + 2);
+            this.move(i + 2, x + 2);
             drawHotString(item.title,
                 i == current ? Application.colorMenuHotSelected : Application.colorMenuHot,
                 i == current ? Application.colorMenuSelected : Application.colorMenu);
 
             // The help string
             int l = cast(int)item.help.count;
-            Move(i + 2, Container.width - l - 2);
+            this.move(i + 2, Container.width - l - 2);
             printw("%s", item.help.toStringz);
         }
 
@@ -238,7 +238,7 @@ package class Menu : Container {
 
     public override void positionCursor()
     {
-        Move(2 + current, x + 2);
+        this.move(2 + current, x + 2);
     }
 
     private void run(Action action)
@@ -354,7 +354,7 @@ public class MenuBar : Container
 
     public override void redraw()
     {
-        Move(0, 0);
+        this.move(0, 0);
         attron(Application.colorFocus);
         for (int i; i < Container.width; i++)
             addch(' ');
@@ -362,7 +362,7 @@ public class MenuBar : Container
         int pos = 1;
 
         foreach (int i, menu; menus) {
-            Move(0, pos);
+            this.move(0, pos);
 
             int hotColor, normalColor;
             if (i == selected) {
@@ -386,14 +386,14 @@ public class MenuBar : Container
         foreach (int i, menu; menus) {
             if (i == selected) {
                 pos++;
-                Move(0, pos);
+                this.move(0, pos);
                 return;
             } else {
                 pos += menu.width + 4;
             }
         }
 
-        Move(0, 0);
+        this.move(0, 0);
     }
 
     // The index of the currently selected MenuBarItem

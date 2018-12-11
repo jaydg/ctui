@@ -141,13 +141,13 @@ public class Entry : Widget
     /// Sets the cursor position.
     public override void positionCursor()
     {
-        Move(y, cast(int)(x + point - first));
+        this.move(y, cast(int)(x + point - first));
     }
 
     public override void redraw()
     {
         attrset(color);
-        Move(y, x);
+        this.move(y, x);
 
         if (secret) {
             int vislength = min(text.count, width);

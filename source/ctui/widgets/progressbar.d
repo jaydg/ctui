@@ -98,7 +98,7 @@ public class ProgressBar : Widget {
     {
         attrset(colorHotFocus);
 
-        Move (y, x);
+        this.move(y, x);
 
         if (isActivity) {
             foreach (i; 0 .. width)

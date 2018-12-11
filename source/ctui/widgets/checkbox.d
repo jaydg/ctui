@@ -117,13 +117,13 @@ public class CheckBox : Widget {
     public override void redraw()
     {
         attrset(colorNormal);
-        Move(y, x);
+        this.move(y, x);
         addstr(checked ? "[X] ".toStringz : "[ ]".toStringz);
         attrset(hasFocus ? colorFocus : colorNormal);
-        Move(y, x + 3);
+        this.move(y, x + 3);
         addstr(text.toStringz);
         if (hot_pos != -1) {
-            Move(y, x + 3 + hot_pos);
+            this.move(y, x + 3 + hot_pos);
             attrset(hasFocus ? colorHotFocus : colorHotNormal);
             addch(hot_key);
         }
@@ -132,7 +132,7 @@ public class CheckBox : Widget {
 
     public override void positionCursor()
     {
-        Move(y, x + 1);
+        this.move(y, x + 1);
     }
 
     public override bool processKey(wchar_t c)

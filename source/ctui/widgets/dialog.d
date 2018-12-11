@@ -121,7 +121,7 @@ public class Dialog : Frame
         clear();
 
         drawFrame(x + 1, y + 1, width - 2, height - 2);
-        move(y + 1, x + (width - cast(int)title.count) / 2);
+        deimos.ncurses.move(y + 1, x + (width - cast(int)title.count) / 2);
         addch(' ');
         attrset(Application.colorDialogHotNormal);
         addstr(title.toStringz);

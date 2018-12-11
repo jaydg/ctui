@@ -175,13 +175,13 @@ public class ListView : Widget {
 
     public override void positionCursor()
     {
-        Move(y + (selected - top), x);
+        this.move(y + (selected - top), x);
     }
 
     public override void redraw()
     {
         for (int l = 0; l < height; l++) {
-            Move(y + l, x);
+            this.move(y + l, x);
             immutable item = l + top;
 
             if (item >= provider.length) {

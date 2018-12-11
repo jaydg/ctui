@@ -179,7 +179,7 @@ private class LogWidget : Widget {
             if (item < 0)
                 item = messages.length + item;
 
-            Move(y + l, x);
+            this.move(y + l, x);
 
             immutable sl = messages[item].count;
             if (sl < width) {
@@ -193,7 +193,7 @@ private class LogWidget : Widget {
         }
 
         for (; l >= 0; l--) {
-            Move (y + l, x);
+            this.move(y + l, x);
             for (i = 0; i < width; i++)
                 addch(' ');
         }

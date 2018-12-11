@@ -269,7 +269,7 @@ public class Container : Widget
         if (container != Application.EmptyContainer && container !is null)
             container.containerMove(row + y, col + x);
         else
-            move(row + y, col + x);
+            deimos.ncurses.move(row + y, col + x);
     }
 
     ///
@@ -278,7 +278,7 @@ public class Container : Widget
         if (container != Application.EmptyContainer && container !is null)
             container.containerBaseMove(row + y, col + x);
         else
-            move(row + y, col + x);
+            deimos.ncurses.move(row + y, col + x);
     }
 
     /// Adds a widget to this container.

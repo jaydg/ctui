@@ -75,7 +75,7 @@ public class Frame : Container
 
         Widget.drawFrame(x, y, width, height);
         attrset(Container.containerColorNormal);
-        move(y, x + 1);
+        deimos.ncurses.move(y, x + 1);
         if (hasFocus)
             attrset(Application.colorDialogNormal);
         if (title != null) {

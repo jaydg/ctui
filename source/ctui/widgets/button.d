@@ -132,11 +132,11 @@ public class Button : Widget {
     public override void redraw()
     {
         attrset(hasFocus ? colorFocus : colorNormal);
-        Move(y, x);
+        this.move(y, x);
         addstr(shown_text.toStringz);
 
         if (hot_pos != -1) {
-            Move(y, x + hot_pos);
+            this.move(y, x + hot_pos);
             attrset(hasFocus ? colorHotFocus : colorHotNormal);
             addch(hot_key);
         }
@@ -144,7 +144,7 @@ public class Button : Widget {
 
     public override void positionCursor()
     {
-        Move(y, x + hot_pos);
+        this.move(y, x + hot_pos);
     }
 
     private bool checkKey(int key)

@@ -62,7 +62,7 @@ public class Label : Widget
         else
             attrset(colorNormal);
 
-        Move(y, x);
+        this.move(y, x);
         addstr(text.toStringz);
     }
 
@@ -76,7 +76,7 @@ public class Label : Widget
     public @property string text(string value)
     {
         attrset(colorNormal);
-        Move(y, x);
+        this.move(y, x);
         for (int i = 0; i < _text.count; i++)
             addch(' ');
         _text = value;

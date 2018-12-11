@@ -1,10 +1,8 @@
 //
-// Simple curses-based GUI toolkit, core
-//
-// Authors:
-//   Miguel de Icaza (miguel.de.icaza@gmail.com)
+// Simple curses-based GUI toolkit, widget base class
 //
 // Copyright (C) 2007-2011 Novell (http://www.novell.com)
+// Copyright (C) 2018 Joachim de Groot
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -97,6 +95,7 @@ public abstract class Widget
         return can_focus;
     }
 
+    /// Determine if the widget can receive focus
     public @property bool canFocus(bool value)
     {
         return can_focus = value;
@@ -132,7 +131,7 @@ public abstract class Widget
     /// For example, a Frame usually takes up a couple of characters for
     /// padding. This method would position the cursor inside the client area,
     /// while baseMove would position  the cursor at the top of the frame.
-    public void Move(int line, int col)
+    public void move(int line, int col)
     {
         container.containerMove(line, col);
     }
@@ -179,7 +178,7 @@ public abstract class Widget
     public void redraw()
     {
         for (int line; line < height; line++) {
-            Move(y + line, x);
+            this.move(y + line, x);
             for (int col; col < width; col++) {
                 addch('x');
             }
@@ -259,7 +258,7 @@ public abstract class Widget
     /// hotkey is, for an entry the location of the editing cursor and so on.
     public void positionCursor()
     {
-        Move(y, x);
+        this.move(y, x);
     }
 
     /// Method to relayout on size changes.
@@ -303,7 +302,7 @@ public abstract class Widget
     /// Draws a frame with the current color in the specified coordinates.
     static public void drawFrame(int col, int line, int width, int height, bool fill)
     {
-        move(line, col);
+        deimos.ncurses.move(line, col);
         printw("┌");
 
         for (int b = 0; b < width - 2; b++)
@@ -312,18 +311,18 @@ public abstract class Widget
         printw("┐");
 
         for (int b = 1; b < height - 1; b++) {
-            move(line+b, col);
+            deimos.ncurses.move(line + b, col);
             printw("│");
             if (fill) {
-                for (int x = 1; x < width - 1; x++)
+                foreach (i ; 1 .. width - 1)
                     addch(' ');
             } else {
-                move(line+b, col + width - 1);
+                deimos.ncurses.move(line + b, col + width - 1);
             }
             printw("│");
         }
 
-        move(line + height - 1, col);
+        deimos.ncurses.move(line + height - 1, col);
         printw("└");
 
         for (int b = 0; b < width - 2; b++)

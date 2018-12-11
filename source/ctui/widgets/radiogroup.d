@@ -104,7 +104,7 @@ public class RadioGroup : Widget {
     public override void redraw()
     {
         foreach (int i, label; radioLabels) {
-            Move(y + i, x);
+            this.move(y + i, x);
             attron(colorNormal);
             printw(i == selected ? "(o) " : "( ) ");
 
@@ -125,7 +125,7 @@ public class RadioGroup : Widget {
 
     public override void positionCursor()
     {
-        Move(y + cursor, x + 1);
+        this.move(y + cursor, x + 1);
     }
 
     /// Changed event, raised when the selected item is changed.
