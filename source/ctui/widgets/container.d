@@ -62,8 +62,6 @@ public class Container : Widget
     ///
     public int border;
 
-    static this();
-
     /// Array Indexing: access the container's children by index
     public ref Widget opIndex(size_t index)
     {
