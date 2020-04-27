@@ -151,10 +151,10 @@ private class LogWidget : Widget {
     {
         super(x, y, 0, 0);
         fill = Fill.Horizontal | Fill.Vertical;
-        AddText("Started");
+        this.addText("Started");
     }
 
-    public void AddText(string s)
+    public void addText(string s)
     {
         messages[head] = s;
         head++;
@@ -209,7 +209,7 @@ private static Frame setupStatus()
 {
     Frame fstatus = new Frame("Status");
     int y;
-    int x = 13;
+    const x = 13;
     string init = "<init>";
 
     fstatus.add(status_progress = new ProgressBar(x, y, 24));
