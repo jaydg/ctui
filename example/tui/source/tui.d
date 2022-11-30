@@ -341,7 +341,7 @@ void main()
     int it;
     Application.mainLoop.addTimeout(dur!"seconds"(1), {
         updateStatus(it++);
-        log_widget.AddText(format!"Iteration %d"(it));
+        log_widget.addText(format!"Iteration %d"(it));
         Application.refresh();
         return true;
     });
