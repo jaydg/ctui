@@ -29,6 +29,7 @@ module ctui.widgets.menubar;
 
 import core.stdc.stddef;
 import std.algorithm : max;
+import std.conv : to;
 import std.string : toStringz;
 import std.uni : isAlphaNum, toUpper;
 import std.utf : count;
@@ -203,8 +204,8 @@ package class Menu : Container {
 
         drawFrame(x, y, width + 4, cast(int)barItems.children.length + 2, true);
 
-        foreach (int i, item; barItems.children) {
-            this.move(i + 2, x + 1);
+        foreach (size_t i, item; barItems.children) {
+            this.move(to!int(i) + 2, x + 1);
 
             attron(item is null
                 ? Application.colorMenuSelected
@@ -221,14 +222,14 @@ package class Menu : Container {
             if (item is null)
                 continue;
 
-            this.move(i + 2, x + 2);
+            this.move(to!int(i) + 2, x + 2);
             drawHotString(item.title,
                 i == current ? Application.colorMenuHotSelected : Application.colorMenuHot,
                 i == current ? Application.colorMenuSelected : Application.colorMenu);
 
             // The help string
             int l = cast(int)item.help.count;
-            this.move(i + 2, Container.width - l - 2);
+            this.move(to!int(i) + 2, Container.width - l - 2);
             printw("%s", item.help.toStringz);
         }
 
@@ -361,7 +362,7 @@ public class MenuBar : Container
 
         int pos = 1;
 
-        foreach (int i, menu; menus) {
+        foreach (size_t i, menu; menus) {
             this.move(0, pos);
 
             int hotColor, normalColor;
@@ -383,7 +384,7 @@ public class MenuBar : Container
     public override void positionCursor()
     {
         int pos;
-        foreach (int i, menu; menus) {
+        foreach (size_t i, menu; menus) {
             if (i == selected) {
                 pos++;
                 this.move(0, pos);
@@ -491,9 +492,9 @@ public class MenuBar : Container
         if (wchar_t hotKey = isAlt(key)) {
             hotKey = toUpper(hotKey);
 
-            foreach (int i, menu; menus) {
+            foreach (size_t i, menu; menus) {
                 if (menu.hotKey == hotKey) {
-                    activate(i);
+                    activate(to!int(i));
                     return true;
                 }
             }
@@ -507,9 +508,9 @@ public class MenuBar : Container
         if (ev.bstate & BUTTON1_CLICKED || ev.bstate & BUTTON1_RELEASED) {
             int pos = 1;
 
-            foreach (int i, menu; menus) {
+            foreach (size_t i, menu; menus) {
                 if (ev.x >= pos && ev.x < pos + menu.width) {
-                    activate(i);
+                    activate(to!int(i));
                 }
 
                 pos += 2 + menu.width + 1;

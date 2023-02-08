@@ -32,6 +32,7 @@ import core.sys.posix.signal;
 import std.algorithm : map, max, remove;
 import std.algorithm.searching : maxElement;
 import std.encoding : index;
+import std.conv : to;
 import std.string : splitLines;
 import std.utf : count;
 import deimos.ncurses;
@@ -278,8 +279,8 @@ public class Application {
             d.errorColors();
         }
 
-        foreach (int i, line; text) {
-            d.add(new Label(1, i + 1, line));
+        foreach (size_t i, line; text) {
+            d.add(new Label(1, to!int(i) + 1, line));
         }
 
         Button b = new Button(0, 0, "Ok", true);

@@ -28,6 +28,7 @@ module ctui.widgets.radiogroup;
 
 import core.stdc.stddef;
 import std.algorithm : max;
+import std.conv : to;
 import std.uni : isAlphaNum, toUpper;
 import std.utf : count;
 import deimos.ncurses;
@@ -103,8 +104,8 @@ public class RadioGroup : Widget {
 
     public override void redraw()
     {
-        foreach (int i, label; radioLabels) {
-            this.move(y + i, x);
+        foreach (size_t i, label; radioLabels) {
+            this.move(y + to!int(i), x);
             attron(colorNormal);
             printw(i == selected ? "(o) " : "( ) ");
 
@@ -135,15 +136,15 @@ public class RadioGroup : Widget {
     {
         if (key.isAlphaNum()) {
             key = key.toUpper();
-            foreach (int i, label; radioLabels) {
+            foreach (size_t i, label; radioLabels) {
                 bool nextIsHot;
                 foreach (dchar c; label) {
                     if (c == '_')
                         nextIsHot = true;
                     else {
                         if (nextIsHot && c == key) {
-                            selected = i;
-                            cursor = i;
+                            selected = to!int(i);
+                            cursor = to!int(i);
                             if (!super.hasFocus()) {
                                 container.focused = this;
                             }
