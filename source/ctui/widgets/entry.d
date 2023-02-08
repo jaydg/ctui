@@ -28,13 +28,11 @@ module ctui.widgets.entry;
 
 import core.stdc.stddef;
 import std.algorithm : min;
-import std.conv : text;
+import std.conv : toText = text;
 import std.encoding : index;
 import std.string : leftJustify, toStringz;
 import std.uni;
 import std.utf : count;
-
-alias toText = std.conv.text;
 
 import deimos.ncurses;
 
