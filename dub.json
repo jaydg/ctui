@@ -12,5 +12,10 @@
 	},
 	"targetName": "ctui",
 	"targetPath": "lib",
-	"targetType": "staticLibrary"
+	"targetType": "staticLibrary",
+	"subPackages": [
+		"example/mainloop",
+		"example/simple",
+		"example/tui"
+	]
 }
