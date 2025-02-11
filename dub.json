@@ -8,7 +8,7 @@
 	"copyright": "Copyright © 2018, Joachim de Groot",
 	"license": "MIT",
 	"dependencies": {
-		"ncurses": "~master"
+		"ncurses": "0.0.149"
 	},
 	"targetName": "ctui",
 	"targetPath": "lib",
