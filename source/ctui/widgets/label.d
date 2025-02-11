@@ -36,6 +36,8 @@ import ctui.widgets.widget;
 public class Label : Widget
 {
     protected string _text;
+    /// Curses color pair that allows replacing the default color.
+    /// When set to the default, -1, `colorNormal` is used.
     public int color = -1;
 
     /// Public constructor: creates a label at the given
